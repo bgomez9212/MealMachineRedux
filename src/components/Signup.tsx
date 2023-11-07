@@ -1,13 +1,19 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../firebase.js";
-export function SignupForm() {
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
-  type InputEvent = React.ChangeEvent<HTMLInputElement>;
-  type ButtonEvent = React.MouseEvent<HTMLButtonElement>;
+import { auth } from "../firebase";
 
-  const onSubmit = async (e: ButtonEvent) => {
+interface SignupProps {
+  handleClick: () => void;
+}
+
+const Signup = ({ handleClick }: SignupProps) => {
+  const navigate = useNavigate();
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const onSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
 
     await createUserWithEmailAndPassword(auth, email, password)
@@ -15,6 +21,7 @@ export function SignupForm() {
         // Signed in
         const user = userCredential.user;
         console.log(user);
+        navigate("/login");
         // ...
       })
       .catch((error) => {
@@ -26,34 +33,65 @@ export function SignupForm() {
   };
 
   return (
-    <div>
-      <form>
+    <main>
+      <section>
         <div>
-          <label htmlFor="email-address">Email address</label>
-          <input
-            type="email"
-            name="Email address"
-            value={email}
-            onChange={(e: InputEvent) => setEmail(e.target.value)}
-            required
-            placeholder="Email address"
-          />
+          <div className="flex flex-col justify-center items-center w-[300px]">
+            <h1 className="text-center text-3xl text-black mb-4">
+              Welcome to
+              <br />
+              Meal Machine!
+            </h1>
+            <form className="w-full">
+              <div>
+                <label htmlFor="email-address" />
+                <input
+                  type="email"
+                  name="email-address"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                  placeholder="Email address"
+                  className="w-full h-10 bg-white px-3 text-black"
+                />
+              </div>
+
+              <div>
+                <label htmlFor="password" />
+                <input
+                  type="password"
+                  name="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  placeholder="Password"
+                  className="w-full mt-2 h-10 bg-white px-3 text-black"
+                />
+              </div>
+
+              <button
+                type="submit"
+                onClick={onSubmit}
+                className="bg-black w-full mt-2 h-10"
+              >
+                Sign up
+              </button>
+            </form>
+
+            <p className="text-center mt-2 text-black">
+              Already have an account? <br />{" "}
+              <button
+                className="text-[#008000] font-bold underline"
+                onClick={handleClick}
+              >
+                Sign in
+              </button>
+            </p>
+          </div>
         </div>
-        <div>
-          <label htmlFor="password">Password</label>
-          <input
-            type="password"
-            name="password"
-            value={password}
-            onChange={(e: InputEvent) => setPassword(e.target.value)}
-            required
-            placeholder="Password"
-          />
-        </div>
-        <button type="submit" onClick={onSubmit}>
-          Sign up
-        </button>
-      </form>
-    </div>
+      </section>
+    </main>
   );
-}
+};
+
+export default Signup;

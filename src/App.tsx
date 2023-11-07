@@ -13,7 +13,7 @@ import { MyGroceries } from "./pages/mygroceries";
 import { MyIngredients } from "./pages/myingredients";
 import { useEffect, useState } from "react";
 import data from "./randomRecipes.json";
-import { SignupForm } from "./components/signup";
+import { LandingPage } from "./pages/landingpage";
 export default function App() {
   const [randomRecipes, setRandomRecipes] = useState(data.recipes);
   // useEffect(() => {
@@ -27,9 +27,9 @@ export default function App() {
   // }, []);
   return (
     <BrowserRouter>
-      <Navbar />
+      {/* <Navbar /> */}
       <Routes>
-        <Route path="/" element={<SignupForm />} />
+        <Route path="/" element={<LandingPage />} />
         <Route path="home" element={<Home randomRecipes={randomRecipes} />} />
         <Route path="groceries" element={<MyGroceries />} />
         <Route path="ingredients" element={<MyIngredients />} />
