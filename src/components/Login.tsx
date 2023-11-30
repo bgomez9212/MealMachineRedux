@@ -36,7 +36,9 @@ const Login = ({ handleClick, authenticateUser }: LoginProps) => {
         <section>
           <div className="flex flex-col justify-center items-center w-[300px]">
             <h1 className="text-center text-3xl text-black mb-4">
-              Welcome back!
+              Welcome back to
+              <br />
+              Meal Machine!
             </h1>
             <form className="w-full">
               <div>
@@ -64,14 +66,19 @@ const Login = ({ handleClick, authenticateUser }: LoginProps) => {
               </div>
 
               <div>
-                <button onClick={onLogin} className="bg-black w-full mt-2 h-10">
-                  Login
+                <button
+                  onClick={onLogin}
+                  className="bg-black w-full mt-2 h-10 text-slate-50"
+                >
+                  {" "}
+                  LOGIN
                 </button>
               </div>
             </form>
 
             <p className="text-center mt-2 text-black">
-              No account yet?{" "}
+              No account yet?
+              <br />
               <button
                 className="text-[#008000] font-bold underline"
                 onClick={handleClick}
