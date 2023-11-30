@@ -6,6 +6,7 @@ import {
   RouterProvider,
   createBrowserRouter,
   createRoutesFromElements,
+  Navigate,
 } from "react-router-dom";
 import axios from "axios";
 import { Home } from "./pages/home";
@@ -13,9 +14,13 @@ import { MyGroceries } from "./pages/mygroceries";
 import { MyIngredients } from "./pages/myingredients";
 import { useEffect, useState } from "react";
 import data from "./randomRecipes.json";
-import { LandingPage } from "./pages/landingpage";
+import { LandingPage } from "./pages/LandingPage";
 export default function App() {
   const [randomRecipes, setRandomRecipes] = useState(data.recipes);
+  const [authed, setAuthed] = useState(false);
+  const authenticateUser = () => {
+    setAuthed(true);
+  };
   // useEffect(() => {
   //   axios
   //     .get("https://api.spoonacular.com/recipes/random?number=9", {
@@ -27,10 +32,22 @@ export default function App() {
   // }, []);
   return (
     <BrowserRouter>
-      {/* <Navbar /> */}
+      <Navbar />
       <Routes>
-        <Route path="/" element={<LandingPage />} />
-        <Route path="home" element={<Home randomRecipes={randomRecipes} />} />
+        <Route
+          path="/"
+          element={<LandingPage authenticateUser={authenticateUser} />}
+        />
+        <Route
+          path="home"
+          element={
+            authed ? (
+              <Home randomRecipes={randomRecipes} />
+            ) : (
+              <Navigate to="/" />
+            )
+          }
+        />
         <Route path="groceries" element={<MyGroceries />} />
         <Route path="ingredients" element={<MyIngredients />} />
       </Routes>

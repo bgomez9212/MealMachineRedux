@@ -5,9 +5,10 @@ import { useNavigate } from "react-router-dom";
 
 interface LoginProps {
   handleClick: () => void;
+  authenticateUser: () => void;
 }
 
-const Login = ({ handleClick }: LoginProps) => {
+const Login = ({ handleClick, authenticateUser }: LoginProps) => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -19,6 +20,7 @@ const Login = ({ handleClick }: LoginProps) => {
         // Signed in
         const user = userCredential.user;
         navigate("/home");
+        authenticateUser();
         console.log(user);
       })
       .catch((error) => {

@@ -1,13 +1,17 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
 import { auth } from "../firebase";
 
 interface SignupProps {
   handleClick: () => void;
+  authenticateUser: () => void;
 }
 
-const Signup = ({ handleClick }: SignupProps) => {
+const Signup = ({ handleClick, authenticateUser }: SignupProps) => {
   const navigate = useNavigate();
 
   const [email, setEmail] = useState("");
@@ -19,10 +23,13 @@ const Signup = ({ handleClick }: SignupProps) => {
     await createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         // Signed in
-        const user = userCredential.user;
-        console.log(user);
-        navigate("/login");
+        // const user = userCredential.user;
+        // console.log(user);
+        // navigate("/");
+        signInWithEmailAndPassword(auth, email, password);
         // ...
+        authenticateUser();
+        navigate("/home");
       })
       .catch((error) => {
         const errorCode = error.code;
