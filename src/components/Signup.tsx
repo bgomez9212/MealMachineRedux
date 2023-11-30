@@ -8,9 +8,10 @@ import { auth } from "../firebase";
 
 interface SignupProps {
   handleClick: () => void;
+  authenticateUser: () => void;
 }
 
-const Signup = ({ handleClick }: SignupProps) => {
+const Signup = ({ handleClick, authenticateUser }: SignupProps) => {
   const navigate = useNavigate();
 
   const [email, setEmail] = useState("");
@@ -27,6 +28,7 @@ const Signup = ({ handleClick }: SignupProps) => {
         // navigate("/");
         signInWithEmailAndPassword(auth, email, password);
         // ...
+        authenticateUser();
         navigate("/home");
       })
       .catch((error) => {
