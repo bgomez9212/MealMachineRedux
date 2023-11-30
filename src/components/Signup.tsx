@@ -79,9 +79,9 @@ const Signup = ({ handleClick, authenticateUser }: SignupProps) => {
               <button
                 type="submit"
                 onClick={onSubmit}
-                className="bg-black w-full mt-2 h-10"
+                className="bg-black w-full mt-2 h-10 text-slate-50"
               >
-                Sign up
+                SIGN UP
               </button>
             </form>
 

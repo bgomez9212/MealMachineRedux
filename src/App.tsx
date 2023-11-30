@@ -38,16 +38,7 @@ export default function App() {
           path="/"
           element={<LandingPage authenticateUser={authenticateUser} />}
         />
-        <Route
-          path="home"
-          element={
-            authed ? (
-              <Home randomRecipes={randomRecipes} />
-            ) : (
-              <Navigate to="/" />
-            )
-          }
-        />
+        <Route path="home" element={authed ? <Home /> : <Navigate to="/" />} />
         <Route path="groceries" element={<MyGroceries />} />
         <Route path="ingredients" element={<MyIngredients />} />
       </Routes>
