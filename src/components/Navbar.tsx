@@ -1,4 +1,21 @@
 import { Link, useLocation } from "react-router-dom";
+import {
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuIndicator,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+  NavigationMenuViewport,
+} from "@/components/ui/navigation-menu";
+
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "./ui/dropdown-menu";
 
 export function Navbar() {
   const location = useLocation();
@@ -7,10 +24,64 @@ export function Navbar() {
 
   const showNavbar = !pathsWithoutNavbar.includes(location.pathname);
   return showNavbar ? (
-    <div className="w-[100vw] h-20 border flex items-center">
-      <Link to="/home">MealMachine</Link>
-      <Link to="/ingredients">Ingredients</Link>
-      <Link to="/groceries">Groceries</Link>
-    </div>
+    <NavigationMenu className="border-b px-10 py-5">
+      <NavigationMenuList>
+        <NavigationMenuItem>
+          <NavigationMenuLink asChild>
+            <Link to="home">
+              <img src="/public/logo-nav-bar.png" className="h-11" />
+            </Link>
+          </NavigationMenuLink>
+        </NavigationMenuItem>
+      </NavigationMenuList>
+      <NavigationMenuList>
+        <NavigationMenuItem>
+          <NavigationMenuLink
+            asChild
+            className={`text-[#526345] ${
+              location.pathname === "/myrecipes"
+                ? "text-[#8FAC5F]"
+                : "hover:text-[#8FAC5F]"
+            }`}
+          >
+            <Link to="myrecipes">Recipes</Link>
+          </NavigationMenuLink>
+        </NavigationMenuItem>
+        <NavigationMenuItem>
+          <NavigationMenuLink
+            asChild
+            className={`text-[#526345] ${
+              location.pathname === "/ingredients"
+                ? "text-[#8FAC5F]"
+                : "hover:text-[#8FAC5F]"
+            }`}
+          >
+            <Link to="ingredients">Ingredients</Link>
+          </NavigationMenuLink>
+        </NavigationMenuItem>
+        <NavigationMenuItem>
+          <NavigationMenuLink
+            asChild
+            className={`text-[#526345] ${
+              location.pathname === "/groceries"
+                ? "text-[#8FAC5F]"
+                : "hover:text-[#8FAC5F]"
+            }`}
+          >
+            <Link to="groceries">Groceries</Link>
+          </NavigationMenuLink>
+        </NavigationMenuItem>
+        <NavigationMenuItem>
+          <DropdownMenu>
+            <DropdownMenuTrigger className="text-[#526345] hover:text-[#8FAC5F]">
+              Profile
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuItem>Sign Out</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </NavigationMenuItem>
+      </NavigationMenuList>
+    </NavigationMenu>
   ) : null;
 }
