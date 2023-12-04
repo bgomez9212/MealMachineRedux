@@ -3,12 +3,12 @@ import {
   BrowserRouter,
   Routes,
   Route,
-  RouterProvider,
-  createBrowserRouter,
-  createRoutesFromElements,
+  // RouterProvider,
+  // createBrowserRouter,
+  // createRoutesFromElements,
   Navigate,
 } from "react-router-dom";
-import axios from "axios";
+// import axios from "axios";
 import { Home } from "./pages/home";
 import { MyGroceries } from "./pages/mygroceries";
 import { MyIngredients } from "./pages/myingredients";
