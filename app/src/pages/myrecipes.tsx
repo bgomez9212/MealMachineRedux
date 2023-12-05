@@ -1,7 +1,11 @@
+import { RecipeCard } from "@/components/RecipeCard";
+
 export function MyRecipes() {
   return (
-    <div>
-      <h1>Recipes</h1>
+    <div className="px-10 flex justify-between">
+      <RecipeCard />
+      <RecipeCard />
+      <RecipeCard />
     </div>
   );
 }

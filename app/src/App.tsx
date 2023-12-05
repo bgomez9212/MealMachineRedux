@@ -14,10 +14,9 @@ import { MyGroceries } from "./pages/mygroceries";
 import { MyIngredients } from "./pages/myingredients";
 import { MyRecipes } from "./pages/myrecipes";
 import { useEffect, useState } from "react";
-import data from "./randomRecipes.json";
 import { LandingPage } from "./pages/LandingPage";
 export default function App() {
-  const [randomRecipes, setRandomRecipes] = useState(data.recipes);
+  // const [randomRecipes, setRandomRecipes] = useState(data.recipes);
   const [authed, setAuthed] = useState(true);
   const authenticateUser = () => {
     setAuthed(true);
