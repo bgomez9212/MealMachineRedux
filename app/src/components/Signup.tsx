@@ -5,6 +5,8 @@ import {
   signInWithEmailAndPassword,
 } from "firebase/auth";
 import { auth } from "../firebase";
+import { Input } from "./ui/input";
+import { Button } from "./ui/button";
 
 interface SignupProps {
   handleClick: () => void;
@@ -44,15 +46,11 @@ const Signup = ({ handleClick, authenticateUser }: SignupProps) => {
       <section>
         <div>
           <div className="flex flex-col justify-center items-center w-[300px]">
-            <h1 className="text-center text-3xl text-black mb-4">
-              Welcome to
-              <br />
-              Meal Machine!
-            </h1>
+            <img src="/public/logo-landing.png" />
             <form className="w-full">
               <div>
                 <label htmlFor="email-address" />
-                <input
+                <Input
                   type="email"
                   name="email-address"
                   value={email}
@@ -65,7 +63,7 @@ const Signup = ({ handleClick, authenticateUser }: SignupProps) => {
 
               <div>
                 <label htmlFor="password" />
-                <input
+                <Input
                   type="password"
                   name="password"
                   value={password}
@@ -76,23 +74,20 @@ const Signup = ({ handleClick, authenticateUser }: SignupProps) => {
                 />
               </div>
 
-              <button
+              <Button
                 type="submit"
                 onClick={onSubmit}
                 className="bg-black w-full mt-2 h-10 text-slate-50"
               >
                 SIGN UP
-              </button>
+              </Button>
             </form>
 
             <p className="text-center mt-2 text-black">
               Already have an account? <br />{" "}
-              <button
-                className="text-[#008000] font-bold underline"
-                onClick={handleClick}
-              >
+              <Button variant={"link"} onClick={handleClick}>
                 Sign in
-              </button>
+              </Button>
             </p>
           </div>
         </div>
