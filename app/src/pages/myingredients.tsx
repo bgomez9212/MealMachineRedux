@@ -21,7 +21,11 @@ export function MyIngredients() {
         </p>
       </div>
       {ingredients.map(({ name, date_added }) => (
-        <IngredientCard name={name} date_added={date_added} />
+        <IngredientCard
+          name={name}
+          date_added={date_added}
+          listType="ingredient"
+        />
       ))}
     </div>
   );

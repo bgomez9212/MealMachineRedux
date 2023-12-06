@@ -10,7 +10,7 @@ import { Button } from "./ui/button";
 
 export function RecipeCard({ image, title }: { image: string; title: string }) {
   return (
-    <Card className="w-full lg:w-[30%] mt-10 flex flex-col overflow-hidden recipe-card">
+    <Card className="w-full lg:w-[30%] mt-10 flex flex-col overflow-hidden recipe-card bg-[#FCFCF6]">
       <CardContent className="h-50 overflow-hidden flex items-center justify-center">
         <img src={image} />
       </CardContent>

@@ -25,9 +25,9 @@ const Signup = ({ handleClick, authenticateUser }: SignupProps) => {
     await createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         // Signed in
-        // const user = userCredential.user;
-        // console.log(user);
-        // navigate("/");
+        const user = userCredential.user;
+        console.log(user);
+        navigate("/");
         signInWithEmailAndPassword(auth, email, password);
         // ...
         authenticateUser();
@@ -47,7 +47,7 @@ const Signup = ({ handleClick, authenticateUser }: SignupProps) => {
         <div>
           <div className="flex flex-col justify-center items-center w-[300px]">
             <img src="/public/logo-landing.png" />
-            <form className="w-full">
+            <form className="w-full mt-5">
               <div>
                 <label htmlFor="email-address" />
                 <Input
