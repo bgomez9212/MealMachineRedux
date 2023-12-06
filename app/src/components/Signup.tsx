@@ -10,27 +10,32 @@ import { Button } from "./ui/button";
 
 interface SignupProps {
   handleClick: () => void;
-  authenticateUser: () => void;
+  authenticateUser: (userId: string) => void;
 }
 
 const Signup = ({ handleClick, authenticateUser }: SignupProps) => {
   const navigate = useNavigate();
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [signUpInfo, setSignUpInfo] = useState({
+    email: "",
+    password: "",
+    confirmPassword: "",
+  });
 
   const onSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
 
-    await createUserWithEmailAndPassword(auth, email, password)
+    await createUserWithEmailAndPassword(
+      auth,
+      signUpInfo.email,
+      signUpInfo.password
+    )
       .then((userCredential) => {
         // Signed in
         const user = userCredential.user;
-        console.log(user);
-        navigate("/");
-        signInWithEmailAndPassword(auth, email, password);
+        signInWithEmailAndPassword(auth, signUpInfo.email, signUpInfo.password);
         // ...
-        authenticateUser();
+        authenticateUser(user.uid);
         navigate("/home");
       })
       .catch((error) => {
@@ -46,15 +51,20 @@ const Signup = ({ handleClick, authenticateUser }: SignupProps) => {
       <section>
         <div>
           <div className="flex flex-col justify-center items-center w-[300px]">
-            <img src="/public/logo-landing.png" />
+            <img src="/logo-landing.png" />
             <form className="w-full mt-5">
               <div>
                 <label htmlFor="email-address" />
                 <Input
                   type="email"
                   name="email-address"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  value={signUpInfo.email}
+                  onChange={(e) =>
+                    setSignUpInfo((prev) => ({
+                      ...prev,
+                      email: e.target.value,
+                    }))
+                  }
                   required
                   placeholder="Email address"
                   className="w-full h-10 bg-white px-3 text-black"
@@ -66,15 +76,39 @@ const Signup = ({ handleClick, authenticateUser }: SignupProps) => {
                 <Input
                   type="password"
                   name="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  value={signUpInfo.password}
+                  onChange={(e) =>
+                    setSignUpInfo((prev) => ({
+                      ...prev,
+                      password: e.target.value,
+                    }))
+                  }
                   required
                   placeholder="Password"
                   className="w-full mt-2 h-10 bg-white px-3 text-black"
                 />
               </div>
 
+              <div>
+                <label htmlFor="confirm-password" />
+                <Input
+                  type="password"
+                  name="confirm-password"
+                  value={signUpInfo.confirmPassword}
+                  onChange={(e) =>
+                    setSignUpInfo((prev) => ({
+                      ...prev,
+                      confirmPassword: e.target.value,
+                    }))
+                  }
+                  required
+                  placeholder="Confirm Password"
+                  className="w-full mt-2 h-10 bg-white px-3 text-black"
+                />
+              </div>
+
               <Button
+                disabled={signUpInfo.password !== signUpInfo.confirmPassword}
                 type="submit"
                 onClick={onSubmit}
                 className="bg-black w-full mt-2 h-10 text-slate-50"
@@ -83,9 +117,19 @@ const Signup = ({ handleClick, authenticateUser }: SignupProps) => {
               </Button>
             </form>
 
+            {signUpInfo.password !== signUpInfo.confirmPassword && (
+              <p className="text-center text-red-600 text-xs">
+                Passwords do not match
+              </p>
+            )}
+
             <p className="text-center mt-2 text-black">
               Already have an account? <br />{" "}
-              <Button variant={"link"} onClick={handleClick}>
+              <Button
+                className="text-[#8FAC5F]"
+                variant={"link"}
+                onClick={handleClick}
+              >
                 Sign in
               </Button>
             </p>

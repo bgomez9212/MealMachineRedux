@@ -2,11 +2,11 @@ import Signup from "../components/Signup";
 import Login from "../components/Login";
 import { useState } from "react";
 
-interface LandingPageProps {
-  authenticateUser: () => void;
+interface landingpageprops {
+  authenticateUser: (userId: string) => void;
 }
 
-export function LandingPage({ authenticateUser }: LandingPageProps) {
+export function LandingPage({ authenticateUser }: landingpageprops) {
   const [hasAccount, setHasAccount] = useState(false);
   const handleClick = () => {
     setHasAccount(!hasAccount);

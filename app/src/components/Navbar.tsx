@@ -17,19 +17,30 @@ import {
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 
+import { getAuth, signOut } from "firebase/auth";
+
 export function Navbar() {
   const location = useLocation();
 
   const pathsWithoutNavbar = ["/"];
 
   const showNavbar = !pathsWithoutNavbar.includes(location.pathname);
+
+  const handleSignOutClick = () => {
+    const auth = getAuth();
+    signOut(auth)
+      .then(() => {})
+      .catch((error) => {
+        console.log("unsuccessful", error);
+      });
+  };
   return showNavbar ? (
     <NavigationMenu className="border-b px-10 py-5">
       <NavigationMenuList>
         <NavigationMenuItem>
           <NavigationMenuLink asChild>
             <Link to="home">
-              <img src="/public/logo-nav-bar.png" className="h-11" />
+              <img src="/logo-nav-bar.png" className="h-11" />
             </Link>
           </NavigationMenuLink>
         </NavigationMenuItem>
@@ -77,7 +88,9 @@ export function Navbar() {
               Profile
             </DropdownMenuTrigger>
             <DropdownMenuContent>
-              <DropdownMenuItem>Sign Out</DropdownMenuItem>
+              <DropdownMenuItem onClick={handleSignOutClick}>
+                Sign Out
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </NavigationMenuItem>
