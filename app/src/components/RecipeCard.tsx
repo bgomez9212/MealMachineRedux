@@ -8,16 +8,14 @@ import {
 } from "@/components/ui/card";
 import { Button } from "./ui/button";
 
-export function RecipeCard(recipe: any) {
-  const recipeObj = recipe.recipe;
-  console.log(recipeObj);
+export function RecipeCard({ image, title }: { image: string; title: string }) {
   return (
-    <Card className="w-[30vw] mt-10 flex flex-col overflow-hidden">
+    <Card className="w-full lg:w-[30%] mt-10 flex flex-col overflow-hidden recipe-card">
       <CardContent className="h-50 overflow-hidden flex items-center justify-center">
-        <img src={recipeObj.image} />
+        <img src={image} />
       </CardContent>
       <CardHeader>
-        <CardTitle>{recipeObj.title}</CardTitle>
+        <CardTitle>{title}</CardTitle>
         <p>Missing</p>
         <CardDescription></CardDescription>
       </CardHeader>
