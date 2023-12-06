@@ -38,13 +38,8 @@ const Login = ({ handleClick, authenticateUser }: LoginProps) => {
       <main>
         <section>
           <div className="flex flex-col justify-center items-center w-[300px]">
-            {/* <h1 className="text-center text-3xl text-black mb-4">
-              Welcome back to
-              <br />
-              Meal Machine!
-            </h1> */}
             <img src="/public/logo-landing.png" />
-            <form className="w-full">
+            <form className="w-full mt-5">
               <div>
                 <Input
                   id="email-address"
