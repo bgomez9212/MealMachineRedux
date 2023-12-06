@@ -4,11 +4,10 @@ import { auth } from "../firebase";
 import { useNavigate } from "react-router-dom";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
-import { buttonVariants } from "./ui/button";
 
 interface LoginProps {
   handleClick: () => void;
-  authenticateUser: () => void;
+  authenticateUser: (userId: string) => void;
 }
 
 const Login = ({ handleClick, authenticateUser }: LoginProps) => {
@@ -23,8 +22,7 @@ const Login = ({ handleClick, authenticateUser }: LoginProps) => {
         // Signed in
         const user = userCredential.user;
         navigate("/home");
-        authenticateUser();
-        console.log(user);
+        authenticateUser(user.uid);
       })
       .catch((error) => {
         const errorCode = error.code;
@@ -38,12 +36,12 @@ const Login = ({ handleClick, authenticateUser }: LoginProps) => {
       <main>
         <section>
           <div className="flex flex-col justify-center items-center w-[300px]">
-            <img src="/public/logo-landing.png" />
+            <img src="/logo-landing.png" />
             <form className="w-full mt-5">
               <div>
                 <Input
                   id="email-address"
-                  name="email-addres"
+                  name="email-address"
                   type="email"
                   required
                   placeholder="Email address"

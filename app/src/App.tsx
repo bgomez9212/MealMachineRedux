@@ -1,47 +1,74 @@
+import { useEffect, useState } from "react";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { Navbar } from "./components/Navbar";
-import {
-  BrowserRouter,
-  Routes,
-  Route,
-  // RouterProvider,
-  // createBrowserRouter,
-  // createRoutesFromElements,
-  Navigate,
-} from "react-router-dom";
-// import axios from "axios";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "./firebase";
 import { Home } from "./pages/home";
 import { MyGroceries } from "./pages/mygroceries";
 import { MyIngredients } from "./pages/myingredients";
 import { MyRecipes } from "./pages/myrecipes";
-import { useEffect, useState } from "react";
 import { LandingPage } from "./pages/LandingPage";
+import { ProtectedRoute } from "./components/ProtectedRoute";
 export default function App() {
-  // const [randomRecipes, setRandomRecipes] = useState(data.recipes);
-  const [authed, setAuthed] = useState(true);
-  const authenticateUser = () => {
-    setAuthed(true);
-  };
-  // useEffect(() => {
-  //   axios
-  //     .get("https://api.spoonacular.com/recipes/random?number=9", {
-  //       headers: {
-  //         "x-api-key": `433bf1970e46425f867c84140c43fc99`,
-  //       },
-  //     })
-  //     .then((results) => console.log(results));
-  // }, []);
+  const [user, setUser] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        // User is signed in
+        setUser(user.uid);
+      } else {
+        // User is signed out
+        setUser(null);
+      }
+
+      // Set loading to false once the authentication state is determined
+      setLoading(false);
+    });
+
+    // Clean up the subscription when the component unmounts
+    return () => unsubscribe();
+  }, []); // Empty dependency array ensures the effect runs only once
+
+  // Show a loading indicator while checking authentication state
+  if (loading) {
+    return (
+      <div className="bg-[url('landing-page.jpg')] h-screen w-screen bg-cover flex justify-center items-center" />
+    );
+  }
+
   return (
     <BrowserRouter>
       <Navbar />
       <Routes>
         <Route
           path="/"
-          element={<LandingPage authenticateUser={authenticateUser} />}
+          element={
+            user ? (
+              <Navigate to="/home" />
+            ) : (
+              <LandingPage authenticateUser={(userId) => setUser(userId)} />
+            )
+          }
         />
-        <Route path="home" element={authed ? <Home /> : <Navigate to="/" />} />
-        <Route path="groceries" element={<MyGroceries />} />
-        <Route path="ingredients" element={<MyIngredients />} />
-        <Route path="myrecipes" element={<MyRecipes />} />
+        <Route
+          path="home"
+          element={<ProtectedRoute user={user} element={<Home />} />}
+        />
+        <Route
+          path="groceries"
+          element={<ProtectedRoute user={user} element={<MyGroceries />} />}
+        />
+        <Route
+          path="ingredients"
+          element={<ProtectedRoute user={user} element={<MyIngredients />} />}
+        />
+        <Route
+          path="recipes"
+          element={<ProtectedRoute user={user} element={<MyRecipes />} />}
+        />
+        <Route path="/*" element={<Navigate to="/" />} />
       </Routes>
     </BrowserRouter>
   );
