@@ -8,8 +8,8 @@ import { getAuth } from "firebase/auth";
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
   apiKey: "AIzaSyDCmqHKGlCgkWOM8YU5DbcNwspwHQvhdZA",
-  authDomain: "mealmachine-23b5b.firebaseapp.com",
-  projectId: "mealmachine-23b5b",
+  authDomain: import.meta.env.VITE_authDomain,
+  projectId: import.meta.env.projectId,
   storageBucket: "mealmachine-23b5b.appspot.com",
   messagingSenderId: "1080227942139",
   appId: "1:1080227942139:web:56b4f9bf977b05e0236a5e",
