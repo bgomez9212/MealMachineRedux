@@ -1,11 +1,12 @@
-import { ReactNode } from "react";
+import { UserContext } from "@/context/context";
+import { ReactNode, useContext } from "react";
 import { Navigate } from "react-router-dom";
 
 interface ProtectedRouteProps {
-  user: string | null;
   element: ReactNode;
 }
 
-export function ProtectedRoute({ user, element }: ProtectedRouteProps) {
+export function ProtectedRoute({ element }: ProtectedRouteProps) {
+  const user = useContext(UserContext);
   return user ? element : <Navigate to="/" />;
 }

@@ -7,6 +7,10 @@ module.exports = {
     const result = await pool.query(query, [user_id]);
     return result;
   },
+  postSavedRecipe: async (user_id, recipe_id) => {
+    const query = "INSERT INTO savedRecipes VALUES ($1, $2)";
+    await pool.query(query, [user_id, recipe_id]);
+  },
   // get ingredients for user
   getIngredients: async (user_id) => {
     const query =

@@ -8,7 +8,15 @@ import {
 } from "@/components/ui/card";
 import { Button } from "./ui/button";
 
-export function RecipeCard({ image, title }: { image: string; title: string }) {
+export function RecipeCard({
+  image,
+  title,
+  id,
+}: {
+  image: string;
+  title: string;
+  id: number;
+}) {
   return (
     <Card className="w-full lg:w-[30%] mt-10 flex flex-col overflow-hidden recipe-card bg-[#FCFCF6]">
       <CardContent className="h-50 overflow-hidden flex items-center justify-center">
@@ -21,7 +29,7 @@ export function RecipeCard({ image, title }: { image: string; title: string }) {
       </CardHeader>
       <CardFooter className="flex justify-between">
         <Button variant={"link"}>Read Recipe</Button>
-        <Button>Save Recipe</Button>
+        <Button onClick={() => console.log(id)}>Save Recipe</Button>
       </CardFooter>
     </Card>
   );
