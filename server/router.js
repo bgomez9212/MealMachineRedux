@@ -5,6 +5,7 @@ const controller = require("./controller.js");
 const router = express.Router();
 
 router.get("/savedRecipes", controller.getSavedRecipes);
+router.post("/savedRecipes", controller.postSavedRecipe);
 
 router.get("/ingredients", controller.getIngredients);
 router.post("/ingredients", controller.postIngredients);

@@ -6,9 +6,9 @@ module.exports = {
     res.send(result.rows).status(200);
   },
   postSavedRecipe: async (req, res) => {
-    const result = await model.postSavedRecipe(req.query.user_id, req.query.recipe_id)
-    res.sendStatus(201)
-  }
+    await model.postSavedRecipe(req.query.user_id, req.query.recipe_id);
+    res.sendStatus(201);
+  },
   getIngredients: async (req, res) => {
     const result = await model.getIngredients(req.query.user_id);
     res.send(result.rows).status(200);
@@ -21,7 +21,7 @@ module.exports = {
     res.sendStatus(201);
   },
   deleteIngredients: async (req, res) => {
-    const result = await model.deleteIngredients(req.query.ing_user_id);
+    await model.deleteIngredients(req.query.ing_user_id);
     res.sendStatus(204);
   },
   getGroceries: async (req, res) => {
@@ -29,10 +29,7 @@ module.exports = {
     res.send(result.rows).status(200);
   },
   postGroceries: async (req, res) => {
-    const result = await model.postGroceries(
-      req.query.user_id,
-      req.query.food_name
-    );
+    await model.postGroceries(req.query.user_id, req.query.food_name);
     res.sendStatus(201);
   },
   deleteGroceries: async (req, res) => {

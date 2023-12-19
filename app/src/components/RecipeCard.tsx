@@ -11,11 +11,11 @@ import { Button } from "./ui/button";
 export function RecipeCard({
   image,
   title,
-  id,
+  handleSaveClick,
 }: {
   image: string;
   title: string;
-  id: number;
+  handleSaveClick: () => void;
 }) {
   return (
     <Card className="w-full lg:w-[30%] mt-10 flex flex-col overflow-hidden recipe-card bg-[#FCFCF6]">
@@ -29,7 +29,7 @@ export function RecipeCard({
       </CardHeader>
       <CardFooter className="flex justify-between">
         <Button variant={"link"}>Read Recipe</Button>
-        <Button onClick={() => console.log(id)}>Save Recipe</Button>
+        <Button onClick={handleSaveClick}>Save Recipe</Button>
       </CardFooter>
     </Card>
   );
