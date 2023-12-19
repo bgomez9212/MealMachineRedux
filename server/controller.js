@@ -5,6 +5,10 @@ module.exports = {
     const result = await model.getSavedRecipes(req.query.user_id);
     res.send(result.rows).status(200);
   },
+  postSavedRecipe: async (req, res) => {
+    const result = await model.postSavedRecipe(req.query.user_id, req.query.recipe_id)
+    res.sendStatus(201)
+  }
   getIngredients: async (req, res) => {
     const result = await model.getIngredients(req.query.user_id);
     res.send(result.rows).status(200);
