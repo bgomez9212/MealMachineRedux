@@ -15,12 +15,13 @@ module.exports = {
   // get ingredients for user
   getIngredients: async (user_id) => {
     const query =
-      "SELECT name FROM food INNER JOIN ingredients ON food.id = ingredients.food_id WHERE ingredients.user_id = $1";
+      "SELECT * FROM food INNER JOIN ingredients ON food.id = ingredients.food_id WHERE ingredients.user_id = $1";
     const result = await pool.query(query, [user_id]);
     return result;
   },
   // add ingredient for user, also adding name to food table if name does not exist
   postIngredients: async (user_id, food_name) => {
+    const currentDate = new Date().toLocaleDateString();
     const client = await pool.connect();
 
     try {
@@ -29,7 +30,9 @@ module.exports = {
 
       // Check if the food exists
       const checkFoodQuery = "SELECT id FROM food WHERE name = $1";
-      const foodResult = await client.query(checkFoodQuery, [food_name]);
+      const foodResult = await client.query(checkFoodQuery, [
+        food_name.toLowerCase(),
+      ]);
 
       let food_id;
 
@@ -38,7 +41,7 @@ module.exports = {
         const insertFoodQuery =
           "INSERT INTO food (name) VALUES ($1) RETURNING id";
         const insertFoodResult = await client.query(insertFoodQuery, [
-          food_name,
+          food_name.toLowerCase(),
         ]);
         food_id = insertFoodResult.rows[0].id;
       } else {
@@ -48,11 +51,12 @@ module.exports = {
 
       // Insert into the ingredients table, referencing the food table
       const insertIngredientQuery =
-        "INSERT INTO ingredients (user_id, food_id, ing_user_id) VALUES ($1, $2, $3) ON CONFLICT (ing_user_id) DO NOTHING";
+        "INSERT INTO ingredients (user_id, food_id, ing_user_id, date_added) VALUES ($1, $2, $3, $4) ON CONFLICT (ing_user_id) DO NOTHING";
       await client.query(insertIngredientQuery, [
         user_id,
         food_id,
         food_id + user_id,
+        currentDate,
       ]);
 
       // Commit the transaction
