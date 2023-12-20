@@ -10,6 +10,10 @@ import { MyRecipes } from "./pages/myrecipes";
 import { LandingPage } from "./pages/LandingPage";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import { UserContext } from "./context/context";
+import { QueryClientProvider, QueryClient } from "react-query";
+
+const queryClient = new QueryClient();
+
 export default function App() {
   const [user, setUser] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
@@ -40,36 +44,41 @@ export default function App() {
   }
 
   return (
-    <UserContext.Provider value={user}>
-      <BrowserRouter>
-        <Navbar />
-        <Routes>
-          <Route
-            path="/"
-            element={
-              user ? (
-                <Navigate to="/home" />
-              ) : (
-                <LandingPage authenticateUser={(userId) => setUser(userId)} />
-              )
-            }
-          />
-          <Route path="home" element={<ProtectedRoute element={<Home />} />} />
-          <Route
-            path="groceries"
-            element={<ProtectedRoute element={<MyGroceries />} />}
-          />
-          <Route
-            path="ingredients"
-            element={<ProtectedRoute element={<MyIngredients />} />}
-          />
-          <Route
-            path="recipes"
-            element={<ProtectedRoute element={<MyRecipes />} />}
-          />
-          <Route path="/*" element={<Navigate to="/" />} />
-        </Routes>
-      </BrowserRouter>
-    </UserContext.Provider>
+    <QueryClientProvider client={queryClient}>
+      <UserContext.Provider value={user}>
+        <BrowserRouter>
+          <Navbar />
+          <Routes>
+            <Route
+              path="/"
+              element={
+                user ? (
+                  <Navigate to="/home" />
+                ) : (
+                  <LandingPage authenticateUser={(userId) => setUser(userId)} />
+                )
+              }
+            />
+            <Route
+              path="home"
+              element={<ProtectedRoute element={<Home />} />}
+            />
+            <Route
+              path="groceries"
+              element={<ProtectedRoute element={<MyGroceries />} />}
+            />
+            <Route
+              path="ingredients"
+              element={<ProtectedRoute element={<MyIngredients />} />}
+            />
+            <Route
+              path="recipes"
+              element={<ProtectedRoute element={<MyRecipes />} />}
+            />
+            <Route path="/*" element={<Navigate to="/" />} />
+          </Routes>
+        </BrowserRouter>
+      </UserContext.Provider>
+    </QueryClientProvider>
   );
 }
