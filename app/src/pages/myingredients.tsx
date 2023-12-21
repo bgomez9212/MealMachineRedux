@@ -10,14 +10,21 @@ import { useQuery, useQueryClient, useMutation } from "react-query";
 export function MyIngredients() {
   const queryClient = useQueryClient();
   const user = useContext(UserContext);
-  const [ingredients, setIngredients] = useState([]);
-  const { data, error, isLoading } = useQuery({
+  const {
+    data: ingredients,
+    error,
+    isLoading,
+  } = useQuery({
     queryKey: ["ingredients"],
-    queryFn: () =>
+    queryFn: async () =>
       axios
         .get(`http://127.0.0.1:8888/api/ingredients?user_id=${user}`)
-        .then((res) => setIngredients(res.data)),
+        .then((res) => {
+          return res.data;
+        }),
   });
+  console.log("data", ingredients);
+  console.log("isLoading", isLoading);
 
   // user input section
   const [textAreaData, setTextAreaData] = useState("");
@@ -40,10 +47,13 @@ export function MyIngredients() {
       .delete(
         `http://127.0.0.1:8888/api/ingredients?ing_user_id=${ing_user_id}`
       )
-      .then(() => console.log("deleted"))
+      .then(() => queryClient.invalidateQueries({ queryKey: ["ingredients"] }))
       .catch((err) => console.log(err));
   }
 
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
   return (
     <div className="px-10 py-10">
       <div className="grid w-full gap-1.5">
@@ -62,18 +72,34 @@ export function MyIngredients() {
           <Button onClick={handleSubmit}>SUBMIT</Button>
         </div>
       </div>
-      {ingredients.length && (
+      {ingredients.length ? (
         <>
-          {ingredients.map(({ name, date_added, ing_user_id }) => (
-            <IngredientCard
-              key={name}
-              name={name}
-              date_added={date_added}
-              handleRemoveIngredient={() => handleRemoveIngredient(ing_user_id)}
-              listType="ingredient"
-            />
-          ))}
+          {ingredients?.map(
+            ({
+              name,
+              date_added,
+              ing_user_id,
+            }: {
+              name: string;
+              date_added: string;
+              ing_user_id: string;
+            }) => (
+              <IngredientCard
+                key={name}
+                name={name}
+                date_added={date_added}
+                handleRemoveIngredient={() =>
+                  handleRemoveIngredient(ing_user_id)
+                }
+                listType="ingredient"
+              />
+            )
+          )}
         </>
+      ) : (
+        <div className="text-center mt-10">
+          ⬆️ Start by adding some ingredients to your kitchen ⬆️
+        </div>
       )}
     </div>
   );
