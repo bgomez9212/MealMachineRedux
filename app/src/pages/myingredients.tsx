@@ -116,7 +116,7 @@ export function MyIngredients() {
         </>
       ) : (
         <div className="text-center mt-10">
-          ⬆️ Get started by adding some ingredients to your kitchen ⬆️
+          ⬆️ Start by adding some ingredients to your kitchen ⬆️
         </div>
       )}
     </div>

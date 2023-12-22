@@ -1,9 +1,16 @@
 const model = require("./model.js");
+const { recipes } = require("./randomRecipes.json");
 
 module.exports = {
   getSavedRecipes: async (req, res) => {
-    const result = await model.getSavedRecipes(req.query.user_id);
-    res.send(result.rows).status(200);
+    const { rows } = await model.getSavedRecipes(req.query.user_id);
+    // res.send(result.rows).status(200);
+    const response = recipes.filter((recipe) => {
+      return rows.some((f) => {
+        return f.recipe_id === recipe.id;
+      });
+    });
+    res.send(response).status(200);
   },
   postSavedRecipe: async (req, res) => {
     await model.postSavedRecipe(req.query.user_id, req.query.recipe_id);
