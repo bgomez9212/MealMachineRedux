@@ -1,4 +1,4 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link, Navigate, useLocation, useNavigate } from "react-router-dom";
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -34,6 +34,13 @@ export function Navbar() {
         console.log("unsuccessful", error);
       });
   };
+
+  const navigate = useNavigate();
+
+  function handleClick() {
+    navigate("/savedRecipes");
+  }
+
   return showNavbar ? (
     <NavigationMenu className="border-b px-10 py-5">
       <NavigationMenuList>
@@ -88,6 +95,9 @@ export function Navbar() {
               Profile
             </DropdownMenuTrigger>
             <DropdownMenuContent>
+              <DropdownMenuItem onClick={handleClick}>
+                Saved Recipes
+              </DropdownMenuItem>
               <DropdownMenuItem onClick={handleSignOutClick}>
                 Sign Out
               </DropdownMenuItem>

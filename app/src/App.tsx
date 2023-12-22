@@ -7,6 +7,7 @@ import { Home } from "./pages/home";
 import { MyGroceries } from "./pages/mygroceries";
 import { MyIngredients } from "./pages/myingredients";
 import { MyRecipes } from "./pages/myrecipes";
+import { SavedRecipes } from "./pages/savedRecipes";
 import { LandingPage } from "./pages/LandingPage";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import { UserContext } from "./context/context";
@@ -74,6 +75,10 @@ export default function App() {
             <Route
               path="recipes"
               element={<ProtectedRoute element={<MyRecipes />} />}
+            />
+            <Route
+              path="savedRecipes"
+              element={<ProtectedRoute element={<SavedRecipes />} />}
             />
             <Route path="/*" element={<Navigate to="/" />} />
           </Routes>
