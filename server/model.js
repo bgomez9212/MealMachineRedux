@@ -1,5 +1,5 @@
 const pool = require("../db/index.js");
-
+const currentDate = new Date().toLocaleDateString();
 module.exports = {
   // get saved recipes for user
   getSavedRecipes: async (user_id) => {
@@ -21,7 +21,6 @@ module.exports = {
   },
   // add ingredient for user, also adding name to food table if name does not exist
   postIngredients: async (user_id, food_name) => {
-    const currentDate = new Date().toLocaleDateString();
     const client = await pool.connect();
 
     try {
@@ -85,7 +84,6 @@ module.exports = {
   // add groceries for user
   postGroceries: async (user_id, food_name) => {
     const client = await pool.connect();
-
     try {
       // Start a transaction
       await client.query("BEGIN");
@@ -111,11 +109,12 @@ module.exports = {
 
       // Insert into the groceries table, referencing the food table
       const insertGroceryQuery =
-        "INSERT INTO groceries (user_id, food_id, gro_user_id) VALUES ($1, $2, $3) ON CONFLICT (gro_user_id) DO NOTHING";
+        "INSERT INTO groceries (user_id, food_id, gro_user_id, date_added) VALUES ($1, $2, $3, $4) ON CONFLICT (gro_user_id) DO NOTHING";
       await client.query(insertGroceryQuery, [
         user_id,
         food_id,
         food_id + user_id,
+        currentDate,
       ]);
 
       // Commit the transaction
