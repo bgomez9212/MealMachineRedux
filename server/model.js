@@ -12,6 +12,11 @@ module.exports = {
       "INSERT INTO savedRecipes(user_id, recipe_id) VALUES ($1, $2)";
     await pool.query(query, [user_id, recipe_id]);
   },
+  deleteSavedRecipe: async (user_id, recipe_id) => {
+    const query =
+      "DELETE FROM savedRecipes WHERE user_id = $1 and recipe_id = $2";
+    await pool.query(query, [user_id, recipe_id]);
+  },
   // get ingredients for user
   getIngredients: async (user_id) => {
     const query =

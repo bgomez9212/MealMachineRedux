@@ -12,6 +12,7 @@ import { LandingPage } from "./pages/LandingPage";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import { UserContext } from "./context/context";
 import { QueryClientProvider, QueryClient } from "react-query";
+import { RecipeDetailPage } from "./pages/RecipeDetailsPage";
 
 const queryClient = new QueryClient();
 
@@ -79,6 +80,10 @@ export default function App() {
             <Route
               path="savedRecipes"
               element={<ProtectedRoute element={<SavedRecipes />} />}
+            />
+            <Route
+              path="details/*"
+              element={<ProtectedRoute element={<RecipeDetailPage />} />}
             />
             <Route path="/*" element={<Navigate to="/" />} />
           </Routes>

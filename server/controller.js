@@ -16,6 +16,10 @@ module.exports = {
     await model.postSavedRecipe(req.query.user_id, req.query.recipe_id);
     res.sendStatus(201);
   },
+  deleteSavedRecipe: async (req, res) => {
+    await model.deleteSavedRecipe(req.query.user_id, req.query.recipe_id);
+    res.sendStatus(204);
+  },
   getIngredients: async (req, res) => {
     const result = await model.getIngredients(req.query.user_id);
     res.send(result.rows).status(200);
