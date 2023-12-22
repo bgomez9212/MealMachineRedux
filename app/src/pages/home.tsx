@@ -7,6 +7,7 @@ import { UserContext } from "@/context/context";
 export function Home() {
   const user = useContext(UserContext);
   const recipes = data.recipes;
+
   function handleSaveClick(recipe_id: number) {
     const postUrl = `http://127.0.0.1:8888/api/savedRecipes?user_id=${user}&recipe_id=${recipe_id}`;
     axios
