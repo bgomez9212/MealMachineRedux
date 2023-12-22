@@ -1,4 +1,4 @@
-import { RecipeCard } from "@/components/RecipeCard";
+import { SavedRecipeCard } from "@/components/SavedRecipeCard";
 import { UserContext } from "@/context/context";
 import axios from "axios";
 import { useContext } from "react";
@@ -22,26 +22,39 @@ export function SavedRecipes() {
         }),
   });
 
+  function handleDeleteSavedRecipe(recipe_id: string) {
+    axios
+      .delete(
+        `http://127.0.0.1:8888/api/savedRecipes?user_id=${user}&recipe_id=${recipe_id}`
+      )
+      .then(() => {
+        queryClient.invalidateQueries({ queryKey: ["savedRecipes"] });
+      });
+  }
+
   if (isLoading) {
     return <h1>is loading...</h1>;
   }
-
-  console.log(savedRecipes);
 
   return (
     <>
       {savedRecipes.length ? (
         <>
-          {savedRecipes.map((recipe) => (
-            <RecipeCard
-              key={recipe.id}
-              image={recipe.image}
-              title={recipe.title}
-            ></RecipeCard>
-          ))}
+          {savedRecipes.map(
+            (recipe: { id: string; image: string; title: string }) => (
+              <SavedRecipeCard
+                key={recipe.id}
+                image={recipe.image}
+                title={recipe.title}
+                handleDeleteSavedRecipe={() =>
+                  handleDeleteSavedRecipe(recipe.id)
+                }
+              ></SavedRecipeCard>
+            )
+          )}
         </>
       ) : (
-        <h1>View Saved Recipes Here</h1>
+        <div className="text-center mt-10">View Saved Recipes Here</div>
       )}
     </>
   );

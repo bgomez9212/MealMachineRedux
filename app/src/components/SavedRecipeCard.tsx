@@ -8,16 +8,14 @@ import {
 } from "@/components/ui/card";
 import { Button } from "./ui/button";
 
-export function RecipeCard({
+export function SavedRecipeCard({
   image,
   title,
-  handleSaveClick,
-  handleReadRecipe,
+  handleDeleteSavedRecipe,
 }: {
   image: string;
   title: string;
-  handleSaveClick: () => void;
-  handleReadRecipe: () => void;
+  handleDeleteSavedRecipe: () => void;
 }) {
   return (
     <Card className="w-full lg:w-[30%] md:w-[47%] mt-10 flex flex-col overflow-hidden recipe-card bg-[#FCFCF6]">
@@ -30,10 +28,10 @@ export function RecipeCard({
         <CardDescription></CardDescription>
       </CardHeader>
       <CardFooter className="flex justify-between">
-        <Button onClick={handleReadRecipe} variant={"link"}>
-          Read Recipe
+        <Button variant={"link"}>Read Recipe</Button>
+        <Button variant={"destructive"} onClick={handleDeleteSavedRecipe}>
+          Remove Recipe
         </Button>
-        <Button onClick={handleSaveClick}>Save Recipe</Button>
       </CardFooter>
     </Card>
   );

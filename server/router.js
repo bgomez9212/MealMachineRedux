@@ -6,6 +6,7 @@ const router = express.Router();
 
 router.get("/savedRecipes", controller.getSavedRecipes);
 router.post("/savedRecipes", controller.postSavedRecipe);
+router.delete("/savedRecipes", controller.deleteSavedRecipe);
 
 router.get("/ingredients", controller.getIngredients);
 router.post("/ingredients", controller.postIngredients);
