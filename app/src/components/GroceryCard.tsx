@@ -7,16 +7,16 @@ import {
 } from "@/components/ui/card";
 import { Button } from "./ui/button";
 
-export function IngredientCard({
+export function GroceryCard({
   name,
   date_added,
-  handleRemoveIngredient,
-  handleMoveIngredientToGroceryList,
+  handleRemoveGrocery,
+  handleMoveGroceryToIngredientList,
 }: {
   name: string;
   date_added: string;
-  handleRemoveIngredient: () => void;
-  handleMoveIngredientToGroceryList: () => void;
+  handleRemoveGrocery: () => void;
+  handleMoveGroceryToIngredientList: () => void;
 }) {
   return (
     <Card className="mt-10 flex flex-col flex-wrap bg-[#FCFCF6]">
@@ -34,13 +34,13 @@ export function IngredientCard({
       </CardHeader>
       <CardFooter>
         <Button
-          onClick={handleMoveIngredientToGroceryList}
+          onClick={handleMoveGroceryToIngredientList}
           className="mr-2"
           variant={"move"}
         >
-          Move to Grocery List
+          Move to Ingredient List
         </Button>
-        <Button onClick={handleRemoveIngredient} variant={"destructive"}>
+        <Button onClick={handleRemoveGrocery} variant={"destructive"}>
           Remove
         </Button>
       </CardFooter>

@@ -12,8 +12,8 @@ export function MyIngredients() {
   const user = useContext(UserContext);
   const {
     data: ingredients,
-    error,
     isLoading,
+    error,
   } = useQuery({
     queryKey: ["ingredients"],
     queryFn: async () =>
@@ -23,8 +23,6 @@ export function MyIngredients() {
           return res.data;
         }),
   });
-  console.log("data", ingredients);
-  console.log("isLoading", isLoading);
 
   // user input section
   const [textAreaData, setTextAreaData] = useState("");
@@ -38,6 +36,7 @@ export function MyIngredients() {
         .then(() =>
           queryClient.invalidateQueries({ queryKey: ["ingredients"] })
         )
+        .then(() => setTextAreaData(""))
         .catch((err) => console.log(err));
     });
   }
@@ -51,9 +50,26 @@ export function MyIngredients() {
       .catch((err) => console.log(err));
   }
 
+  function handleMoveIngredientToGroceryList(
+    ing_user_id: string,
+    food_name: string
+  ) {
+    axios
+      .post(
+        `http://127.0.0.1:8888/api/groceries?user_id=${user}&food_name=${food_name}`
+      )
+      .then(() => handleRemoveIngredient(ing_user_id))
+      .then(() => queryClient.invalidateQueries({ queryKey: ["ingredients"] }));
+  }
+
+  if (error) {
+    return <div>Sorry there seems to be something wrong on our end</div>;
+  }
+
   if (isLoading) {
     return <div>Loading...</div>;
   }
+
   return (
     <div className="px-10 py-10">
       <div className="grid w-full gap-1.5">
@@ -91,14 +107,16 @@ export function MyIngredients() {
                 handleRemoveIngredient={() =>
                   handleRemoveIngredient(ing_user_id)
                 }
-                listType="ingredient"
+                handleMoveIngredientToGroceryList={() =>
+                  handleMoveIngredientToGroceryList(ing_user_id, name)
+                }
               />
             )
           )}
         </>
       ) : (
         <div className="text-center mt-10">
-          ⬆️ Start by adding some ingredients to your kitchen ⬆️
+          ⬆️ Get started by adding some ingredients to your kitchen ⬆️
         </div>
       )}
     </div>
