@@ -23,7 +23,7 @@ export function Home() {
   }
 
   function handleReadRecipe(recipe_id: number) {
-    navigate(`/details/recipe_id=${recipe_id}`);
+    navigate(`/details/${recipe_id}`);
   }
 
   console.log(recipes[0]);
