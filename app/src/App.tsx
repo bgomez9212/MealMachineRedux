@@ -82,7 +82,7 @@ export default function App() {
               element={<ProtectedRoute element={<SavedRecipes />} />}
             />
             <Route
-              path="details/*"
+              path="details/:recipe_id"
               element={<ProtectedRoute element={<RecipeDetailPage />} />}
             />
             <Route path="/*" element={<Navigate to="/" />} />
