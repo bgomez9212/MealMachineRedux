@@ -4,10 +4,12 @@ import axios from "axios";
 import { useContext } from "react";
 import { UserContext } from "@/context/context";
 import { useNavigate } from "react-router-dom";
+import { useQuery, useQueryClient } from "react-query";
 
 export function Home() {
   const user = useContext(UserContext);
   const recipes = data.recipes;
+  const queryClient = useQueryClient();
   const navigate = useNavigate();
 
   function handleSaveClick(recipe_id: number) {
@@ -15,18 +17,47 @@ export function Home() {
     axios
       .post(postUrl)
       .then(() => {
-        console.log("Success");
+        queryClient.invalidateQueries({ queryKey: ["savedRecipes"] });
       })
       .catch((err) => {
         console.error("Error:", err);
       });
   }
+  // get saved recipes here, create an array of recipe ids,
+  // then set a prop on recipe card that will be a boolean and will
+  // render the appropriate button style? then change handleSave to
+  // refetch the savedRecipes ?
+  // I want the button to be conditionally rendered based on if the
+  // recipe is saved or not
+
+  const {
+    data: savedRecipes,
+    // isLoading,
+    // error,
+  } = useQuery({
+    queryKey: ["savedRecipes"],
+    queryFn: async () =>
+      axios
+        .get(`http://127.0.0.1:8888/api/savedRecipes?user_id=${user}`)
+        .then((res) => {
+          return res.data.map((recipe: { id: number }) => recipe.id);
+        }),
+  });
 
   function handleReadRecipe(recipe_id: number) {
     navigate(`/details/${recipe_id}`);
   }
 
-  console.log(recipes[0]);
+  function handleDeleteSavedRecipe(recipe_id: number) {
+    axios
+      .delete(
+        `http://127.0.0.1:8888/api/savedRecipes?user_id=${user}&recipe_id=${recipe_id}`
+      )
+      .then(() => {
+        queryClient.invalidateQueries({ queryKey: ["savedRecipes"] });
+      });
+  }
+
   return (
     <div className="px-10 flex flex-wrap justify-between">
       {recipes.map(({ title, image, id }) => (
@@ -36,6 +67,8 @@ export function Home() {
           image={image}
           handleSaveClick={() => handleSaveClick(id)}
           handleReadRecipe={() => handleReadRecipe(id)}
+          handleDeleteSavedRecipe={() => handleDeleteSavedRecipe(id)}
+          isSaved={savedRecipes?.includes(id)}
         />
       ))}
     </div>
