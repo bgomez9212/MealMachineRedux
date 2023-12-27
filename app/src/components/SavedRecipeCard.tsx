@@ -17,7 +17,7 @@ export function SavedRecipeCard({
   image: string;
   title: string;
   handleDeleteSavedRecipe: () => void;
-  handleReadRecipes: () => void;
+  handleReadRecipe: () => void;
 }) {
   return (
     <Card className="w-full lg:w-[30%] md:w-[47%] mt-10 flex flex-col overflow-hidden recipe-card bg-[#FCFCF6]">
