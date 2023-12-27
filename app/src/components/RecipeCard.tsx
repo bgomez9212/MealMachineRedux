@@ -13,11 +13,13 @@ export function RecipeCard({
   title,
   handleSaveClick,
   handleReadRecipe,
+  isSaved,
 }: {
   image: string;
   title: string;
   handleSaveClick: () => void;
   handleReadRecipe: () => void;
+  isSaved: boolean;
 }) {
   return (
     <Card className="w-full lg:w-[30%] md:w-[47%] mt-10 flex flex-col overflow-hidden recipe-card bg-[#FCFCF6]">
@@ -33,7 +35,11 @@ export function RecipeCard({
         <Button onClick={handleReadRecipe} variant={"link"}>
           Read Recipe
         </Button>
-        <Button onClick={handleSaveClick}>Save Recipe</Button>
+        {isSaved ? (
+          <Button variant={"saved"}>Saved</Button>
+        ) : (
+          <Button onClick={handleSaveClick}>Save Recipe</Button>
+        )}
       </CardFooter>
     </Card>
   );
