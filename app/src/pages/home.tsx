@@ -48,6 +48,16 @@ export function Home() {
     navigate(`/details/${recipe_id}`);
   }
 
+  function handleDeleteSavedRecipe(recipe_id: number) {
+    axios
+      .delete(
+        `http://127.0.0.1:8888/api/savedRecipes?user_id=${user}&recipe_id=${recipe_id}`
+      )
+      .then(() => {
+        queryClient.invalidateQueries({ queryKey: ["savedRecipes"] });
+      });
+  }
+
   return (
     <div className="px-10 flex flex-wrap justify-between">
       {recipes.map(({ title, image, id }) => (
@@ -57,6 +67,7 @@ export function Home() {
           image={image}
           handleSaveClick={() => handleSaveClick(id)}
           handleReadRecipe={() => handleReadRecipe(id)}
+          handleDeleteSavedRecipe={() => handleDeleteSavedRecipe(id)}
           isSaved={savedRecipes?.includes(id)}
         />
       ))}
