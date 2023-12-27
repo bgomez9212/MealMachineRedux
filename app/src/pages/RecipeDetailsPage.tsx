@@ -1,5 +1,6 @@
 import { useParams } from "react-router-dom";
 import data from "./randomRecipes.json";
+import { Check, X } from "lucide-react";
 
 export function RecipeDetailPage() {
   const { recipe_id } = useParams();
@@ -9,17 +10,30 @@ export function RecipeDetailPage() {
     (recipe) => recipe.id === parseInt(recipe_id!)
   )[0];
 
+  function renderCheckmark(condition: boolean) {
+    return condition ? <Check color="#008a09" /> : <X color="#ff0000" />;
+  }
+
   return (
     <div className="px-10 py-10">
       <header className="flex mb-10 justify-between border max-h-[300px] p-5 rounded-md">
         <div className="mr-10">
           <h1 className="text-3xl mb-2">{recipe.title}</h1>
           <h1 className="mb-2">{`Ready in ${recipe.readyInMinutes} minutes`}</h1>
-          <h1>{`Vegetarian?: ${recipe.vegetarian}`}</h1>
-          <h1>{`Vegan?: ${recipe.vegan}`}</h1>
-          <h1>{`Gluten Free?: ${recipe.glutenFree}`}</h1>
+          <div className="flex">
+            <h1>{`Vegetarian? `}</h1>
+            {renderCheckmark(recipe.vegetarian)}
+          </div>
+          <div className="flex">
+            <h1>{`Vegan? `}</h1>
+            {renderCheckmark(recipe.vegan)}
+          </div>
+          <div className="flex">
+            <h1>{`Gluten Free? `}</h1>
+            {renderCheckmark(recipe.glutenFree)}
+          </div>
           <h1>{`Servings: ${recipe.servings}`}</h1>
-          <h1 className="text-xs">{`Source: ${recipe.sourceUrl}`}</h1>
+          <h1 className="text-xs mt-6">{`Source: ${recipe.sourceUrl}`}</h1>
           {/* Number of ingredients missing */}
         </div>
         <div className="max-h-[320px] flex justify-end min-w-[400px]">
