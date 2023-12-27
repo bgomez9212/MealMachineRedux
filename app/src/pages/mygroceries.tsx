@@ -107,7 +107,7 @@ export function MyGroceries() {
         </>
       ) : (
         <div className="text-center mt-10">
-          ⬆️ Get started by adding some groceries to your kitchen ⬆️
+          ⬆️ Get started by adding some groceries to your grocery list ⬆️
         </div>
       )}
     </div>

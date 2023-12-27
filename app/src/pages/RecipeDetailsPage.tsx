@@ -9,8 +9,6 @@ export function RecipeDetailPage() {
     (recipe) => recipe.id === parseInt(recipe_id!)
   )[0];
 
-  console.log(recipe);
-
   return (
     <div className="px-10 py-10">
       <header className="flex mb-10 justify-between border max-h-[300px] p-5 rounded-md">

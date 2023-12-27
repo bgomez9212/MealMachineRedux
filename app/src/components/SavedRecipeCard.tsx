@@ -12,10 +12,12 @@ export function SavedRecipeCard({
   image,
   title,
   handleDeleteSavedRecipe,
+  handleReadRecipe,
 }: {
   image: string;
   title: string;
   handleDeleteSavedRecipe: () => void;
+  handleReadRecipes: () => void;
 }) {
   return (
     <Card className="w-full lg:w-[30%] md:w-[47%] mt-10 flex flex-col overflow-hidden recipe-card bg-[#FCFCF6]">
@@ -28,7 +30,9 @@ export function SavedRecipeCard({
         <CardDescription></CardDescription>
       </CardHeader>
       <CardFooter className="flex justify-between">
-        <Button variant={"link"}>Read Recipe</Button>
+        <Button variant={"link"} onClick={handleReadRecipe}>
+          Read Recipe
+        </Button>
         <Button variant={"destructive"} onClick={handleDeleteSavedRecipe}>
           Remove Recipe
         </Button>
