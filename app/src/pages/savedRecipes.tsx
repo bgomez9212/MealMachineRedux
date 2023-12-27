@@ -3,10 +3,16 @@ import { UserContext } from "@/context/context";
 import axios from "axios";
 import { useContext } from "react";
 import { useQuery, useQueryClient } from "react-query";
+import { useNavigate } from "react-router-dom";
 
 export function SavedRecipes() {
   const queryClient = useQueryClient();
   const user = useContext(UserContext);
+  const navigate = useNavigate();
+
+  function handleReadRecipe(recipe_id: number) {
+    navigate(`/details/${recipe_id}`);
+  }
 
   const {
     data: savedRecipes,
@@ -22,7 +28,7 @@ export function SavedRecipes() {
         }),
   });
 
-  function handleDeleteSavedRecipe(recipe_id: string) {
+  function handleDeleteSavedRecipe(recipe_id: number) {
     axios
       .delete(
         `http://127.0.0.1:8888/api/savedRecipes?user_id=${user}&recipe_id=${recipe_id}`
@@ -41,7 +47,7 @@ export function SavedRecipes() {
       {savedRecipes.length ? (
         <>
           {savedRecipes.map(
-            (recipe: { id: string; image: string; title: string }) => (
+            (recipe: { id: number; image: string; title: string }) => (
               <SavedRecipeCard
                 key={recipe.id}
                 image={recipe.image}
@@ -49,6 +55,7 @@ export function SavedRecipes() {
                 handleDeleteSavedRecipe={() =>
                   handleDeleteSavedRecipe(recipe.id)
                 }
+                handleReadRecipe={() => handleReadRecipe(recipe.id)}
               ></SavedRecipeCard>
             )
           )}
