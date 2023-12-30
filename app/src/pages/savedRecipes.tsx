@@ -17,7 +17,7 @@ export function SavedRecipes() {
   const {
     data: savedRecipes,
     isLoading,
-    error,
+    // error,
   } = useQuery({
     queryKey: ["savedRecipes"],
     queryFn: async () =>

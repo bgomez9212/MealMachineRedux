@@ -6,7 +6,6 @@ import { auth } from "./firebase";
 import { Home } from "./pages/home";
 import { MyGroceries } from "./pages/mygroceries";
 import { MyIngredients } from "./pages/myingredients";
-import { MyRecipes } from "./pages/myrecipes";
 import { SavedRecipes } from "./pages/savedRecipes";
 import { LandingPage } from "./pages/LandingPage";
 import { ProtectedRoute } from "./components/ProtectedRoute";
@@ -72,10 +71,6 @@ export default function App() {
             <Route
               path="ingredients"
               element={<ProtectedRoute element={<MyIngredients />} />}
-            />
-            <Route
-              path="recipes"
-              element={<ProtectedRoute element={<MyRecipes />} />}
             />
             <Route
               path="savedRecipes"
