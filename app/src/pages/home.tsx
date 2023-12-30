@@ -6,7 +6,6 @@ import { UserContext } from "@/context/context";
 import { useNavigate } from "react-router-dom";
 import { useQuery, useQueryClient } from "react-query";
 import { useToast } from "@/components/ui/use-toast";
-import { Button } from "@/components/ui/button";
 
 export function Home() {
   const { toast } = useToast();
