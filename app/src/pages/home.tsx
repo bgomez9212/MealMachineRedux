@@ -23,12 +23,6 @@ export function Home() {
         console.error("Error:", err);
       });
   }
-  // get saved recipes here, create an array of recipe ids,
-  // then set a prop on recipe card that will be a boolean and will
-  // render the appropriate button style? then change handleSave to
-  // refetch the savedRecipes ?
-  // I want the button to be conditionally rendered based on if the
-  // recipe is saved or not
 
   const {
     data: savedRecipes,

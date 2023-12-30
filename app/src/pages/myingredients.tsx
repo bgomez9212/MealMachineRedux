@@ -5,7 +5,7 @@ import { useContext, useState } from "react";
 import { Button } from "@/components/ui/button";
 import axios from "axios";
 import { UserContext } from "@/context/context";
-import { useQuery, useQueryClient, useMutation } from "react-query";
+import { useQuery, useQueryClient } from "react-query";
 
 export function MyIngredients() {
   const queryClient = useQueryClient();

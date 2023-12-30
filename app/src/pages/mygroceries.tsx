@@ -13,7 +13,7 @@ export function MyGroceries() {
   const {
     data: groceries,
     isLoading,
-    error,
+    // error,
   } = useQuery({
     queryKey: ["groceries"],
     queryFn: async () =>
