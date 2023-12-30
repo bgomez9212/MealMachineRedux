@@ -5,24 +5,14 @@ import { useContext } from "react";
 import { UserContext } from "@/context/context";
 import { useNavigate } from "react-router-dom";
 import { useQuery, useQueryClient } from "react-query";
+import { useToast } from "@/components/ui/use-toast";
 
 export function Home() {
+  const { toast } = useToast();
   const user = useContext(UserContext);
   const recipes = data.recipes;
   const queryClient = useQueryClient();
   const navigate = useNavigate();
-
-  function handleSaveClick(recipe_id: number) {
-    const postUrl = `http://127.0.0.1:8888/api/savedRecipes?user_id=${user}&recipe_id=${recipe_id}`;
-    axios
-      .post(postUrl)
-      .then(() => {
-        queryClient.invalidateQueries({ queryKey: ["savedRecipes"] });
-      })
-      .catch((err) => {
-        console.error("Error:", err);
-      });
-  }
 
   const {
     data: savedRecipes,
@@ -38,17 +28,37 @@ export function Home() {
         }),
   });
 
+  function handleSaveClick(recipe_id: number, recipe_title: string) {
+    const postUrl = `http://127.0.0.1:8888/api/savedRecipes?user_id=${user}&recipe_id=${recipe_id}`;
+    axios
+      .post(postUrl)
+      .then(() => {
+        queryClient.invalidateQueries({ queryKey: ["savedRecipes"] });
+        toast({
+          title: "Recipe Saved!",
+          description: `${recipe_title} added to your saved recipes!`,
+        });
+      })
+      .catch((err) => {
+        console.error("Error:", err);
+      });
+  }
+
   function handleReadRecipe(recipe_id: number) {
     navigate(`/details/${recipe_id}`);
   }
 
-  function handleDeleteSavedRecipe(recipe_id: number) {
+  function handleDeleteSavedRecipe(recipe_id: number, recipe_title: string) {
     axios
       .delete(
         `http://127.0.0.1:8888/api/savedRecipes?user_id=${user}&recipe_id=${recipe_id}`
       )
       .then(() => {
         queryClient.invalidateQueries({ queryKey: ["savedRecipes"] });
+        toast({
+          title: "Recipe Removed",
+          description: `${recipe_title} removed from your saved recipes!`,
+        });
       });
   }
 
@@ -59,9 +69,9 @@ export function Home() {
           key={title}
           title={title}
           image={image}
-          handleSaveClick={() => handleSaveClick(id)}
+          handleSaveClick={() => handleSaveClick(id, title)}
           handleReadRecipe={() => handleReadRecipe(id)}
-          handleDeleteSavedRecipe={() => handleDeleteSavedRecipe(id)}
+          handleDeleteSavedRecipe={() => handleDeleteSavedRecipe(id, title)}
           isSaved={savedRecipes?.includes(id)}
         />
       ))}
