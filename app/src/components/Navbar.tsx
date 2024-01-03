@@ -20,7 +20,7 @@ import { Moon, Sun } from "lucide-react";
 import { useTheme } from "@/context/themeContext";
 export function Navbar() {
   const location = useLocation();
-  const { setTheme } = useTheme();
+  const { theme, setTheme } = useTheme();
 
   const pathsWithoutNavbar = ["/"];
 
@@ -47,7 +47,11 @@ export function Navbar() {
         <NavigationMenuItem>
           <NavigationMenuLink asChild>
             <Link to="home">
-              <img src="/logo-nav-bar.png" className="h-11" />
+              {theme === "dark" ? (
+                <img src="/logo-nav-bar-dark.PNG" className="h-11" />
+              ) : (
+                <img src="/logo-nav-bar.png" className="h-11" />
+              )}
             </Link>
           </NavigationMenuLink>
         </NavigationMenuItem>
@@ -56,10 +60,10 @@ export function Navbar() {
         <NavigationMenuItem>
           <NavigationMenuLink
             asChild
-            className={`text-[#526345] ${
+            className={`text-[#526345] dark:text-[#fcfcf6] ${
               location.pathname === "/myrecipes"
-                ? "text-[#8FAC5F]"
-                : "hover:text-[#8FAC5F]"
+                ? "text-[#8FAC5F] dark:text-[#8fac5f]"
+                : "hover:text-[#8FAC5F] dark:hover:text-[#8fac5f]"
             }`}
           >
             <Link to="myrecipes">Recipes</Link>
@@ -68,10 +72,10 @@ export function Navbar() {
         <NavigationMenuItem>
           <NavigationMenuLink
             asChild
-            className={`text-[#526345] ${
+            className={`text-[#526345] dark:text-[#fcfcf6] ${
               location.pathname === "/ingredients"
-                ? "text-[#8FAC5F]"
-                : "hover:text-[#8FAC5F]"
+                ? "text-[#8FAC5F] dark:text-[#8fac5f]"
+                : "hover:text-[#8FAC5F] dark:hover:text-[#8fac5f]"
             }`}
           >
             <Link to="ingredients">Ingredients</Link>
@@ -80,10 +84,10 @@ export function Navbar() {
         <NavigationMenuItem>
           <NavigationMenuLink
             asChild
-            className={`text-[#526345] ${
+            className={`text-[#526345] dark:text-[#fcfcf6] ${
               location.pathname === "/groceries"
-                ? "text-[#8FAC5F]"
-                : "hover:text-[#8FAC5F]"
+                ? "text-[#8FAC5F] dark:text-[#8fac5f]"
+                : "hover:text-[#8FAC5F] dark:hover:text-[#8fac5f]"
             }`}
           >
             <Link to="groceries">Groceries</Link>
@@ -91,7 +95,7 @@ export function Navbar() {
         </NavigationMenuItem>
         <NavigationMenuItem>
           <DropdownMenu>
-            <DropdownMenuTrigger className="text-[#526345] hover:text-[#8FAC5F]">
+            <DropdownMenuTrigger className="text-[#526345] dark:text-[#fcfcf6] hover:text-[#8FAC5F]">
               Profile
             </DropdownMenuTrigger>
             <DropdownMenuContent>

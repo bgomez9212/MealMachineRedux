@@ -4,6 +4,7 @@ import { auth } from "../firebase";
 import { useNavigate } from "react-router-dom";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
+import { useTheme } from "@/context/themeContext";
 
 interface LoginProps {
   handleClick: () => void;
@@ -14,6 +15,7 @@ const Login = ({ handleClick, authenticateUser }: LoginProps) => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const { theme } = useTheme();
 
   const onLogin = (e: { preventDefault: () => void }) => {
     e.preventDefault();
@@ -36,7 +38,11 @@ const Login = ({ handleClick, authenticateUser }: LoginProps) => {
       <main>
         <section>
           <div className="flex flex-col justify-center items-center w-[300px]">
-            <img src="/logo-landing.png" />
+            {theme === "dark" ? (
+              <img src="/logo-landing-dark.PNG" />
+            ) : (
+              <img src="/logo-landing.png" />
+            )}
             <form className="w-full mt-5">
               <div>
                 <Input
