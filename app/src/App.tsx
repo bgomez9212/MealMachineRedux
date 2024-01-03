@@ -10,6 +10,7 @@ import { SavedRecipes } from "./pages/savedRecipes";
 import { LandingPage } from "./pages/LandingPage";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import { UserContext } from "./context/context";
+import { ThemeProvider } from "./context/themeContext";
 import { QueryClientProvider, QueryClient } from "react-query";
 import { RecipeDetailPage } from "./pages/RecipeDetailsPage";
 
@@ -45,45 +46,49 @@ export default function App() {
   }
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <UserContext.Provider value={user}>
-        <BrowserRouter>
-          <Navbar />
-          <Routes>
-            <Route
-              path="/"
-              element={
-                user ? (
-                  <Navigate to="/home" />
-                ) : (
-                  <LandingPage authenticateUser={(userId) => setUser(userId)} />
-                )
-              }
-            />
-            <Route
-              path="home"
-              element={<ProtectedRoute element={<Home />} />}
-            />
-            <Route
-              path="groceries"
-              element={<ProtectedRoute element={<MyGroceries />} />}
-            />
-            <Route
-              path="ingredients"
-              element={<ProtectedRoute element={<MyIngredients />} />}
-            />
-            <Route
-              path="savedRecipes"
-              element={<ProtectedRoute element={<SavedRecipes />} />}
-            />
-            <Route
-              path="details/:recipe_id"
-              element={<ProtectedRoute element={<RecipeDetailPage />} />}
-            />
-            <Route path="/*" element={<Navigate to="/" />} />
-          </Routes>
-        </BrowserRouter>
-      </UserContext.Provider>
-    </QueryClientProvider>
+    <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
+      <QueryClientProvider client={queryClient}>
+        <UserContext.Provider value={user}>
+          <BrowserRouter>
+            <Navbar />
+            <Routes>
+              <Route
+                path="/"
+                element={
+                  user ? (
+                    <Navigate to="/home" />
+                  ) : (
+                    <LandingPage
+                      authenticateUser={(userId) => setUser(userId)}
+                    />
+                  )
+                }
+              />
+              <Route
+                path="home"
+                element={<ProtectedRoute element={<Home />} />}
+              />
+              <Route
+                path="groceries"
+                element={<ProtectedRoute element={<MyGroceries />} />}
+              />
+              <Route
+                path="ingredients"
+                element={<ProtectedRoute element={<MyIngredients />} />}
+              />
+              <Route
+                path="savedRecipes"
+                element={<ProtectedRoute element={<SavedRecipes />} />}
+              />
+              <Route
+                path="details/:recipe_id"
+                element={<ProtectedRoute element={<RecipeDetailPage />} />}
+              />
+              <Route path="/*" element={<Navigate to="/" />} />
+            </Routes>
+          </BrowserRouter>
+        </UserContext.Provider>
+      </QueryClientProvider>
+    </ThemeProvider>
   );
 }

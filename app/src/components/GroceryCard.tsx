@@ -19,7 +19,7 @@ export function GroceryCard({
   handleMoveGroceryToIngredientList: () => void;
 }) {
   return (
-    <Card className="mt-10 flex flex-col flex-wrap bg-[#FCFCF6]">
+    <Card className="mt-10 flex flex-col flex-wrap bg-[#FCFCF6] dark:bg-[#526345]">
       <CardHeader>
         <CardTitle>
           {name
