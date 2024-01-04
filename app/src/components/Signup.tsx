@@ -7,7 +7,7 @@ import {
 import { auth } from "../firebase";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
-import { useTheme } from "@/context/themeContext";
+import { ModeSetter } from "@/hooks/modeSetter";
 
 interface SignupProps {
   handleClick: () => void;
@@ -16,7 +16,6 @@ interface SignupProps {
 
 const Signup = ({ handleClick, authenticateUser }: SignupProps) => {
   const navigate = useNavigate();
-  const { theme } = useTheme();
   const [signUpInfo, setSignUpInfo] = useState({
     email: "",
     password: "",
@@ -47,12 +46,14 @@ const Signup = ({ handleClick, authenticateUser }: SignupProps) => {
       });
   };
 
+  const mode = ModeSetter();
+
   return (
     <main>
       <section>
         <div>
           <div className="flex flex-col justify-center items-center w-[300px]">
-            {theme === "dark" ? (
+            {mode === "dark" ? (
               <img src="/logo-landing-dark.PNG" />
             ) : (
               <img src="/logo-landing.png" />
