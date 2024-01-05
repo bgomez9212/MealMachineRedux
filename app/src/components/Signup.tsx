@@ -7,7 +7,6 @@ import {
 import { auth } from "../firebase";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
-import { ModeSetter } from "@/hooks/modeSetter";
 
 interface SignupProps {
   handleClick: () => void;
@@ -46,18 +45,12 @@ const Signup = ({ handleClick, authenticateUser }: SignupProps) => {
       });
   };
 
-  const mode = ModeSetter();
-
   return (
     <main>
       <section>
         <div>
           <div className="flex flex-col justify-center items-center w-[300px]">
-            {mode === "dark" ? (
-              <img src="/logo-landing-dark.PNG" />
-            ) : (
-              <img src="/logo-landing.png" />
-            )}
+            <div className="h-[180px] w-[300px] bg-[url('/logo-landing.png')] bg-cover dark:bg-[url('/logo-landing-dark.PNG')]"></div>
             <form className="w-full mt-5">
               <div>
                 <label htmlFor="email-address" />

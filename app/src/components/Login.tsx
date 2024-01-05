@@ -4,7 +4,6 @@ import { auth } from "../firebase";
 import { useNavigate } from "react-router-dom";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
-import { ModeSetter } from "@/hooks/modeSetter";
 
 interface LoginProps {
   handleClick: () => void;
@@ -32,19 +31,12 @@ const Login = ({ handleClick, authenticateUser }: LoginProps) => {
       });
   };
 
-  const mode = ModeSetter();
-  console.log(mode);
-
   return (
     <>
       <main>
         <section>
           <div className="flex flex-col justify-center items-center w-[300px]">
-            {mode === "dark" ? (
-              <img src="/logo-landing-dark.PNG" />
-            ) : (
-              <img src="/logo-landing.png" />
-            )}
+            <div className="h-[180px] w-[300px] bg-[url('/logo-landing.png')] bg-cover dark:bg-[url('/logo-landing-dark.PNG')]"></div>
             <form className="w-full mt-5">
               <div>
                 <Input

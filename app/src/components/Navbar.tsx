@@ -16,7 +16,6 @@ import {
 import { getAuth, signOut } from "firebase/auth";
 import { Button } from "./ui/button";
 import { Moon, Sun } from "lucide-react";
-import { ModeSetter } from "@/hooks/modeSetter";
 import { useTheme } from "@/context/themeContext";
 export function Navbar() {
   const location = useLocation();
@@ -40,19 +39,13 @@ export function Navbar() {
     navigate("/savedRecipes");
   }
 
-  const mode = ModeSetter();
-
   return showNavbar ? (
     <NavigationMenu className="border-b px-10 py-5">
       <NavigationMenuList>
         <NavigationMenuItem>
           <NavigationMenuLink asChild>
             <Link to="home">
-              {mode === "light" ? (
-                <img src="/logo-nav-bar.png" className="h-11" />
-              ) : (
-                <img src="/logo-nav-bar-dark.PNG" className="h-11" />
-              )}
+              <div className="h-[44px] w-[199px] bg-[url('/logo-nav-bar.png')] bg-cover dark:bg-[url('/logo-nav-bar-dark.PNG')]"></div>
             </Link>
           </NavigationMenuLink>
         </NavigationMenuItem>
