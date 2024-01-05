@@ -7,7 +7,6 @@ import {
 import { auth } from "../firebase";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
-import { useTheme } from "@/context/themeContext";
 
 interface SignupProps {
   handleClick: () => void;
@@ -16,7 +15,6 @@ interface SignupProps {
 
 const Signup = ({ handleClick, authenticateUser }: SignupProps) => {
   const navigate = useNavigate();
-  const { theme } = useTheme();
   const [signUpInfo, setSignUpInfo] = useState({
     email: "",
     password: "",
@@ -52,11 +50,7 @@ const Signup = ({ handleClick, authenticateUser }: SignupProps) => {
       <section>
         <div>
           <div className="flex flex-col justify-center items-center w-[300px]">
-            {theme === "dark" ? (
-              <img src="/logo-landing-dark.PNG" />
-            ) : (
-              <img src="/logo-landing.png" />
-            )}
+            <div className="h-[180px] w-[300px] bg-[url('/logo-landing.png')] bg-cover dark:bg-[url('/logo-landing-dark.PNG')]"></div>
             <form className="w-full mt-5">
               <div>
                 <label htmlFor="email-address" />

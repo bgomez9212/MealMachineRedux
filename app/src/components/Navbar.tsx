@@ -16,14 +16,12 @@ import {
 import { getAuth, signOut } from "firebase/auth";
 import { Button } from "./ui/button";
 import { Moon, Sun } from "lucide-react";
-
 import { useTheme } from "@/context/themeContext";
 export function Navbar() {
   const location = useLocation();
-  const { theme, setTheme } = useTheme();
-
+  const { setTheme } = useTheme();
+  // console.log(document.documentElement.classList.value);
   const pathsWithoutNavbar = ["/"];
-
   const showNavbar = !pathsWithoutNavbar.includes(location.pathname);
 
   const handleSignOutClick = () => {
@@ -47,11 +45,7 @@ export function Navbar() {
         <NavigationMenuItem>
           <NavigationMenuLink asChild>
             <Link to="home">
-              {theme === "dark" ? (
-                <img src="/logo-nav-bar-dark.PNG" className="h-11" />
-              ) : (
-                <img src="/logo-nav-bar.png" className="h-11" />
-              )}
+              <div className="h-[44px] w-[199px] bg-[url('/logo-nav-bar.png')] bg-cover dark:bg-[url('/logo-nav-bar-dark.PNG')]"></div>
             </Link>
           </NavigationMenuLink>
         </NavigationMenuItem>
@@ -61,9 +55,9 @@ export function Navbar() {
           <NavigationMenuLink
             asChild
             className={`text-[#526345] dark:text-[#fcfcf6] ${
-              location.pathname === "/myrecipes"
-                ? "text-[#8FAC5F] dark:text-[#8fac5f]"
-                : "hover:text-[#8FAC5F] dark:hover:text-[#8fac5f]"
+              location.pathname === "/home"
+                ? "text-[#8FAC5F] dark:text-[#8FAC5F]"
+                : "hover:text-[#8FAC5F] dark:hover:text-[#8FAC5F]"
             }`}
           >
             <Link to="myrecipes">Recipes</Link>
@@ -74,8 +68,8 @@ export function Navbar() {
             asChild
             className={`text-[#526345] dark:text-[#fcfcf6] ${
               location.pathname === "/ingredients"
-                ? "text-[#8FAC5F] dark:text-[#8fac5f]"
-                : "hover:text-[#8FAC5F] dark:hover:text-[#8fac5f]"
+                ? "text-[#8FAC5F] dark:text-[#8FAC5F]"
+                : "hover:text-[#8FAC5F] dark:hover:text-[#8FAC5F]"
             }`}
           >
             <Link to="ingredients">Ingredients</Link>
@@ -86,8 +80,8 @@ export function Navbar() {
             asChild
             className={`text-[#526345] dark:text-[#fcfcf6] ${
               location.pathname === "/groceries"
-                ? "text-[#8FAC5F] dark:text-[#8fac5f]"
-                : "hover:text-[#8FAC5F] dark:hover:text-[#8fac5f]"
+                ? "text-[#8FAC5F] dark:text-[#8FAC5F]"
+                : "hover:text-[#8FAC5F] dark:hover:text-[#8FAC5F]"
             }`}
           >
             <Link to="groceries">Groceries</Link>
@@ -95,7 +89,7 @@ export function Navbar() {
         </NavigationMenuItem>
         <NavigationMenuItem>
           <DropdownMenu>
-            <DropdownMenuTrigger className="text-[#526345] dark:text-[#fcfcf6] hover:text-[#8FAC5F]">
+            <DropdownMenuTrigger className="text-[#526345] dark:text-[#fcfcf6] hover:text-[#8FAC5F] dark:hover:text-[#8FAC5F]">
               Profile
             </DropdownMenuTrigger>
             <DropdownMenuContent>
@@ -110,7 +104,7 @@ export function Navbar() {
         </NavigationMenuItem>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" size="icon">
+            <Button variant="outline" size="icon" className="rounded-full">
               <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
               <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
               <span className="sr-only">Toggle theme</span>
