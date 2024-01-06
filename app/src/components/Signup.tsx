@@ -110,7 +110,7 @@ const Signup = ({ handleClick, authenticateUser }: SignupProps) => {
                 disabled={signUpInfo.password !== signUpInfo.confirmPassword}
                 type="submit"
                 onClick={onSubmit}
-                className="bg-black w-full mt-2 h-10 text-slate-50"
+                className="bg-black w-full mt-2 h-10 text-slate-50 dark:hover:text-slate-950"
               >
                 SIGN UP
               </Button>

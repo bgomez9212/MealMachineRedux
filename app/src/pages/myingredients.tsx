@@ -80,12 +80,14 @@ export function MyIngredients() {
           value={textAreaData}
           onChange={(e) => setTextAreaData(e.target.value)}
         />
-        <div className="flex justify-between">
-          <p className="text-sm text-muted-foreground">
+        <div className="flex flex-col md:flex-row justify-between">
+          <p className="text-sm text-muted-foreground mb-2 md:mb-0">
             You can enter multiple ingredients by submitting a comma-separated
             list.
           </p>
-          <Button onClick={handleSubmit}>SUBMIT</Button>
+          <Button className="order-last" onClick={handleSubmit}>
+            SUBMIT
+          </Button>
         </div>
       </div>
       {ingredients.length ? (

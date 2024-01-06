@@ -16,9 +16,10 @@ export function RecipeDetailPage() {
 
   return (
     <div className="px-10 py-10">
-      <header className="flex mb-10 justify-between border max-h-[300px] p-5 rounded-md">
-        <div className="mr-10 flex flex-col justify-evenly">
+      <header className="flex flex-col md:flex md:flex-row mb-10 justify-between border md:max-h-[300px] p-5 rounded-md">
+        <div className="mr-10 flex flex-col justify-evenly w-full">
           <h1 className="text-3xl mb-2">{recipe.title}</h1>
+          <img src={recipe.image} className="md:hidden mb-2" />
           <h1 className="mb-2">{`Ready in ${recipe.readyInMinutes} minutes`}</h1>
           <div className="flex">
             <h1>{`Vegetarian? `}</h1>
@@ -32,14 +33,14 @@ export function RecipeDetailPage() {
             <h1>{`Gluten Free? `}</h1>
             {renderCheckmark(recipe.glutenFree)}
           </div>
-          <h1>{`Servings: ${recipe.servings}`}</h1>
+          <h1 className="mb-2">{`Servings: ${recipe.servings}`}</h1>
           <Link
             to={recipe.sourceUrl}
             className="text-xs text-[#667b4d]"
           >{`Source: ${recipe.sourceUrl}`}</Link>
           {/* Number of ingredients missing */}
         </div>
-        <div className="max-h-[320px] flex justify-end min-w-[400px]">
+        <div className="max-h-[320px] hidden md:flex justify-end md:min-w-[400px]">
           <img
             className="rounded-lg"
             style={{ maxHeight: "100%" }}
@@ -47,9 +48,11 @@ export function RecipeDetailPage() {
           />
         </div>
       </header>
-      <div className="flex justify-between">
-        <div className="w-[47%]">
-          <h1 className="text-xl">Ingredients</h1>
+      <div className="md:flex justify-between">
+        <div className="md:w-[47%] mb-5 md:mb-0">
+          <h1 className="text-3xl mb-4 underline underline-offset-8">
+            Ingredients
+          </h1>
           <ul className="list-disc list-inside">
             {recipe.extendedIngredients
               .filter(
@@ -57,15 +60,21 @@ export function RecipeDetailPage() {
                   index === self.findIndex((o) => o.id === obj.id)
               )
               .map(({ original, id }) => (
-                <li key={id}>{original}</li>
+                <li className="mb-2" key={id}>
+                  {original}
+                </li>
               ))}
           </ul>
         </div>
-        <div className="w-[47%]">
-          <h1 className="text-xl">Directions</h1>
+        <div className="md:w-[47%] mb-10">
+          <h1 className="text-3xl mb-4 underline underline-offset-8">
+            Directions
+          </h1>
           <ol className="list-decimal list-inside">
             {recipe.analyzedInstructions[0].steps.map((step) => (
-              <li key={step.number}>{step.step}</li>
+              <li className="mb-2" key={step.number}>
+                {step.step}
+              </li>
             ))}
           </ol>
         </div>

@@ -26,7 +26,7 @@ export function RecipeCard({
 }) {
   const [hovered, setHovered] = useState(false);
   return (
-    <Card className="w-full lg:w-[30%] md:w-[47%] mt-10 flex flex-col overflow-hidden recipe-card bg-[#FCFCF6] dark:bg-[#526345]">
+    <Card className="w-full mt-10 flex flex-col overflow-hidden recipe-card bg-[#FCFCF6] dark:bg-[#526345]">
       <CardContent className="h-50 overflow-hidden flex items-center justify-center">
         <img src={image} />
       </CardContent>
