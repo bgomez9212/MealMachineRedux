@@ -63,7 +63,7 @@ export function Home() {
   }
 
   return (
-    <div className="px-10 flex flex-wrap justify-between">
+    <div className="min-[630px]:grid min-[630px]:grid-cols-2 lg:grid-cols-3 px-10 gap-x-10 mb-20">
       {recipes.map(({ title, image, id }) => (
         <RecipeCard
           key={title}
