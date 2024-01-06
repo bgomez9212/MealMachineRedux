@@ -84,7 +84,7 @@ export function MyGroceries() {
         </div>
       </div>
       {groceries.length ? (
-        <>
+        <div className="mb-10">
           {groceries?.map(
             ({
               name,
@@ -106,7 +106,7 @@ export function MyGroceries() {
               />
             )
           )}
-        </>
+        </div>
       ) : (
         <div className="text-center mt-10">
           ⬆️ Get started by adding some groceries to your grocery list ⬆️
