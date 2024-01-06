@@ -91,7 +91,7 @@ export function MyIngredients() {
         </div>
       </div>
       {ingredients.length ? (
-        <>
+        <div className="mb-10">
           {ingredients?.map(
             ({
               name,
@@ -115,7 +115,7 @@ export function MyIngredients() {
               />
             )
           )}
-        </>
+        </div>
       ) : (
         <div className="text-center mt-10">
           ⬆️ Start by adding some ingredients to your kitchen ⬆️

@@ -45,7 +45,7 @@ export function SavedRecipes() {
   return (
     <>
       {savedRecipes.length ? (
-        <div className="grid grid-cols-3 px-10 gap-x-10">
+        <div className="min-[630px]:grid min-[630px]:grid-cols-2 lg:grid-cols-3 px-10 gap-x-10 mb-20">
           {savedRecipes.map(
             (recipe: { id: number; image: string; title: string }) => (
               <SavedRecipeCard
