@@ -15,7 +15,7 @@ import {
 
 import { getAuth, signOut } from "firebase/auth";
 import { Button } from "./ui/button";
-import { Moon, Sun } from "lucide-react";
+import { Moon, Sun, User } from "lucide-react";
 import { useTheme } from "@/context/themeContext";
 import Box from "@mui/material/Box";
 import BottomNavigation from "@mui/material/BottomNavigation";
@@ -116,20 +116,36 @@ export function Navbar() {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" size="icon" className="rounded-full">
-                <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-                <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+                <Sun className="hidden md:block md:h-[1.2rem] md:w-[1.2rem] md:rotate-0 md:scale-100 md:transition-all md:dark:-rotate-90 md:dark:scale-0" />
+                <Moon className="hidden md:block md:absolute md:h-[1.2rem] md:w-[1.2rem] md:rotate-90 md:scale-0 md:transition-all md:dark:rotate-0 md:dark:scale-100" />
+                <User className="md:hidden h-[1.2rem] w-[1.2rem] rotate-0 scale-100" />
                 <span className="sr-only">Toggle theme</span>
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={() => setTheme("light")}>
+            <DropdownMenuContent align="end" className="w-[100vw] md:w-full">
+              <DropdownMenuItem
+                className="h-20 md:h-8 border-b"
+                onClick={() => setTheme("light")}
+              >
                 Light
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setTheme("dark")}>
+              <DropdownMenuItem
+                className="h-20 md:h-8 border-b"
+                onClick={() => setTheme("dark")}
+              >
                 Dark
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setTheme("system")}>
+              <DropdownMenuItem
+                className="hidden md:flex h-20 md:h-8"
+                onClick={() => setTheme("system")}
+              >
                 System
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                className="md:hidden h-20"
+                onClick={handleSignOutClick}
+              >
+                Sign Out
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
