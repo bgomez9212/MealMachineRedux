@@ -40,9 +40,7 @@ export default function App() {
 
   // Show a loading indicator while checking authentication state
   if (loading) {
-    return (
-      <div className="bg-[url('landing-page.jpg')] h-screen w-screen bg-cover flex justify-center items-center" />
-    );
+    return <div>Loading...</div>;
   }
 
   return (

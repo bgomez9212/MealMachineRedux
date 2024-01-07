@@ -65,19 +65,19 @@ export function Navbar() {
           <NavigationMenuItem>
             <NavigationMenuLink
               asChild
-              className={`hidden md:block text-[#526345] dark:text-[#fcfcf6] ${
+              className={`hidden md:block ${
                 location.pathname === "/home"
                   ? "text-[#8FAC5F] dark:text-[#8FAC5F]"
                   : "hover:text-[#8FAC5F] dark:hover:text-[#8FAC5F]"
               }`}
             >
-              <Link to="myrecipes">Recipes</Link>
+              <Link to="home">Recipes</Link>
             </NavigationMenuLink>
           </NavigationMenuItem>
           <NavigationMenuItem>
             <NavigationMenuLink
               asChild
-              className={`hidden md:block text-[#526345] dark:text-[#fcfcf6] ${
+              className={`hidden md:block ${
                 location.pathname === "/ingredients"
                   ? "text-[#8FAC5F] dark:text-[#8FAC5F]"
                   : "hover:text-[#8FAC5F] dark:hover:text-[#8FAC5F]"
@@ -89,7 +89,7 @@ export function Navbar() {
           <NavigationMenuItem>
             <NavigationMenuLink
               asChild
-              className={`hidden md:block text-[#526345] dark:text-[#fcfcf6] ${
+              className={`hidden md:block ${
                 location.pathname === "/groceries"
                   ? "text-[#8FAC5F] dark:text-[#8FAC5F]"
                   : "hover:text-[#8FAC5F] dark:hover:text-[#8FAC5F]"
@@ -100,7 +100,7 @@ export function Navbar() {
           </NavigationMenuItem>
           <NavigationMenuItem>
             <DropdownMenu>
-              <DropdownMenuTrigger className="hidden md:block text-[#526345] dark:text-[#fcfcf6] hover:text-[#8FAC5F] dark:hover:text-[#8FAC5F]">
+              <DropdownMenuTrigger className="hidden md:block dark:text-[#fcfcf6] hover:text-[#8FAC5F] dark:hover:text-[#8FAC5F]">
                 Profile
               </DropdownMenuTrigger>
               <DropdownMenuContent>
