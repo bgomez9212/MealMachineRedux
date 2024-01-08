@@ -51,7 +51,7 @@ export function Navbar() {
 
   return showNavbar ? (
     <>
-      <NavigationMenu className="border-b px-10 py-5">
+      <NavigationMenu className="border-b px-10 py-5 sticky top-0">
         <NavigationMenuList>
           <NavigationMenuItem>
             <NavigationMenuLink asChild>
