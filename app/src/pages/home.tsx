@@ -27,6 +27,7 @@ export function Home() {
           return res.data.map((recipe: { id: number }) => recipe.id);
         }),
   });
+  console.log(savedRecipes);
 
   function handleSaveClick(recipe_id: number, recipe_title: string) {
     const postUrl = `http://127.0.0.1:8888/api/savedRecipes?user_id=${user}&recipe_id=${recipe_id}`;
