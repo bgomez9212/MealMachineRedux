@@ -159,4 +159,17 @@ module.exports = {
     );
     return result.data;
   },
+  getRecipeDetails: async (recipe_id) => {
+    const result = await axios.get(
+      `https://api.spoonacular.com/recipes/${recipe_id}/information`,
+      {
+        headers: {
+          "x-api-key": process.env.API_KEY,
+        },
+      }
+    );
+    return result.data;
+    // console.log(recipe_id);
+    // return "connected";
+  },
 };

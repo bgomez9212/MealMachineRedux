@@ -48,4 +48,8 @@ module.exports = {
     const result = await model.getRecipes(req.query.user_id);
     res.send(result);
   },
+  getRecipeDetails: async (req, res) => {
+    const result = await model.getRecipeDetails(req.query.recipe_id);
+    res.send(result);
+  },
 };

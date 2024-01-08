@@ -17,4 +17,5 @@ router.post("/groceries", controller.postGroceries);
 router.delete("/groceries", controller.deleteGroceries);
 
 // router.get("/recipes", controller.getRecipes);
+router.get("/recipesDetails", controller.getRecipeDetails);
 module.exports = router;
