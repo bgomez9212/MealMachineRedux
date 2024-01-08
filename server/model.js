@@ -1,3 +1,5 @@
+const dotenv = require("dotenv").config();
+const axios = require("axios");
 const pool = require("../db/index.js");
 const currentDate = new Date().toLocaleDateString();
 module.exports = {
@@ -136,5 +138,25 @@ module.exports = {
   deleteGroceries: async (gro_user_id) => {
     const query = "DELETE FROM groceries WHERE gro_user_id = $1";
     await pool.query(query, [gro_user_id]);
+  },
+  getRecipes: async (user_id) => {
+    const ingredients = await pool.query(
+      "SELECT name FROM food INNER JOIN ingredients ON food.id = ingredients.food_id WHERE ingredients.user_id = $1",
+      [user_id]
+    );
+    const ingredientsList = ingredients.rows
+      .map(({ name }) => {
+        return name.includes(" ") ? name.split(" ").join("") : name;
+      })
+      .join(",+");
+    const result = await axios.get(
+      `https://api.spoonacular.com/recipes/findByIngredients?ingredients=${ingredientsList}&number=9`,
+      {
+        headers: {
+          "x-api-key": process.env.API_KEY,
+        },
+      }
+    );
+    return result.data;
   },
 };

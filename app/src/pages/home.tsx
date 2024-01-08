@@ -10,7 +10,7 @@ import { useToast } from "@/components/ui/use-toast";
 export function Home() {
   const { toast } = useToast();
   const user = useContext(UserContext);
-  const recipes = data.recipes;
+  const recipes = data;
   const queryClient = useQueryClient();
   const navigate = useNavigate();
 
