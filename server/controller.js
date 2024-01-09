@@ -3,17 +3,12 @@ const recipes = require("./randomRecipes.json");
 
 module.exports = {
   getSavedRecipes: async (req, res) => {
-    const { rows } = await model.getSavedRecipes(req.query.user_id);
-    // res.send(result.rows).status(200);
-    const response = recipes.filter((recipe) => {
-      return rows.some((f) => {
-        return f.recipe_id === recipe.id;
-      });
-    });
-    res.send(response).status(200);
+    const result = await model.getSavedRecipes(req.query.user_id);
+    res.send(result).status(200);
   },
   postSavedRecipe: async (req, res) => {
-    await model.postSavedRecipe(req.query.user_id, req.query.recipe_id);
+    const { user_id, recipe_id, image, title } = req.body;
+    await model.postSavedRecipe(user_id, recipe_id, image, title);
     res.sendStatus(201);
   },
   deleteSavedRecipe: async (req, res) => {

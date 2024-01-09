@@ -6,13 +6,13 @@ module.exports = {
   // get saved recipes for user
   getSavedRecipes: async (user_id) => {
     const query = `SELECT * FROM savedRecipes WHERE user_id = $1`;
-    const result = await pool.query(query, [user_id]);
+    const { rows: result } = await pool.query(query, [user_id]);
     return result;
   },
-  postSavedRecipe: async (user_id, recipe_id) => {
+  postSavedRecipe: async (user_id, recipe_id, imageUrl, title) => {
     const query =
-      "INSERT INTO savedRecipes(user_id, recipe_id) VALUES ($1, $2)";
-    await pool.query(query, [user_id, recipe_id]);
+      "INSERT INTO savedRecipes(user_id, recipe_id, image, title) VALUES ($1, $2, $3, $4)";
+    await pool.query(query, [user_id, recipe_id, imageUrl, title]);
   },
   deleteSavedRecipe: async (user_id, recipe_id) => {
     const query =
@@ -169,7 +169,5 @@ module.exports = {
       }
     );
     return result.data;
-    // console.log(recipe_id);
-    // return "connected";
   },
 };
