@@ -22,7 +22,7 @@ export function SavedRecipeCard({
   return (
     <Card className="w-full mt-10 flex flex-col overflow-hidden recipe-card bg-[#FCFCF6] dark:bg-[#526345]">
       <CardContent className="h-50 overflow-hidden flex items-center justify-center">
-        <img src={image} />
+        <img className="w-full" src={image} />
       </CardContent>
       <CardHeader>
         <CardTitle>{title}</CardTitle>

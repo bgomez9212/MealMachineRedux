@@ -7,8 +7,8 @@ const db = require("../db/index");
 const router = require("./router.js");
 
 app.use(cors());
-app.use("/api", router);
 app.use(express.json());
+app.use("/api", router);
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);

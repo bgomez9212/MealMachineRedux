@@ -1,19 +1,14 @@
 const model = require("./model.js");
-const { recipes } = require("./randomRecipes.json");
+const recipes = require("./randomRecipes.json");
 
 module.exports = {
   getSavedRecipes: async (req, res) => {
-    const { rows } = await model.getSavedRecipes(req.query.user_id);
-    // res.send(result.rows).status(200);
-    const response = recipes.filter((recipe) => {
-      return rows.some((f) => {
-        return f.recipe_id === recipe.id;
-      });
-    });
-    res.send(response).status(200);
+    const result = await model.getSavedRecipes(req.query.user_id);
+    res.send(result).status(200);
   },
   postSavedRecipe: async (req, res) => {
-    await model.postSavedRecipe(req.query.user_id, req.query.recipe_id);
+    const { user_id, recipe_id, image, title } = req.body;
+    await model.postSavedRecipe(user_id, recipe_id, image, title);
     res.sendStatus(201);
   },
   deleteSavedRecipe: async (req, res) => {
@@ -25,10 +20,7 @@ module.exports = {
     res.send(result.rows).status(200);
   },
   postIngredients: async (req, res) => {
-    const result = await model.postIngredients(
-      req.query.user_id,
-      req.query.food_name
-    );
+    await model.postIngredients(req.query.user_id, req.query.food_name);
     res.sendStatus(201);
   },
   deleteIngredients: async (req, res) => {
@@ -44,7 +36,15 @@ module.exports = {
     res.sendStatus(201);
   },
   deleteGroceries: async (req, res) => {
-    const result = await model.deleteGroceries(req.query.gro_user_id);
+    await model.deleteGroceries(req.query.gro_user_id);
     res.sendStatus(204);
+  },
+  getRecipes: async (req, res) => {
+    const result = await model.getRecipes(req.query.user_id);
+    res.send(result);
+  },
+  getRecipeDetails: async (req, res) => {
+    const result = await model.getRecipeDetails(req.query.recipe_id);
+    res.send(result);
   },
 };

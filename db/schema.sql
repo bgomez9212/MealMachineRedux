@@ -24,5 +24,7 @@ CREATE TABLE IF NOT EXISTS groceries (
 CREATE TABLE IF NOT EXISTS savedRecipes (
   id SERIAL PRIMARY KEY,
   user_id VARCHAR(128),
-  recipe_id INT
+  recipe_id INT,
+  image VARCHAR(128),
+  title VARCHAR(128)
 );

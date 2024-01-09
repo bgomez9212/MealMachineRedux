@@ -1,16 +1,18 @@
+const dotenv = require("dotenv").config();
+const axios = require("axios");
 const pool = require("../db/index.js");
 const currentDate = new Date().toLocaleDateString();
 module.exports = {
   // get saved recipes for user
   getSavedRecipes: async (user_id) => {
     const query = `SELECT * FROM savedRecipes WHERE user_id = $1`;
-    const result = await pool.query(query, [user_id]);
+    const { rows: result } = await pool.query(query, [user_id]);
     return result;
   },
-  postSavedRecipe: async (user_id, recipe_id) => {
+  postSavedRecipe: async (user_id, recipe_id, imageUrl, title) => {
     const query =
-      "INSERT INTO savedRecipes(user_id, recipe_id) VALUES ($1, $2)";
-    await pool.query(query, [user_id, recipe_id]);
+      "INSERT INTO savedRecipes(user_id, recipe_id, image, title) VALUES ($1, $2, $3, $4)";
+    await pool.query(query, [user_id, recipe_id, imageUrl, title]);
   },
   deleteSavedRecipe: async (user_id, recipe_id) => {
     const query =
@@ -136,5 +138,36 @@ module.exports = {
   deleteGroceries: async (gro_user_id) => {
     const query = "DELETE FROM groceries WHERE gro_user_id = $1";
     await pool.query(query, [gro_user_id]);
+  },
+  getRecipes: async (user_id) => {
+    const ingredients = await pool.query(
+      "SELECT name FROM food INNER JOIN ingredients ON food.id = ingredients.food_id WHERE ingredients.user_id = $1",
+      [user_id]
+    );
+    const ingredientsList = ingredients.rows
+      .map(({ name }) => {
+        return name.includes(" ") ? name.split(" ").join("") : name;
+      })
+      .join(",+");
+    const result = await axios.get(
+      `https://api.spoonacular.com/recipes/findByIngredients?ingredients=${ingredientsList}&number=9`,
+      {
+        headers: {
+          "x-api-key": process.env.API_KEY,
+        },
+      }
+    );
+    return result.data;
+  },
+  getRecipeDetails: async (recipe_id) => {
+    const result = await axios.get(
+      `https://api.spoonacular.com/recipes/${recipe_id}/information`,
+      {
+        headers: {
+          "x-api-key": process.env.API_KEY,
+        },
+      }
+    );
+    return result.data;
   },
 };
