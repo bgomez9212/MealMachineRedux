@@ -49,8 +49,6 @@ export function RecipeDetailPage() {
         }),
   });
 
-  console.log(recipe);
-
   function renderCheckmark(condition: boolean | undefined) {
     if (condition === undefined) {
       return "";

@@ -27,7 +27,7 @@ export function Home() {
 
   const {
     data: recipes,
-    // isLoading,
+    isLoading: isLoadingRecipes,
     // error,
   } = useQuery<HomeRecipes[]>({
     queryKey: ["recipes"],
@@ -41,7 +41,7 @@ export function Home() {
 
   const {
     data: savedRecipes,
-    // isLoading,
+    isLoading: isLoadingSavedRecipes,
     // error,
   } = useQuery({
     queryKey: ["savedRecipes"],
@@ -52,7 +52,6 @@ export function Home() {
           return res.data.map((recipe: SavedRecipe) => recipe.recipe_id);
         }),
   });
-  console.log(savedRecipes);
 
   function handleSaveClick(
     recipe_id: number,
@@ -95,6 +94,10 @@ export function Home() {
           description: `${recipe_title} removed from your saved recipes!`,
         });
       });
+  }
+
+  if (isLoadingRecipes || isLoadingSavedRecipes) {
+    return <div>isLoading...</div>;
   }
 
   return (
