@@ -49,9 +49,7 @@ export function Home() {
       axios
         .get(`http://127.0.0.1:8888/api/savedRecipes?user_id=${user}`)
         .then((res) => {
-          return res.data.map(
-            ({ recipe }: { recipe: SavedRecipe }) => recipe.recipe_id
-          );
+          return res.data.map((recipe: SavedRecipe) => recipe.recipe_id);
         }),
   });
   console.log(savedRecipes);
