@@ -1,5 +1,4 @@
 const model = require("./model.js");
-const recipes = require("./randomRecipes.json");
 
 module.exports = {
   getSavedRecipes: async (req, res) => {
