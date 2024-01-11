@@ -1,15 +1,21 @@
 import { RecipeCard } from "@/components/RecipeCard";
 import axios from "axios";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { UserContext } from "@/context/context";
 import { useNavigate } from "react-router-dom";
 import { useQuery, useQueryClient } from "react-query";
 import { useToast } from "@/components/ui/use-toast";
 
+type MissingIngredients = {
+  name: string;
+};
+
 type HomeRecipes = {
   id: number;
   title: string;
   image: string;
+  missedIngredientCount: number;
+  missedIngredients: MissingIngredients[];
 };
 
 type SavedRecipe = {
@@ -24,6 +30,15 @@ export function Home() {
   const user = useContext(UserContext);
   const queryClient = useQueryClient();
   const navigate = useNavigate();
+  const [modalOpen, setModalOpen] = useState(false);
+
+  function handleModalOpen() {
+    setModalOpen(true);
+  }
+
+  function handleModalClose() {
+    setModalOpen(false);
+  }
 
   const {
     data: recipes,
@@ -102,7 +117,7 @@ export function Home() {
 
   return (
     <div className="min-[630px]:grid min-[630px]:grid-cols-2 lg:grid-cols-3 px-10 gap-x-10 mb-20">
-      {recipes?.map(({ title, image, id }) => (
+      {recipes?.map(({ title, image, id, missedIngredientCount }) => (
         <RecipeCard
           key={title}
           title={title}
@@ -111,6 +126,10 @@ export function Home() {
           handleReadRecipe={() => handleReadRecipe(id)}
           handleDeleteSavedRecipe={() => handleDeleteSavedRecipe(id, title)}
           isSaved={savedRecipes?.includes(id)}
+          missedIngredientCount={missedIngredientCount}
+          handleModalOpen={handleModalOpen}
+          handleModalClose={handleModalClose}
+          modalOpen={modalOpen}
         />
       ))}
     </div>

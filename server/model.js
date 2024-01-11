@@ -150,7 +150,7 @@ module.exports = {
       })
       .join(",+");
     const result = await axios.get(
-      `https://api.spoonacular.com/recipes/findByIngredients?ingredients=${ingredientsList}&number=9`,
+      `https://api.spoonacular.com/recipes/findByIngredients?ingredients=${ingredientsList}&number=9&ranking=2`,
       {
         headers: {
           "x-api-key": process.env.API_KEY,
