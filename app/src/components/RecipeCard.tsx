@@ -26,17 +26,6 @@ type Groceries = {
   gro_user_id: string;
 };
 
-const style = {
-  position: "absolute" as const,
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: "75vw",
-  bgcolor: "background.paper",
-  boxShadow: 24,
-  p: 4,
-};
-
 export function RecipeCard({
   image,
   title,
@@ -72,43 +61,68 @@ export function RecipeCard({
       .then(() => queryClient.invalidateQueries({ queryKey: ["groceries"] }));
   }
 
+  // const style = {
+  //   position: "absolute" as const,
+  //   top: "50%",
+  //   left: "50%",
+  //   transform: "translate(-50%, -50%)",
+  //   width: "75vw",
+  //   bgcolor: "background.paper",
+  //   boxShadow: 24,
+  //   p: 4,
+  // };
+
   return (
     <>
       <Modal
         open={!!selectedRecipe}
         onClose={() => setSelectedRecipe(null)}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
+        className="flex justify-center items-center"
       >
-        <Box sx={style}>
-          <p className="dark:text-black text-xl">
-            Ingredients You Are Missing:
-          </p>
-          {selectedRecipe?.map((ingredient: MissingIngredients) => (
-            <div className="flex items-center justify-between border-b last:border-b-0 py-2">
-              <p key={ingredient.name} className="dark:text-black">
-                {ingredient.name
-                  .split(" ")
-                  .map((word) => word[0].toUpperCase() + word.substring(1))
-                  .join(" ")}
-              </p>
-              {groceries
-                .map((grocery) => grocery.name)
-                .indexOf(ingredient.name) > -1 ? (
-                <Button className="disabled bg-green-500">
-                  In Your Groceries
-                </Button>
-              ) : (
-                <Button
-                  onClick={() => handleSaveGrocery(ingredient.name)}
-                  key={ingredient.id}
-                  className="dark:bg-black dark:text-white hover:bg-black/90"
-                >
-                  Add "{ingredient.name}" To Groceries
-                </Button>
-              )}
-            </div>
-          ))}
+        <Box
+          className={
+            "w-3/4 bg-white dark:bg-black shadow-lg border border-white p-10 flex flex-col items-center max-h-[50vh]"
+          }
+        >
+          <p className="text-2xl mb-4">Missing Ingredients:</p>
+          <div className="overflow-auto w-full">
+            {selectedRecipe?.map((ingredient: MissingIngredients) => (
+              <div className="flex flex-col sm:flex-row items-center justify-between py-5 border-b w-full">
+                <p className="hidden sm:block" key={ingredient.name}>
+                  {ingredient.name
+                    .split(" ")
+                    .map((word) => word[0].toUpperCase() + word.substring(1))
+                    .join(" ")}
+                </p>
+                {groceries
+                  .map((grocery) => grocery.name)
+                  .indexOf(ingredient.name) > -1 ? (
+                  <Button className="disabled bg-[#8fac5f]">
+                    In Your Groceries
+                  </Button>
+                ) : (
+                  <Button
+                    className="whitespace-normal h-auto"
+                    onClick={() => handleSaveGrocery(ingredient.name)}
+                    key={ingredient.id}
+                  >
+                    Add "
+                    {ingredient.name
+                      .split(" ")
+                      .map((word) => word[0].toUpperCase() + word.substring(1))
+                      .join(" ")}
+                    " To Groceries
+                  </Button>
+                )}
+              </div>
+            ))}
+          </div>
+          <Button
+            className="w-full md:w-1/2 mt-10"
+            onClick={() => setSelectedRecipe(null)}
+          >
+            Close
+          </Button>
         </Box>
       </Modal>
       <Card className="w-full mt-10 flex flex-col overflow-hidden recipe-card bg-[#FCFCF6] dark:bg-[#526345]">
