@@ -12,7 +12,7 @@ import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import axios from "axios";
 import { UserContext } from "@/context/context";
-import { useQuery, useQueryClient } from "react-query";
+import { useQueryClient } from "react-query";
 
 type MissingIngredients = {
   name: string;
@@ -120,7 +120,7 @@ export function RecipeCard({
         </CardHeader>
         <CardDescription
           onClick={() => setSelectedRecipe(missedIngredients)}
-          className="flex flex-grow flex-col justify-end mb-5 mx-6 cursor-pointer"
+          className="flex flex-grow flex-col justify-end mb-5 mx-6 cursor-pointer text-black dark:text-white"
         >
           {missedIngredientCount >= 1
             ? `Missing ${missedIngredientCount} Ingredient${

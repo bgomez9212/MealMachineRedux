@@ -11,7 +11,7 @@ import { LandingPage } from "./pages/LandingPage";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import { UserContext } from "./context/context";
 import { ThemeProvider } from "./context/themeContext";
-import { QueryClientProvider, QueryClient, useQuery } from "react-query";
+import { useQuery } from "react-query";
 import { RecipeDetailPage } from "./pages/RecipeDetailsPage";
 import axios from "axios";
 
@@ -34,6 +34,7 @@ export default function App() {
       } else {
         // User is signed out
         setUser(null);
+        refetch();
       }
 
       // Set loading to false once the authentication state is determined
@@ -46,8 +47,9 @@ export default function App() {
 
   const {
     data: groceries,
-    // isLoading,
+    isLoading,
     // error,
+    refetch,
   } = useQuery<Groceries[]>({
     queryKey: ["groceries"],
     queryFn: async () =>
@@ -56,11 +58,17 @@ export default function App() {
         .then((res) => {
           return res.data;
         }),
+    enabled: !!user,
   });
+
   console.log(groceries);
 
   // Show a loading indicator while checking authentication state
   if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (isLoading) {
     return <div>Loading...</div>;
   }
 
