@@ -26,7 +26,14 @@ type SavedRecipe = {
   image: string;
 };
 
-export function Home() {
+type Groceries = {
+  id: number;
+  name: string;
+  date_added: string;
+  gro_user_id: string;
+};
+
+export function Home({ groceries }: { groceries: Groceries[] }) {
   const { toast } = useToast();
   const user = useContext(UserContext);
   const queryClient = useQueryClient();
@@ -121,6 +128,7 @@ export function Home() {
             isSaved={savedRecipes?.includes(id)}
             missedIngredientCount={missedIngredientCount}
             missedIngredients={missedIngredients}
+            groceries={groceries}
           />
         )
       )}

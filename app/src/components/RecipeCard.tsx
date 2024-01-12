@@ -19,6 +19,13 @@ type MissingIngredients = {
   id: number;
 };
 
+type Groceries = {
+  id: number;
+  name: string;
+  date_added: string;
+  gro_user_id: string;
+};
+
 const style = {
   position: "absolute" as const,
   top: "50%",
@@ -39,6 +46,7 @@ export function RecipeCard({
   handleDeleteSavedRecipe,
   isSaved,
   missedIngredients,
+  groceries,
 }: {
   image: string;
   title: string;
@@ -48,26 +56,13 @@ export function RecipeCard({
   isSaved: boolean;
   missedIngredientCount: number;
   missedIngredients: MissingIngredients[];
+  groceries: Groceries[];
 }) {
   const [selectedRecipe, setSelectedRecipe] = useState<
     MissingIngredients[] | null
   >(null);
   const user = useContext(UserContext);
   const queryClient = useQueryClient();
-
-  const {
-    data: groceries,
-    // isLoading,
-    // error,
-  } = useQuery({
-    queryKey: ["groceries"],
-    queryFn: async () =>
-      axios
-        .get(`http://127.0.0.1:8888/api/groceries?user_id=${user}`)
-        .then((res) => {
-          return res.data.map((grocery: { name: string }) => grocery.name);
-        }),
-  });
 
   function handleSaveGrocery(grocery: string) {
     axios
@@ -97,7 +92,9 @@ export function RecipeCard({
                   .map((word) => word[0].toUpperCase() + word.substring(1))
                   .join(" ")}
               </p>
-              {groceries.indexOf(ingredient.name) > -1 ? (
+              {groceries
+                .map((grocery) => grocery.name)
+                .indexOf(ingredient.name) > -1 ? (
                 <Button className="disabled bg-green-500">
                   In Your Groceries
                 </Button>
