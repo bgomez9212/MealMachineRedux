@@ -1,6 +1,6 @@
 import { RecipeCard } from "@/components/RecipeCard";
 import axios from "axios";
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import { UserContext } from "@/context/context";
 import { useNavigate } from "react-router-dom";
 import { useQuery, useQueryClient } from "react-query";
