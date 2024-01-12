@@ -8,6 +8,7 @@ import { useToast } from "@/components/ui/use-toast";
 
 type MissingIngredients = {
   name: string;
+  id: number;
 };
 
 type HomeRecipes = {
@@ -30,15 +31,6 @@ export function Home() {
   const user = useContext(UserContext);
   const queryClient = useQueryClient();
   const navigate = useNavigate();
-  const [modalOpen, setModalOpen] = useState(false);
-
-  function handleModalOpen() {
-    setModalOpen(true);
-  }
-
-  function handleModalClose() {
-    setModalOpen(false);
-  }
 
   const {
     data: recipes,
@@ -117,21 +109,21 @@ export function Home() {
 
   return (
     <div className="min-[630px]:grid min-[630px]:grid-cols-2 lg:grid-cols-3 px-10 gap-x-10 mb-20">
-      {recipes?.map(({ title, image, id, missedIngredientCount }) => (
-        <RecipeCard
-          key={title}
-          title={title}
-          image={image}
-          handleSaveClick={() => handleSaveClick(id, title, image)}
-          handleReadRecipe={() => handleReadRecipe(id)}
-          handleDeleteSavedRecipe={() => handleDeleteSavedRecipe(id, title)}
-          isSaved={savedRecipes?.includes(id)}
-          missedIngredientCount={missedIngredientCount}
-          handleModalOpen={handleModalOpen}
-          handleModalClose={handleModalClose}
-          modalOpen={modalOpen}
-        />
-      ))}
+      {recipes?.map(
+        ({ title, image, id, missedIngredientCount, missedIngredients }) => (
+          <RecipeCard
+            key={title}
+            title={title}
+            image={image}
+            handleSaveClick={() => handleSaveClick(id, title, image)}
+            handleReadRecipe={() => handleReadRecipe(id)}
+            handleDeleteSavedRecipe={() => handleDeleteSavedRecipe(id, title)}
+            isSaved={savedRecipes?.includes(id)}
+            missedIngredientCount={missedIngredientCount}
+            missedIngredients={missedIngredients}
+          />
+        )
+      )}
     </div>
   );
 }
