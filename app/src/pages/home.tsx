@@ -6,10 +6,17 @@ import { useNavigate } from "react-router-dom";
 import { useQuery, useQueryClient } from "react-query";
 import { useToast } from "@/components/ui/use-toast";
 
+type MissingIngredients = {
+  name: string;
+  id: number;
+};
+
 type HomeRecipes = {
   id: number;
   title: string;
   image: string;
+  missedIngredientCount: number;
+  missedIngredients: MissingIngredients[];
 };
 
 type SavedRecipe = {
@@ -19,7 +26,14 @@ type SavedRecipe = {
   image: string;
 };
 
-export function Home() {
+type Groceries = {
+  id: number;
+  name: string;
+  date_added: string;
+  gro_user_id: string;
+};
+
+export function Home({ groceries }: { groceries: Groceries[] }) {
   const { toast } = useToast();
   const user = useContext(UserContext);
   const queryClient = useQueryClient();
@@ -102,17 +116,22 @@ export function Home() {
 
   return (
     <div className="min-[630px]:grid min-[630px]:grid-cols-2 lg:grid-cols-3 px-10 gap-x-10 mb-20">
-      {recipes?.map(({ title, image, id }) => (
-        <RecipeCard
-          key={title}
-          title={title}
-          image={image}
-          handleSaveClick={() => handleSaveClick(id, title, image)}
-          handleReadRecipe={() => handleReadRecipe(id)}
-          handleDeleteSavedRecipe={() => handleDeleteSavedRecipe(id, title)}
-          isSaved={savedRecipes?.includes(id)}
-        />
-      ))}
+      {recipes?.map(
+        ({ title, image, id, missedIngredientCount, missedIngredients }) => (
+          <RecipeCard
+            key={title}
+            title={title}
+            image={image}
+            handleSaveClick={() => handleSaveClick(id, title, image)}
+            handleReadRecipe={() => handleReadRecipe(id)}
+            handleDeleteSavedRecipe={() => handleDeleteSavedRecipe(id, title)}
+            isSaved={savedRecipes?.includes(id)}
+            missedIngredientCount={missedIngredientCount}
+            missedIngredients={missedIngredients}
+            groceries={groceries}
+          />
+        )
+      )}
     </div>
   );
 }

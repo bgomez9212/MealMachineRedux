@@ -1,28 +1,22 @@
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { GroceryCard } from "@/components/GroceryCard";
-import { useQuery, useQueryClient } from "react-query";
+import { useQueryClient } from "react-query";
 import { useContext, useState } from "react";
 import { UserContext } from "@/context/context";
 import axios from "axios";
 import { Button } from "@/components/ui/button";
 
-export function MyGroceries() {
+type Groceries = {
+  id: number;
+  name: string;
+  date_added: string;
+  gro_user_id: string;
+};
+
+export function MyGroceries({ groceries }: { groceries: Groceries[] }) {
   const queryClient = useQueryClient();
   const user = useContext(UserContext);
-  const {
-    data: groceries,
-    isLoading,
-    // error,
-  } = useQuery({
-    queryKey: ["groceries"],
-    queryFn: async () =>
-      axios
-        .get(`http://127.0.0.1:8888/api/groceries?user_id=${user}`)
-        .then((res) => {
-          return res.data;
-        }),
-  });
 
   const [groceryInput, setGroceryInput] = useState("");
 
@@ -57,10 +51,6 @@ export function MyGroceries() {
       )
       .then(() => handleRemoveGrocery(gro_user_id))
       .then(() => queryClient.invalidateQueries({ queryKey: ["groceries"] }));
-  }
-
-  if (isLoading) {
-    return <div>Loading...</div>;
   }
 
   return (
