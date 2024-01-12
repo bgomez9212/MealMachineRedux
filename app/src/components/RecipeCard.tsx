@@ -12,6 +12,7 @@ import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import axios from "axios";
 import { UserContext } from "@/context/context";
+import { useQuery, useQueryClient } from "react-query";
 
 type MissingIngredients = {
   name: string;
@@ -52,11 +53,28 @@ export function RecipeCard({
     MissingIngredients[] | null
   >(null);
   const user = useContext(UserContext);
+  const queryClient = useQueryClient();
+
+  const {
+    data: groceries,
+    // isLoading,
+    // error,
+  } = useQuery({
+    queryKey: ["groceries"],
+    queryFn: async () =>
+      axios
+        .get(`http://127.0.0.1:8888/api/groceries?user_id=${user}`)
+        .then((res) => {
+          return res.data.map((grocery: { name: string }) => grocery.name);
+        }),
+  });
 
   function handleSaveGrocery(grocery: string) {
-    axios.post(
-      `http://127.0.0.1:8888/api/groceries?user_id=${user}&food_name=${grocery}`
-    );
+    axios
+      .post(
+        `http://127.0.0.1:8888/api/groceries?user_id=${user}&food_name=${grocery}`
+      )
+      .then(() => queryClient.invalidateQueries({ queryKey: ["groceries"] }));
   }
 
   return (
@@ -79,13 +97,19 @@ export function RecipeCard({
                   .map((word) => word[0].toUpperCase() + word.substring(1))
                   .join(" ")}
               </p>
-              <Button
-                onClick={() => handleSaveGrocery(ingredient.name)}
-                key={ingredient.id}
-                className="dark:bg-black dark:text-white hover:bg-green-700 dark:hover:bg-green-700"
-              >
-                Add "{ingredient.name}" To Groceries
-              </Button>
+              {groceries.indexOf(ingredient.name) > -1 ? (
+                <Button className="disabled bg-green-500">
+                  In Your Groceries
+                </Button>
+              ) : (
+                <Button
+                  onClick={() => handleSaveGrocery(ingredient.name)}
+                  key={ingredient.id}
+                  className="dark:bg-black dark:text-white hover:bg-black/90"
+                >
+                  Add "{ingredient.name}" To Groceries
+                </Button>
+              )}
             </div>
           ))}
         </Box>
