@@ -48,7 +48,6 @@ export function RecipeCard({
   missedIngredientCount: number;
   missedIngredients: MissingIngredients[];
 }) {
-  const [hovered, setHovered] = useState(false);
   const [selectedRecipe, setSelectedRecipe] = useState<
     MissingIngredients[] | null
   >(null);
@@ -116,11 +115,7 @@ export function RecipeCard({
             <Button
               variant={"saved"}
               onClick={handleDeleteSavedRecipe}
-              onMouseEnter={() => setHovered(true)}
-              onMouseLeave={() => setHovered(false)}
-            >
-              {hovered ? "Unsave" : "Saved"}
-            </Button>
+            ></Button>
           ) : (
             <Button onClick={handleSaveClick}>Save Recipe</Button>
           )}
