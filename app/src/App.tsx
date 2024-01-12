@@ -43,7 +43,7 @@ export default function App() {
 
     // Clean up the subscription when the component unmounts
     return () => unsubscribe();
-  }, []); // Empty dependency array ensures the effect runs only once
+  }); // Empty dependency array ensures the effect runs only once
 
   const {
     data: groceries,
