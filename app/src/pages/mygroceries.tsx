@@ -33,9 +33,10 @@ export function MyGroceries({ groceries }: { groceries: Groceries[] }) {
 
     groceryArray.forEach((grocery) => {
       axios
-        .post(
-          `http://127.0.0.1:8888/api/groceries?user_id=${user}&food_name=${grocery}`
-        )
+        .post("http://127.0.0.1:8888/api/groceries", {
+          user_id: user,
+          food_name: grocery,
+        })
         .then(() => queryClient.invalidateQueries({ queryKey: ["groceries"] }))
         .then(() => setGroceryInput(""));
     });
@@ -46,9 +47,10 @@ export function MyGroceries({ groceries }: { groceries: Groceries[] }) {
     food_name: string
   ) {
     axios
-      .post(
-        `http://127.0.0.1:8888/api/ingredients?user_id=${user}&food_name=${food_name}`
-      )
+      .post("http://127.0.0.1:8888/api/ingredients", {
+        user_id: user,
+        food_name: food_name,
+      })
       .then(() => handleRemoveGrocery(gro_user_id))
       .then(() => queryClient.invalidateQueries({ queryKey: ["groceries"] }));
   }

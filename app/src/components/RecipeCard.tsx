@@ -55,22 +55,12 @@ export function RecipeCard({
 
   function handleSaveGrocery(grocery: string) {
     axios
-      .post(
-        `http://127.0.0.1:8888/api/groceries?user_id=${user}&food_name=${grocery}`
-      )
+      .post("http://127.0.0.1:8888/api/groceries", {
+        user_id: user,
+        food_name: grocery,
+      })
       .then(() => queryClient.invalidateQueries({ queryKey: ["groceries"] }));
   }
-
-  // const style = {
-  //   position: "absolute" as const,
-  //   top: "50%",
-  //   left: "50%",
-  //   transform: "translate(-50%, -50%)",
-  //   width: "75vw",
-  //   bgcolor: "background.paper",
-  //   boxShadow: 24,
-  //   p: 4,
-  // };
 
   return (
     <>

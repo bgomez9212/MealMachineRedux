@@ -30,9 +30,11 @@ export function MyIngredients() {
   function handleSubmit() {
     const ingredientArray = textAreaData.split(",").map((word) => word.trim());
     ingredientArray.forEach((ingredient) => {
-      const postUrl = `http://127.0.0.1:8888/api/ingredients?user_id=${user}&food_name=${ingredient}`;
       axios
-        .post(postUrl)
+        .post("http://127.0.0.1:8888/api/ingredients", {
+          user_id: user,
+          food_name: ingredient,
+        })
         .then(() =>
           queryClient.invalidateQueries({ queryKey: ["ingredients"] })
         )
@@ -55,9 +57,10 @@ export function MyIngredients() {
     food_name: string
   ) {
     axios
-      .post(
-        `http://127.0.0.1:8888/api/groceries?user_id=${user}&food_name=${food_name}`
-      )
+      .post("http://127.0.0.1:8888/api/groceries", {
+        user_id: user,
+        food_name: food_name,
+      })
       .then(() => handleRemoveIngredient(ing_user_id))
       .then(() => queryClient.invalidateQueries({ queryKey: ["ingredients"] }));
   }
