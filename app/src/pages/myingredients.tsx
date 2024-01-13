@@ -18,7 +18,11 @@ export function MyIngredients() {
     queryKey: ["ingredients"],
     queryFn: async () =>
       axios
-        .get(`http://127.0.0.1:8888/api/ingredients?user_id=${user}`)
+        .get(import.meta.env.VITE_server_ingredients, {
+          params: {
+            user_id: user,
+          },
+        })
         .then((res) => {
           return res.data;
         }),
@@ -26,12 +30,12 @@ export function MyIngredients() {
 
   // user input section
   const [textAreaData, setTextAreaData] = useState("");
-
+  // import.meta.env.VITE_apiKey
   function handleSubmit() {
     const ingredientArray = textAreaData.split(",").map((word) => word.trim());
     ingredientArray.forEach((ingredient) => {
       axios
-        .post("http://127.0.0.1:8888/api/ingredients", {
+        .post(import.meta.env.VITE_server_ingredients, {
           user_id: user,
           food_name: ingredient,
         })
@@ -45,9 +49,11 @@ export function MyIngredients() {
 
   function handleRemoveIngredient(ing_user_id: string) {
     axios
-      .delete(
-        `http://127.0.0.1:8888/api/ingredients?ing_user_id=${ing_user_id}`
-      )
+      .delete(import.meta.env.VITE_server_ingredients, {
+        data: {
+          ing_user_id: ing_user_id,
+        },
+      })
       .then(() => queryClient.invalidateQueries({ queryKey: ["ingredients"] }))
       .catch((err) => console.log(err));
   }
@@ -57,7 +63,7 @@ export function MyIngredients() {
     food_name: string
   ) {
     axios
-      .post("http://127.0.0.1:8888/api/groceries", {
+      .post(import.meta.env.VITE_server_groceries, {
         user_id: user,
         food_name: food_name,
       })

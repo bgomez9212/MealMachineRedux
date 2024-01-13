@@ -61,8 +61,6 @@ export default function App() {
     enabled: !!user,
   });
 
-  console.log(groceries);
-
   // Show a loading indicator while checking authentication state
   if (loading) {
     return <div>Loading...</div>;
