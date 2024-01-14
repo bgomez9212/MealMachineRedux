@@ -11,7 +11,7 @@ module.exports = {
     res.sendStatus(201);
   },
   deleteSavedRecipe: async (req, res) => {
-    await model.deleteSavedRecipe(req.query.user_id, req.query.recipe_id);
+    await model.deleteSavedRecipe(req.body.user_id, req.body.recipe_id);
     res.sendStatus(204);
   },
   getIngredients: async (req, res) => {
@@ -23,7 +23,7 @@ module.exports = {
     res.sendStatus(201);
   },
   deleteIngredients: async (req, res) => {
-    await model.deleteIngredients(req.query.ing_user_id);
+    await model.deleteIngredients(req.body.ing_user_id);
     res.sendStatus(204);
   },
   getGroceries: async (req, res) => {
@@ -35,7 +35,7 @@ module.exports = {
     res.sendStatus(201);
   },
   deleteGroceries: async (req, res) => {
-    await model.deleteGroceries(req.query.gro_user_id);
+    await model.deleteGroceries(req.body.gro_user_id);
     res.sendStatus(204);
   },
   getRecipes: async (req, res) => {

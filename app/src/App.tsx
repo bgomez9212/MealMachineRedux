@@ -54,7 +54,11 @@ export default function App() {
     queryKey: ["groceries"],
     queryFn: async () =>
       axios
-        .get(`http://127.0.0.1:8888/api/groceries?user_id=${user}`)
+        .get(import.meta.env.VITE_server_groceries, {
+          params: {
+            user_id: user,
+          },
+        })
         .then((res) => {
           return res.data;
         }),

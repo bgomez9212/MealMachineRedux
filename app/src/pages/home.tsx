@@ -47,7 +47,11 @@ export function Home({ groceries }: { groceries: Groceries[] }) {
     queryKey: ["recipes"],
     queryFn: async () =>
       axios
-        .get(`http://127.0.0.1:8888/api/recipes?user_id=${user}`)
+        .get(import.meta.env.VITE_server_recipes, {
+          params: {
+            user_id: user,
+          },
+        })
         .then((res) => {
           return res.data;
         }),
@@ -61,7 +65,11 @@ export function Home({ groceries }: { groceries: Groceries[] }) {
     queryKey: ["savedRecipes"],
     queryFn: async () =>
       axios
-        .get(`http://127.0.0.1:8888/api/savedRecipes?user_id=${user}`)
+        .get(import.meta.env.VITE_server_savedRecipes, {
+          params: {
+            user_id: user,
+          },
+        })
         .then((res) => {
           return res.data.map((recipe: SavedRecipe) => recipe.recipe_id);
         }),
@@ -73,7 +81,7 @@ export function Home({ groceries }: { groceries: Groceries[] }) {
     imageUrl: string
   ) {
     axios
-      .post("http://127.0.0.1:8888/api/savedRecipes", {
+      .post(import.meta.env.VITE_server_savedRecipes, {
         user_id: user,
         recipe_id: recipe_id,
         image: imageUrl,
@@ -97,9 +105,12 @@ export function Home({ groceries }: { groceries: Groceries[] }) {
 
   function handleDeleteSavedRecipe(recipe_id: number, recipe_title: string) {
     axios
-      .delete(
-        `http://127.0.0.1:8888/api/savedRecipes?user_id=${user}&recipe_id=${recipe_id}`
-      )
+      .delete(import.meta.env.VITE_server_savedRecipes, {
+        data: {
+          user_id: user,
+          recipe_id: recipe_id,
+        },
+      })
       .then(() => {
         queryClient.invalidateQueries({ queryKey: ["savedRecipes"] });
         toast({

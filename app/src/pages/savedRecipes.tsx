@@ -22,7 +22,11 @@ export function SavedRecipes() {
     queryKey: ["savedRecipes"],
     queryFn: async () =>
       axios
-        .get(`http://127.0.0.1:8888/api/savedRecipes?user_id=${user}`)
+        .get(import.meta.env.VITE_server_savedRecipes, {
+          params: {
+            user_id: user,
+          },
+        })
         .then((res) => {
           return res.data;
         }),
@@ -30,9 +34,12 @@ export function SavedRecipes() {
 
   function handleDeleteSavedRecipe(recipe_id: number) {
     axios
-      .delete(
-        `http://127.0.0.1:8888/api/savedRecipes?user_id=${user}&recipe_id=${recipe_id}`
-      )
+      .delete(import.meta.env.VITE_server_savedRecipes, {
+        data: {
+          user_id: user,
+          recipe_id: recipe_id,
+        },
+      })
       .then(() => {
         queryClient.invalidateQueries({ queryKey: ["savedRecipes"] });
       });

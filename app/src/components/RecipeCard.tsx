@@ -55,7 +55,7 @@ export function RecipeCard({
 
   function handleSaveGrocery(grocery: string) {
     axios
-      .post("http://127.0.0.1:8888/api/groceries", {
+      .post(import.meta.env.VITE_server_groceries, {
         user_id: user,
         food_name: grocery,
       })

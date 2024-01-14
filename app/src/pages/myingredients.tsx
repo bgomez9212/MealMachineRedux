@@ -40,7 +40,9 @@ export function MyIngredients() {
           food_name: ingredient,
         })
         .then(() =>
-          queryClient.invalidateQueries({ queryKey: ["ingredients"] })
+          queryClient.invalidateQueries({
+            queryKey: ["ingredients", "recipes"],
+          })
         )
         .then(() => setTextAreaData(""))
         .catch((err) => console.log(err));
