@@ -22,7 +22,11 @@ export function MyGroceries({ groceries }: { groceries: Groceries[] }) {
 
   function handleRemoveGrocery(gro_user_id: string) {
     axios
-      .delete(`http://127.0.0.1:8888/api/groceries?gro_user_id=${gro_user_id}`)
+      .delete(import.meta.env.VITE_server_groceries, {
+        data: {
+          gro_user_id: gro_user_id,
+        },
+      })
       .then(() => queryClient.invalidateQueries({ queryKey: ["groceries"] }));
   }
 
@@ -33,9 +37,10 @@ export function MyGroceries({ groceries }: { groceries: Groceries[] }) {
 
     groceryArray.forEach((grocery) => {
       axios
-        .post(
-          `http://127.0.0.1:8888/api/groceries?user_id=${user}&food_name=${grocery}`
-        )
+        .post(import.meta.env.VITE_server_groceries, {
+          user_id: user,
+          food_name: grocery,
+        })
         .then(() => queryClient.invalidateQueries({ queryKey: ["groceries"] }))
         .then(() => setGroceryInput(""));
     });
@@ -46,9 +51,10 @@ export function MyGroceries({ groceries }: { groceries: Groceries[] }) {
     food_name: string
   ) {
     axios
-      .post(
-        `http://127.0.0.1:8888/api/ingredients?user_id=${user}&food_name=${food_name}`
-      )
+      .post(import.meta.env.VITE_server_ingredients, {
+        user_id: user,
+        food_name: food_name,
+      })
       .then(() => handleRemoveGrocery(gro_user_id))
       .then(() => queryClient.invalidateQueries({ queryKey: ["groceries"] }));
   }

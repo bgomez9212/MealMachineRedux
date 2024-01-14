@@ -11,7 +11,7 @@ module.exports = {
     res.sendStatus(201);
   },
   deleteSavedRecipe: async (req, res) => {
-    await model.deleteSavedRecipe(req.query.user_id, req.query.recipe_id);
+    await model.deleteSavedRecipe(req.body.user_id, req.body.recipe_id);
     res.sendStatus(204);
   },
   getIngredients: async (req, res) => {
@@ -19,11 +19,11 @@ module.exports = {
     res.send(result.rows).status(200);
   },
   postIngredients: async (req, res) => {
-    await model.postIngredients(req.query.user_id, req.query.food_name);
+    await model.postIngredients(req.body.user_id, req.body.food_name);
     res.sendStatus(201);
   },
   deleteIngredients: async (req, res) => {
-    await model.deleteIngredients(req.query.ing_user_id);
+    await model.deleteIngredients(req.body.ing_user_id);
     res.sendStatus(204);
   },
   getGroceries: async (req, res) => {
@@ -31,11 +31,11 @@ module.exports = {
     res.send(result.rows).status(200);
   },
   postGroceries: async (req, res) => {
-    await model.postGroceries(req.query.user_id, req.query.food_name);
+    await model.postGroceries(req.body.user_id, req.body.food_name);
     res.sendStatus(201);
   },
   deleteGroceries: async (req, res) => {
-    await model.deleteGroceries(req.query.gro_user_id);
+    await model.deleteGroceries(req.body.gro_user_id);
     res.sendStatus(204);
   },
   getRecipes: async (req, res) => {
