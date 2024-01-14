@@ -39,11 +39,12 @@ export function MyIngredients() {
           user_id: user,
           food_name: ingredient,
         })
-        .then(() =>
+        .then(() => {
           queryClient.invalidateQueries({
-            queryKey: ["ingredients", "recipes"],
-          })
-        )
+            queryKey: ["ingredients"],
+          });
+          queryClient.invalidateQueries({ queryKey: ["recipes"] });
+        })
         .then(() => setTextAreaData(""))
         .catch((err) => console.log(err));
     });
@@ -56,7 +57,10 @@ export function MyIngredients() {
           ing_user_id: ing_user_id,
         },
       })
-      .then(() => queryClient.invalidateQueries({ queryKey: ["ingredients"] }))
+      .then(() => {
+        queryClient.invalidateQueries({ queryKey: ["ingredients"] });
+        queryClient.invalidateQueries({ queryKey: ["recipes"] });
+      })
       .catch((err) => console.log(err));
   }
 
@@ -70,7 +74,10 @@ export function MyIngredients() {
         food_name: food_name,
       })
       .then(() => handleRemoveIngredient(ing_user_id))
-      .then(() => queryClient.invalidateQueries({ queryKey: ["ingredients"] }));
+      .then(() => {
+        queryClient.invalidateQueries({ queryKey: ["ingredients"] });
+        queryClient.invalidateQueries({ queryKey: ["recipes"] });
+      });
   }
 
   if (error) {
