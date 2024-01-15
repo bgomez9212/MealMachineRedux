@@ -77,6 +77,7 @@ export function MyIngredients() {
       .then(() => {
         queryClient.invalidateQueries({ queryKey: ["ingredients"] });
         queryClient.invalidateQueries({ queryKey: ["recipes"] });
+        queryClient.invalidateQueries({ queryKey: ["groceries"] });
       });
   }
 
