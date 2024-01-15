@@ -3,7 +3,7 @@ const express = require("express");
 const app = express();
 const cors = require("cors");
 const port = 8888;
-const db = require("../db/index");
+const db = require("./db.js");
 const router = require("./router.js");
 
 app.use(cors());
