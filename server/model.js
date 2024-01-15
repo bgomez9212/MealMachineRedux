@@ -1,6 +1,6 @@
 const dotenv = require("dotenv").config();
 const axios = require("axios");
-const pool = require("../db/index.js");
+const pool = require("./db.js");
 const currentDate = new Date().toLocaleDateString();
 module.exports = {
   // get saved recipes for user
