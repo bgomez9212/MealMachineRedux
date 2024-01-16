@@ -5,7 +5,7 @@ const config = {
   database: process.env.DB,
   password: process.env.PASSWORD,
   host: process.env.HOST,
-  port: process.env.PORT,
+  port: process.env.DB_PORT,
   max: process.env.MAX, // max number of clients in the pool
   idleTimeoutMillis: process.env.IDLETIMEOUTMILLIS,
 };
