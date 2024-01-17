@@ -1,9 +1,10 @@
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { Check, X } from "lucide-react";
-import { QueryClient, useQuery, useQueryClient } from "react-query";
+import { useQuery, useQueryClient } from "react-query";
 import axios from "axios";
 import { Button } from "@/components/ui/button";
 import { type Recipe } from "@/types";
+import ClipLoader from "react-spinners/ClipLoader";
 
 export function RecipeDetailPage() {
   const { recipe_id } = useParams();
@@ -37,9 +38,13 @@ export function RecipeDetailPage() {
   }
 
   if (isLoading) {
-    return <div>isLoading...</div>;
+    return (
+      <div>
+        <ClipLoader color="#36d7b7" />
+      </div>
+    );
   }
-  console.log(recipe);
+
   return (
     <div className="px-10 py-10">
       <Button className="mb-5" variant={"outline"} onClick={handleBackClick}>

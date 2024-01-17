@@ -15,6 +15,7 @@ import { useQuery } from "react-query";
 import { RecipeDetailPage } from "./pages/RecipeDetailsPage";
 import axios from "axios";
 import { type Groceries } from "./types";
+import ClipLoader from "react-spinners/ClipLoader";
 
 export default function App() {
   const [user, setUser] = useState<string | null>(null);
@@ -28,7 +29,6 @@ export default function App() {
       } else {
         // User is signed out
         setUser(null);
-        refetch();
       }
 
       // Set loading to false once the authentication state is determined
@@ -41,9 +41,8 @@ export default function App() {
 
   const {
     data: groceries,
-    isLoading,
+    // isLoading,
     // error,
-    refetch,
   } = useQuery<Groceries[]>({
     queryKey: ["groceries"],
     queryFn: async () =>
@@ -56,16 +55,15 @@ export default function App() {
         .then((res) => {
           return res.data;
         }),
-    enabled: !!user,
   });
 
   // Show a loading indicator while checking authentication state
   if (loading) {
-    return <div>Loading...</div>;
-  }
-
-  if (isLoading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="w-full flex items-center">
+        <ClipLoader color="#36d7b7" />
+      </div>
+    );
   }
 
   return (
