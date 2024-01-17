@@ -43,6 +43,7 @@ export default function App() {
     data: groceries,
     // isLoading,
     // error,
+    // refetch,
   } = useQuery<Groceries[]>({
     queryKey: ["groceries"],
     queryFn: async () =>
@@ -55,16 +56,25 @@ export default function App() {
         .then((res) => {
           return res.data;
         }),
+    enabled: !!user,
   });
 
   // Show a loading indicator while checking authentication state
   if (loading) {
     return (
-      <div className="w-full flex items-center">
+      <div>
         <ClipLoader color="#36d7b7" />
       </div>
     );
   }
+
+  // if (isLoading) {
+  //   return (
+  //     <div>
+  //       <ClipLoader color="#36d7b7" />
+  //     </div>
+  //   );
+  // }
 
   return (
     <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
