@@ -1,6 +1,6 @@
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { Check, X } from "lucide-react";
-import { useQuery } from "react-query";
+import { QueryClient, useQuery, useQueryClient } from "react-query";
 import axios from "axios";
 import { Button } from "@/components/ui/button";
 import { type Recipe } from "@/types";
@@ -8,10 +8,11 @@ import { type Recipe } from "@/types";
 export function RecipeDetailPage() {
   const { recipe_id } = useParams();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
   const {
     data: recipe,
-    // isLoading,
+    isLoading,
     // error,
   } = useQuery<Recipe>({
     queryKey: ["recipeDetails"],
@@ -30,9 +31,18 @@ export function RecipeDetailPage() {
     return condition ? <Check color="#008a09" /> : <X color="#ff0000" />;
   }
 
+  function handleBackClick() {
+    queryClient.setQueryData(["recipeDetails"], undefined);
+    navigate(-1);
+  }
+
+  if (isLoading) {
+    return <div>isLoading...</div>;
+  }
+  console.log(recipe);
   return (
     <div className="px-10 py-10">
-      <Button className="mb-5" variant={"outline"} onClick={() => navigate(-1)}>
+      <Button className="mb-5" variant={"outline"} onClick={handleBackClick}>
         {"<"}
       </Button>
       <header className="flex flex-col md:flex md:flex-row mb-10 justify-between border md:max-h-[300px] p-5 rounded-md">
