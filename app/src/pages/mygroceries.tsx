@@ -6,13 +6,7 @@ import { useContext, useState } from "react";
 import { UserContext } from "@/context/context";
 import axios from "axios";
 import { Button } from "@/components/ui/button";
-
-type Groceries = {
-  id: number;
-  name: string;
-  date_added: string;
-  gro_user_id: string;
-};
+import { type Groceries } from "@/types";
 
 export function MyGroceries({ groceries }: { groceries: Groceries[] }) {
   const queryClient = useQueryClient();

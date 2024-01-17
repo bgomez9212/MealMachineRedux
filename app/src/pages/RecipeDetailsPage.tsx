@@ -3,35 +3,7 @@ import { Check, X } from "lucide-react";
 import { useQuery } from "react-query";
 import axios from "axios";
 import { Button } from "@/components/ui/button";
-
-type Recipe = {
-  id: number;
-  image: string;
-  title: string;
-  readyInMinutes: number;
-  vegetarian: boolean;
-  vegan: boolean;
-  glutenFree: boolean;
-  servings: number;
-  sourceUrl: string;
-  extendedIngredients: ExtendedIngredients[];
-  analyzedInstructions: AnalyzedInstructions[];
-};
-
-type ExtendedIngredients = {
-  id: number;
-  original: string;
-};
-
-type AnalyzedInstructions = {
-  name: string;
-  steps: Steps[];
-};
-
-type Steps = {
-  number: number;
-  step: string;
-};
+import { type Recipe } from "@/types";
 
 export function RecipeDetailPage() {
   const { recipe_id } = useParams();
