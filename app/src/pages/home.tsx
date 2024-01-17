@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { useQuery, useQueryClient } from "react-query";
 import { useToast } from "@/components/ui/use-toast";
 import { type HomeRecipes, type SavedRecipe, type Groceries } from "@/types";
+import ClipLoader from "react-spinners/ClipLoader";
 
 export function Home({ groceries }: { groceries: Groceries[] }) {
   const { toast } = useToast();
@@ -95,7 +96,11 @@ export function Home({ groceries }: { groceries: Groceries[] }) {
   }
 
   if (isLoadingRecipes || isLoadingSavedRecipes) {
-    return <div>isLoading...</div>;
+    return (
+      <div className="w-full flex items-center justify-center mt-20">
+        <ClipLoader color="#8FAC5F" />
+      </div>
+    );
   }
 
   return (
