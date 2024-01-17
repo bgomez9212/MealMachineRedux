@@ -14,13 +14,7 @@ import { ThemeProvider } from "./context/themeContext";
 import { useQuery } from "react-query";
 import { RecipeDetailPage } from "./pages/RecipeDetailsPage";
 import axios from "axios";
-
-type Groceries = {
-  id: number;
-  name: string;
-  date_added: string;
-  gro_user_id: string;
-};
+import { type Groceries } from "./types";
 
 export default function App() {
   const [user, setUser] = useState<string | null>(null);

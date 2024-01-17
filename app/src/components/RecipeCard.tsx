@@ -13,18 +13,7 @@ import Modal from "@mui/material/Modal";
 import axios from "axios";
 import { UserContext } from "@/context/context";
 import { useQueryClient } from "react-query";
-
-type MissingIngredients = {
-  name: string;
-  id: number;
-};
-
-type Groceries = {
-  id: number;
-  name: string;
-  date_added: string;
-  gro_user_id: string;
-};
+import { type Groceries, type MissingIngredients } from "@/types";
 
 export function RecipeCard({
   image,

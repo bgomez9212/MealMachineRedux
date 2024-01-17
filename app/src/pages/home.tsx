@@ -5,33 +5,7 @@ import { UserContext } from "@/context/context";
 import { useNavigate } from "react-router-dom";
 import { useQuery, useQueryClient } from "react-query";
 import { useToast } from "@/components/ui/use-toast";
-
-type MissingIngredients = {
-  name: string;
-  id: number;
-};
-
-type HomeRecipes = {
-  id: number;
-  title: string;
-  image: string;
-  missedIngredientCount: number;
-  missedIngredients: MissingIngredients[];
-};
-
-type SavedRecipe = {
-  id: number;
-  recipe_id: number;
-  title: string;
-  image: string;
-};
-
-type Groceries = {
-  id: number;
-  name: string;
-  date_added: string;
-  gro_user_id: string;
-};
+import { type HomeRecipes, type SavedRecipe, type Groceries } from "@/types";
 
 export function Home({ groceries }: { groceries: Groceries[] }) {
   const { toast } = useToast();
