@@ -23,6 +23,7 @@ const Signup = ({ handleClick, authenticateUser }: SignupProps) => {
     confirmPassword: "",
   });
   const [visible, setVisible] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const onSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
@@ -41,10 +42,12 @@ const Signup = ({ handleClick, authenticateUser }: SignupProps) => {
         navigate("/home");
       })
       .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        console.log(errorCode, errorMessage);
-        // ..
+        if (error.code === "auth/invalid-email") {
+          setErrorMessage("Invalid Email");
+        }
+        if (error.code === "auth/email-already-in-use") {
+          setErrorMessage("Email is already in use");
+        }
       });
   };
 
@@ -77,7 +80,7 @@ const Signup = ({ handleClick, authenticateUser }: SignupProps) => {
                 <Input
                   type={visible ? "text" : "password"}
                   placeholder="Password"
-                  // Other input props...
+                  required
                   className="w-full mt-2 h-10 bg-white px-3 text-black"
                   onChange={(e) =>
                     setSignUpInfo({ ...signUpInfo, password: e.target.value })
@@ -99,7 +102,7 @@ const Signup = ({ handleClick, authenticateUser }: SignupProps) => {
                 <Input
                   type={visible ? "text" : "password"}
                   placeholder="Confirm Password"
-                  // Other input props...
+                  required
                   className="w-full mt-2 h-10 bg-white px-3 text-black"
                   onChange={(e) =>
                     setSignUpInfo({
@@ -121,7 +124,12 @@ const Signup = ({ handleClick, authenticateUser }: SignupProps) => {
               </div>
 
               <Button
-                disabled={signUpInfo.password !== signUpInfo.confirmPassword}
+                disabled={
+                  signUpInfo.password !== signUpInfo.confirmPassword ||
+                  !signUpInfo.email ||
+                  !signUpInfo.password ||
+                  !signUpInfo.confirmPassword
+                }
                 type="submit"
                 onClick={onSubmit}
                 className="bg-black w-full mt-2 h-10 text-slate-50 dark:hover:text-slate-950"
@@ -131,6 +139,11 @@ const Signup = ({ handleClick, authenticateUser }: SignupProps) => {
               {signUpInfo.password !== signUpInfo.confirmPassword && (
                 <p className="text-center text-red-400 text-xs">
                   Passwords do not match
+                </p>
+              )}
+              {errorMessage && (
+                <p className="text-center text-red-400 dark:text-red-500">
+                  {errorMessage}
                 </p>
               )}
             </form>
