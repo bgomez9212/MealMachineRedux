@@ -106,13 +106,13 @@ export function Home({ groceries }: { groceries: Groceries[] }) {
   if (!recipes?.length) {
     return (
       <div className="text-center mt-10">
-        <h1>How To Get Started</h1>
-        <p>
+        <h1 className="underline text-xl mb-2">How To Get Started</h1>
+        <p className="px-14">
           To get your recommended recipes, add some ingredients to your kitchen.
           Navigate to the Ingredients page and add whatever you have available
           to cook with. After submitting your ingredients, come back to this
-          page by hitting the Recipes link, and you will have a list of recipes
-          that are either ready to cook, or missing a minimal amount of
+          page by clicking either Home or Recipes, and you will have a list of
+          recipes that are either ready to cook, or missing a minimal amount of
           ingredients.
         </p>
       </div>
