@@ -7,6 +7,8 @@ import {
 import { auth } from "../firebase";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 
 interface SignupProps {
   handleClick: () => void;
@@ -20,6 +22,8 @@ const Signup = ({ handleClick, authenticateUser }: SignupProps) => {
     password: "",
     confirmPassword: "",
   });
+  const [visible, setVisible] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const onSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
@@ -38,10 +42,12 @@ const Signup = ({ handleClick, authenticateUser }: SignupProps) => {
         navigate("/home");
       })
       .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        console.log(errorCode, errorMessage);
-        // ..
+        if (error.code === "auth/invalid-email") {
+          setErrorMessage("Invalid Email");
+        }
+        if (error.code === "auth/email-already-in-use") {
+          setErrorMessage("Email is already in use");
+        }
       });
   };
 
@@ -70,57 +76,77 @@ const Signup = ({ handleClick, authenticateUser }: SignupProps) => {
                 />
               </div>
 
-              <div>
-                <label htmlFor="password" />
+              <div className="flex items-center relative">
                 <Input
-                  type="password"
-                  name="password"
-                  value={signUpInfo.password}
-                  onChange={(e) =>
-                    setSignUpInfo((prev) => ({
-                      ...prev,
-                      password: e.target.value,
-                    }))
-                  }
-                  required
+                  type={visible ? "text" : "password"}
                   placeholder="Password"
+                  required
                   className="w-full mt-2 h-10 bg-white px-3 text-black"
+                  onChange={(e) =>
+                    setSignUpInfo({ ...signUpInfo, password: e.target.value })
+                  }
                 />
+                <div
+                  className="absolute right-3 cursor-pointer mt-1"
+                  onClick={() => setVisible((prevVisible) => !prevVisible)}
+                >
+                  {visible ? (
+                    <VisibilityOffIcon sx={{ color: "black" }} />
+                  ) : (
+                    <VisibilityIcon sx={{ color: "black" }} />
+                  )}
+                </div>
               </div>
 
-              <div>
-                <label htmlFor="confirm-password" />
+              <div className="flex items-center relative">
                 <Input
-                  type="password"
-                  name="confirm-password"
-                  value={signUpInfo.confirmPassword}
-                  onChange={(e) =>
-                    setSignUpInfo((prev) => ({
-                      ...prev,
-                      confirmPassword: e.target.value,
-                    }))
-                  }
-                  required
+                  type={visible ? "text" : "password"}
                   placeholder="Confirm Password"
+                  required
                   className="w-full mt-2 h-10 bg-white px-3 text-black"
+                  onChange={(e) =>
+                    setSignUpInfo({
+                      ...signUpInfo,
+                      confirmPassword: e.target.value,
+                    })
+                  }
                 />
+                <div
+                  className="absolute right-3 cursor-pointer mt-1"
+                  onClick={() => setVisible((prevVisible) => !prevVisible)}
+                >
+                  {visible ? (
+                    <VisibilityOffIcon sx={{ color: "black" }} />
+                  ) : (
+                    <VisibilityIcon sx={{ color: "black" }} />
+                  )}
+                </div>
               </div>
 
               <Button
-                disabled={signUpInfo.password !== signUpInfo.confirmPassword}
+                disabled={
+                  signUpInfo.password !== signUpInfo.confirmPassword ||
+                  !signUpInfo.email ||
+                  !signUpInfo.password ||
+                  !signUpInfo.confirmPassword
+                }
                 type="submit"
                 onClick={onSubmit}
                 className="bg-black w-full mt-2 h-10 text-slate-50 dark:hover:text-slate-950"
               >
                 SIGN UP
               </Button>
+              {signUpInfo.password !== signUpInfo.confirmPassword && (
+                <p className="text-center text-red-400 text-xs">
+                  Passwords do not match
+                </p>
+              )}
+              {errorMessage && (
+                <p className="text-center text-red-400 dark:text-red-500">
+                  {errorMessage}
+                </p>
+              )}
             </form>
-
-            {signUpInfo.password !== signUpInfo.confirmPassword && (
-              <p className="text-center text-red-600 text-xs">
-                Passwords do not match
-              </p>
-            )}
 
             <p className="text-center mt-2 text-black">
               Already have an account? <br />{" "}

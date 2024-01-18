@@ -4,6 +4,8 @@ import { auth } from "../firebase";
 import { useNavigate } from "react-router-dom";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 
 interface LoginProps {
   handleClick: () => void;
@@ -12,22 +14,21 @@ interface LoginProps {
 
 const Login = ({ handleClick, authenticateUser }: LoginProps) => {
   const navigate = useNavigate();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [formData, setFormData] = useState({ email: "", password: "" });
+  const [errorMessage, setErrorMessage] = useState("");
+  const [visible, setVisible] = useState(false);
 
   const onLogin = (e: { preventDefault: () => void }) => {
     e.preventDefault();
-    signInWithEmailAndPassword(auth, email, password)
+    signInWithEmailAndPassword(auth, formData.email, formData.password)
       .then((userCredential) => {
         // Signed in
         const user = userCredential.user;
         navigate("/home");
         authenticateUser(user.uid);
       })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        console.log(errorCode, errorMessage);
+      .catch(() => {
+        setErrorMessage("Incorrect email or password");
       });
   };
 
@@ -45,21 +46,33 @@ const Login = ({ handleClick, authenticateUser }: LoginProps) => {
                   type="email"
                   required
                   placeholder="Email address"
-                  onChange={(e) => setEmail(e.target.value)}
+                  onChange={(e) =>
+                    setFormData({ ...formData, email: e.target.value })
+                  }
                   className="w-full h-10 bg-white px-3 text-black"
                 />
               </div>
 
-              <div>
+              <div className="flex items-center relative">
                 <Input
-                  id="password"
-                  name="password"
-                  type="password"
-                  required
+                  type={visible ? "text" : "password"}
                   placeholder="Password"
-                  onChange={(e) => setPassword(e.target.value)}
+                  // Other input props...
                   className="w-full mt-2 h-10 bg-white px-3 text-black"
+                  onChange={(e) =>
+                    setFormData({ ...formData, password: e.target.value })
+                  }
                 />
+                <div
+                  className="absolute right-3 cursor-pointer mt-1"
+                  onClick={() => setVisible((prevVisible) => !prevVisible)}
+                >
+                  {visible ? (
+                    <VisibilityOffIcon sx={{ color: "black" }} />
+                  ) : (
+                    <VisibilityIcon sx={{ color: "black" }} />
+                  )}
+                </div>
               </div>
 
               <div>
@@ -70,13 +83,22 @@ const Login = ({ handleClick, authenticateUser }: LoginProps) => {
                   {" "}
                   LOGIN
                 </Button>
+                {errorMessage && (
+                  <p className="text-center text-red-400 dark:text-red-500">
+                    {errorMessage}
+                  </p>
+                )}
               </div>
             </form>
 
             <p className="text-center mt-2 text-black">
               No account yet?
               <br />
-              <Button variant={"link"} onClick={handleClick}>
+              <Button
+                className="text-[#8FAC5F]"
+                variant={"link"}
+                onClick={handleClick}
+              >
                 Sign up
               </Button>
             </p>
