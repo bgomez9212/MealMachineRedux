@@ -18,4 +18,5 @@ router.delete("/groceries", controller.deleteGroceries);
 
 router.get("/recipes", controller.getRecipes);
 router.get("/recipeDetails", controller.getRecipeDetails);
+router.get("/searchRecipes", controller.getSearchedRecipes);
 module.exports = router;

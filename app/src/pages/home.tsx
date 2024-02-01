@@ -1,18 +1,20 @@
 import { RecipeCard } from "@/components/RecipeCard";
 import axios from "axios";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { UserContext } from "@/context/context";
 import { useNavigate } from "react-router-dom";
 import { useQuery, useQueryClient } from "react-query";
 import { useToast } from "@/components/ui/use-toast";
 import { type HomeRecipes, type SavedRecipe, type Groceries } from "@/types";
 import ClipLoader from "react-spinners/ClipLoader";
+import { Input } from "@/components/ui/input";
 
 export function Home({ groceries }: { groceries: Groceries[] }) {
   const { toast } = useToast();
   const user = useContext(UserContext);
   const queryClient = useQueryClient();
   const navigate = useNavigate();
+  const [search, setSearch] = useState("");
 
   const {
     data: recipes,
@@ -48,6 +50,21 @@ export function Home({ groceries }: { groceries: Groceries[] }) {
         .then((res) => {
           return res.data.map((recipe: SavedRecipe) => recipe.recipe_id);
         }),
+  });
+
+  const { data: searchResults, isLoading: isSearchLoading } = useQuery<
+    HomeRecipes[]
+  >({
+    queryKey: ["searchResults"],
+    enabled: search.length >= 3,
+    queryFn: async () =>
+      axios
+        .get(import.meta.env.VITE_server_searchRecipes, {
+          params: {
+            term: search,
+          },
+        })
+        .then((res) => res.data.results),
   });
 
   function handleSaveClick(
@@ -103,39 +120,86 @@ export function Home({ groceries }: { groceries: Groceries[] }) {
     );
   }
 
-  if (!recipes?.length) {
-    return (
-      <div className="text-center mt-10">
-        <h1 className="underline text-xl mb-2">How To Get Started</h1>
-        <p className="px-14">
-          To get your recommended recipes, add some ingredients to your kitchen.
-          Navigate to the Ingredients page and add whatever you have available
-          to cook with. After submitting your ingredients, come back to this
-          page by clicking either Home or Recipes, and you will have a list of
-          recipes that are either ready to cook, or missing a minimal amount of
-          ingredients.
-        </p>
-      </div>
-    );
-  }
-
   return (
-    <div className="min-[630px]:grid min-[630px]:grid-cols-2 lg:grid-cols-3 px-10 gap-x-10 mb-20">
-      {recipes?.map(
-        ({ title, image, id, missedIngredientCount, missedIngredients }) => (
-          <RecipeCard
-            key={title}
-            title={title}
-            image={image}
-            handleSaveClick={() => handleSaveClick(id, title, image)}
-            handleReadRecipe={() => handleReadRecipe(id)}
-            handleDeleteSavedRecipe={() => handleDeleteSavedRecipe(id, title)}
-            isSaved={savedRecipes?.includes(id)}
-            missedIngredientCount={missedIngredientCount}
-            missedIngredients={missedIngredients}
-            groceries={groceries}
-          />
-        )
+    <div>
+      <div className="mt-5 flex justify-center">
+        <Input
+          className="w-[90%]"
+          placeholder="Search For Recipes"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
+      </div>
+      {search.length >= 3 ? (
+        <div className="min-[630px]:grid min-[630px]:grid-cols-2 lg:grid-cols-3 px-10 gap-x-10 mb-20">
+          {searchResults?.map(
+            ({
+              title,
+              id,
+              image,
+              missedIngredientCount,
+              missedIngredients,
+            }) => (
+              <RecipeCard
+                key={title}
+                title={title}
+                image={image}
+                handleSaveClick={() => handleSaveClick(id, title, image)}
+                handleReadRecipe={() => handleReadRecipe(id)}
+                handleDeleteSavedRecipe={() =>
+                  handleDeleteSavedRecipe(id, title)
+                }
+                isSaved={savedRecipes?.includes(id)}
+                missedIngredientCount={missedIngredientCount}
+                missedIngredients={missedIngredients}
+                groceries={groceries}
+              />
+            )
+          )}
+        </div>
+      ) : (
+        <div>
+          {recipes?.length ? (
+            <div className="min-[630px]:grid min-[630px]:grid-cols-2 lg:grid-cols-3 px-10 gap-x-10 mb-20">
+              {recipes?.map(
+                ({
+                  title,
+                  image,
+                  id,
+                  missedIngredientCount,
+                  missedIngredients,
+                }) => (
+                  <RecipeCard
+                    key={title}
+                    title={title}
+                    image={image}
+                    handleSaveClick={() => handleSaveClick(id, title, image)}
+                    handleReadRecipe={() => handleReadRecipe(id)}
+                    handleDeleteSavedRecipe={() =>
+                      handleDeleteSavedRecipe(id, title)
+                    }
+                    isSaved={savedRecipes?.includes(id)}
+                    missedIngredientCount={missedIngredientCount}
+                    missedIngredients={missedIngredients}
+                    groceries={groceries}
+                  />
+                )
+              )}
+            </div>
+          ) : (
+            <div className="text-center mt-10">
+              <h1 className="underline text-xl mb-2">How To Get Started</h1>
+              <p className="px-14">
+                To get your recommended recipes, add some ingredients to your
+                kitchen. Navigate to the Ingredients page and add whatever you
+                have available to cook with. After submitting your ingredients,
+                come back to this page by clicking either Home or Recipes, and
+                you will have a list of recipes that are either ready to cook,
+                or missing a minimal amount of ingredients.
+              </p>
+            </div>
+          )}
+        </div>
       )}
     </div>
   );

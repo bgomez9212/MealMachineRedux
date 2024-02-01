@@ -170,4 +170,15 @@ module.exports = {
     );
     return result.data;
   },
+  getSearchedRecipes: async (term) => {
+    const result = await axios.get(
+      `https://api.spoonacular.com/recipes/complexSearch?query=${term}&number=9&fillIngredients=true`,
+      {
+        headers: {
+          "x-api-key": process.env.API_KEY,
+        },
+      }
+    );
+    return result.data;
+  },
 };
