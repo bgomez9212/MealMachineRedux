@@ -52,7 +52,9 @@ export function Home({ groceries }: { groceries: Groceries[] }) {
         }),
   });
 
-  const { data: searchResults, isLoading: isSearchLoading } = useQuery({
+  const { data: searchResults, isLoading: isSearchLoading } = useQuery<
+    HomeRecipes[]
+  >({
     queryKey: ["searchResults"],
     enabled: search.length >= 3,
     queryFn: async () =>
@@ -62,11 +64,9 @@ export function Home({ groceries }: { groceries: Groceries[] }) {
             term: search,
           },
         })
-        .then((res) => res.data),
+        .then((res) => res.data.results),
   });
 
-  console.log(searchResults);
-  console.log(isSearchLoading);
   function handleSaveClick(
     recipe_id: number,
     recipe_title: string,
@@ -131,7 +131,32 @@ export function Home({ groceries }: { groceries: Groceries[] }) {
         />
       </div>
       {search.length >= 3 ? (
-        <div></div>
+        <div className="min-[630px]:grid min-[630px]:grid-cols-2 lg:grid-cols-3 px-10 gap-x-10 mb-20">
+          {searchResults?.map(
+            ({
+              title,
+              id,
+              image,
+              missedIngredientCount,
+              missedIngredients,
+            }) => (
+              <RecipeCard
+                key={title}
+                title={title}
+                image={image}
+                handleSaveClick={() => handleSaveClick(id, title, image)}
+                handleReadRecipe={() => handleReadRecipe(id)}
+                handleDeleteSavedRecipe={() =>
+                  handleDeleteSavedRecipe(id, title)
+                }
+                isSaved={savedRecipes?.includes(id)}
+                missedIngredientCount={missedIngredientCount}
+                missedIngredients={missedIngredients}
+                groceries={groceries}
+              />
+            )
+          )}
+        </div>
       ) : (
         <div>
           {recipes?.length ? (
