@@ -52,6 +52,21 @@ export function Home({ groceries }: { groceries: Groceries[] }) {
         }),
   });
 
+  const { data: searchResults, isLoading: isSearchLoading } = useQuery({
+    queryKey: ["searchResults"],
+    enabled: search.length >= 3,
+    queryFn: async () =>
+      axios
+        .get(import.meta.env.VITE_server_searchRecipes, {
+          params: {
+            term: search,
+          },
+        })
+        .then((res) => res.data),
+  });
+
+  console.log(searchResults);
+  console.log(isSearchLoading);
   function handleSaveClick(
     recipe_id: number,
     recipe_title: string,
