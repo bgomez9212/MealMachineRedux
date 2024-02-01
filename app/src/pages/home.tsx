@@ -52,9 +52,10 @@ export function Home({ groceries }: { groceries: Groceries[] }) {
         }),
   });
 
-  const { data: searchResults, isLoading: isSearchLoading } = useQuery<
-    HomeRecipes[]
-  >({
+  const {
+    data: searchResults,
+    // isLoading: isSearchLoading
+  } = useQuery<HomeRecipes[]>({
     queryKey: ["searchResults"],
     enabled: search.length >= 3,
     queryFn: async () =>
