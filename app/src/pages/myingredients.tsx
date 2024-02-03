@@ -10,6 +10,8 @@ import { useQuery, useQueryClient } from "react-query";
 export function MyIngredients() {
   const queryClient = useQueryClient();
   const user = useContext(UserContext);
+  const regex = new RegExp("^[a-zA-Z]+.*$");
+
   const {
     data: ingredients,
     isLoading,
@@ -34,19 +36,21 @@ export function MyIngredients() {
   function handleSubmit() {
     const ingredientArray = textAreaData.split(",").map((word) => word.trim());
     ingredientArray.forEach((ingredient) => {
-      axios
-        .post(import.meta.env.VITE_server_ingredients, {
-          user_id: user,
-          food_name: ingredient,
-        })
-        .then(() => {
-          queryClient.invalidateQueries({
-            queryKey: ["ingredients"],
-          });
-          queryClient.invalidateQueries({ queryKey: ["recipes"] });
-        })
-        .then(() => setTextAreaData(""))
-        .catch((err) => console.log(err));
+      if (regex.test(ingredient)) {
+        axios
+          .post(import.meta.env.VITE_server_ingredients, {
+            user_id: user,
+            food_name: ingredient,
+          })
+          .then(() => {
+            queryClient.invalidateQueries({
+              queryKey: ["ingredients"],
+            });
+            queryClient.invalidateQueries({ queryKey: ["recipes"] });
+          })
+          .then(() => setTextAreaData(""))
+          .catch((err) => console.log(err));
+      }
     });
   }
 

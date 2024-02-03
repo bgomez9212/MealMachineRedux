@@ -11,6 +11,7 @@ import { type Groceries } from "@/types";
 export function MyGroceries({ groceries }: { groceries: Groceries[] }) {
   const queryClient = useQueryClient();
   const user = useContext(UserContext);
+  const regex = new RegExp("^[a-zA-Z]+.*$");
 
   const [groceryInput, setGroceryInput] = useState("");
 
@@ -30,13 +31,17 @@ export function MyGroceries({ groceries }: { groceries: Groceries[] }) {
       .map((grocery) => grocery.trim());
 
     groceryArray.forEach((grocery) => {
-      axios
-        .post(import.meta.env.VITE_server_groceries, {
-          user_id: user,
-          food_name: grocery,
-        })
-        .then(() => queryClient.invalidateQueries({ queryKey: ["groceries"] }))
-        .then(() => setGroceryInput(""));
+      if (regex.test(grocery)) {
+        axios
+          .post(import.meta.env.VITE_server_groceries, {
+            user_id: user,
+            food_name: grocery,
+          })
+          .then(() =>
+            queryClient.invalidateQueries({ queryKey: ["groceries"] })
+          )
+          .then(() => setGroceryInput(""));
+      }
     });
   }
 
