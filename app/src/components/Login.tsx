@@ -77,6 +77,7 @@ const Login = ({ handleClick, authenticateUser }: LoginProps) => {
 
               <div>
                 <Button
+                  data-testid="test1"
                   onClick={onLogin}
                   className="bg-black w-full mt-2 h-10 text-slate-50 dark:hover:text-slate-950"
                 >
