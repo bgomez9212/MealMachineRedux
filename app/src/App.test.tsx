@@ -1,7 +1,7 @@
 import React from "react";
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { http } from "msw";
+import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
 import { QueryClient, QueryClientProvider } from "react-query";
 import App from "./App";
@@ -17,8 +17,8 @@ window.matchMedia =
   };
 // Mocking the server for axios requests
 const server = setupServer(
-  http.get(import.meta.env.VITE_server_groceries, (_req, res, ctx) => {
-    return res(ctx.json([]));
+  http.get(import.meta.env.VITE_server_groceries, () => {
+    return HttpResponse.json();
   })
 );
 
