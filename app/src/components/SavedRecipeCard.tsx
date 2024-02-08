@@ -26,7 +26,6 @@ export function SavedRecipeCard({
       </CardContent>
       <CardHeader>
         <CardTitle>{title}</CardTitle>
-        <p>Missing</p>
         <CardDescription></CardDescription>
       </CardHeader>
       <CardFooter className="flex justify-between">

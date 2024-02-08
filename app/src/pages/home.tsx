@@ -62,11 +62,13 @@ export function Home({ groceries }: { groceries: Groceries[] }) {
       axios
         .get(import.meta.env.VITE_server_searchRecipes, {
           params: {
+            user_id: user,
             term: search,
           },
         })
         .then((res) => res.data.results),
   });
+  console.log(searchResults);
 
   function handleSaveClick(
     recipe_id: number,

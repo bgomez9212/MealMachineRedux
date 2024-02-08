@@ -170,9 +170,18 @@ module.exports = {
     );
     return result.data;
   },
-  getSearchedRecipes: async (term) => {
+  getSearchedRecipes: async (user_id, term) => {
+    const { rows: ingredients } = await pool.query(
+      "SELECT name FROM food INNER JOIN ingredients ON food.id = ingredients.food_id WHERE ingredients.user_id = $1",
+      [user_id]
+    );
+    const ingredientsList = ingredients
+      .map(({ name }) => {
+        return name.includes(" ") ? name.split(" ").join("") : name;
+      })
+      .join(",");
     const result = await axios.get(
-      `https://api.spoonacular.com/recipes/complexSearch?query=${term}&number=9&fillIngredients=true`,
+      `https://api.spoonacular.com/recipes/complexSearch?query=${term}&number=9&includeIngredients=${ingredientsList}&fillIngredients=true`,
       {
         headers: {
           "x-api-key": process.env.API_KEY,
