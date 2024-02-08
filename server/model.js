@@ -180,14 +180,14 @@ module.exports = {
         return name.includes(" ") ? name.split(" ").join("") : name;
       })
       .join(",");
-    const result = await axios.get(
-      `https://api.spoonacular.com/recipes/complexSearch?query=${term}&number=9&includeIngredients=${ingredientsList}&fillIngredients=true`,
+    const { data: result } = await axios.get(
+      `https://api.spoonacular.com/recipes/complexSearch?query=${term}&number=9`,
       {
         headers: {
           "x-api-key": process.env.API_KEY,
         },
       }
     );
-    return result.data;
+    return result;
   },
 };
