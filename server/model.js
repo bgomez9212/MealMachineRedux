@@ -5,7 +5,7 @@ const currentDate = new Date().toLocaleDateString();
 module.exports = {
   // get saved recipes for user
   getSavedRecipes: async (user_id) => {
-    const query = `SELECT * FROM savedRecipes WHERE user_id = $1`;
+    const query = `SELECT * FROM savedRecipes WHERE user_id = $1 ORDER BY date_added`;
     const { rows: result } = await pool.query(query, [user_id]);
     return result;
   },
