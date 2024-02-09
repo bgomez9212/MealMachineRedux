@@ -5,7 +5,7 @@ const currentDate = new Date().toLocaleDateString();
 module.exports = {
   // get saved recipes for user
   getSavedRecipes: async (user_id) => {
-    const query = `SELECT * FROM savedRecipes WHERE user_id = $1`;
+    const query = `SELECT * FROM savedRecipes WHERE user_id = $1 ORDER BY date_added`;
     const { rows: result } = await pool.query(query, [user_id]);
     return result;
   },
@@ -170,15 +170,24 @@ module.exports = {
     );
     return result.data;
   },
-  getSearchedRecipes: async (term) => {
-    const result = await axios.get(
-      `https://api.spoonacular.com/recipes/complexSearch?query=${term}&number=9&fillIngredients=true`,
+  getSearchedRecipes: async (user_id, term) => {
+    const { rows: ingredients } = await pool.query(
+      "SELECT name FROM food INNER JOIN ingredients ON food.id = ingredients.food_id WHERE ingredients.user_id = $1",
+      [user_id]
+    );
+    const ingredientsList = ingredients
+      .map(({ name }) => {
+        return name.includes(" ") ? name.split(" ").join("") : name;
+      })
+      .join(",");
+    const { data: result } = await axios.get(
+      `https://api.spoonacular.com/recipes/complexSearch?query=${term}&number=9`,
       {
         headers: {
           "x-api-key": process.env.API_KEY,
         },
       }
     );
-    return result.data;
+    return result;
   },
 };

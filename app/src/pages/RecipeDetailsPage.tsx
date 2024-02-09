@@ -39,8 +39,8 @@ export function RecipeDetailPage() {
 
   if (isLoading) {
     return (
-      <div>
-        <ClipLoader color="#36d7b7" />
+      <div className="w-full flex items-center justify-center mt-20">
+        <ClipLoader color="#8FAC5F" />
       </div>
     );
   }

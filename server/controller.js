@@ -47,7 +47,10 @@ module.exports = {
     res.send(result);
   },
   getSearchedRecipes: async (req, res) => {
-    const result = await model.getSearchedRecipes(req.query.term);
+    const result = await model.getSearchedRecipes(
+      req.query.user_id,
+      req.query.term
+    );
     res.send(result);
   },
 };

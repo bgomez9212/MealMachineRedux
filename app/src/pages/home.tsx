@@ -62,6 +62,7 @@ export function Home({ groceries }: { groceries: Groceries[] }) {
       axios
         .get(import.meta.env.VITE_server_searchRecipes, {
           params: {
+            user_id: user,
             term: search,
           },
         })
@@ -133,30 +134,20 @@ export function Home({ groceries }: { groceries: Groceries[] }) {
       </div>
       {search.length >= 3 ? (
         <div className="min-[630px]:grid min-[630px]:grid-cols-2 lg:grid-cols-3 px-10 gap-x-10 mb-20">
-          {searchResults?.map(
-            ({
-              title,
-              id,
-              image,
-              missedIngredientCount,
-              missedIngredients,
-            }) => (
-              <RecipeCard
-                key={title}
-                title={title}
-                image={image}
-                handleSaveClick={() => handleSaveClick(id, title, image)}
-                handleReadRecipe={() => handleReadRecipe(id)}
-                handleDeleteSavedRecipe={() =>
-                  handleDeleteSavedRecipe(id, title)
-                }
-                isSaved={savedRecipes?.includes(id)}
-                missedIngredientCount={missedIngredientCount}
-                missedIngredients={missedIngredients}
-                groceries={groceries}
-              />
-            )
-          )}
+          {searchResults?.map(({ title, id, image }) => (
+            <RecipeCard
+              key={title}
+              title={title}
+              image={image}
+              handleSaveClick={() => handleSaveClick(id, title, image)}
+              handleReadRecipe={() => handleReadRecipe(id)}
+              handleDeleteSavedRecipe={() => handleDeleteSavedRecipe(id, title)}
+              isSaved={savedRecipes?.includes(id)}
+              missedIngredientCount={null}
+              missedIngredients={null}
+              groceries={groceries}
+            />
+          ))}
         </div>
       ) : (
         <div>
