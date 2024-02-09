@@ -11,6 +11,20 @@ export function RecipeDetailPage() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
+  // const {
+  //   data: recipe,
+  //   isLoading,
+  //   // error,
+  // } = useQuery<Recipe>({
+  //   queryKey: ["recipeDetails"],
+  //   queryFn: async () =>
+  //     axios
+  //       .get(`http://127.0.0.1:8888/api/recipeDetails?recipe_id=${recipe_id}`)
+  //       .then((res) => {
+  //         return res.data;
+  //       }),
+  // });
+
   const {
     data: recipe,
     isLoading,
@@ -19,7 +33,11 @@ export function RecipeDetailPage() {
     queryKey: ["recipeDetails"],
     queryFn: async () =>
       axios
-        .get(`http://127.0.0.1:8888/api/recipeDetails?recipe_id=${recipe_id}`)
+        .get(import.meta.env.VITE_server_recipeDetails, {
+          params: {
+            recipe_id: recipe_id,
+          },
+        })
         .then((res) => {
           return res.data;
         }),
