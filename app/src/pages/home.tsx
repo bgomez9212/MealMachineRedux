@@ -1,6 +1,6 @@
 import { RecipeCard } from "@/components/RecipeCard";
 import axios from "axios";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { UserContext } from "@/context/context";
 import { useNavigate } from "react-router-dom";
 import { useQuery, useQueryClient } from "react-query";
@@ -54,6 +54,7 @@ export function Home({ groceries }: { groceries: Groceries[] }) {
 
   const {
     data: searchResults,
+    refetch: refetchSearchResults,
     // isLoading: isSearchLoading
   } = useQuery<HomeRecipes[]>({
     queryKey: ["searchResults"],
@@ -68,6 +69,13 @@ export function Home({ groceries }: { groceries: Groceries[] }) {
         })
         .then((res) => res.data.results),
   });
+
+  useEffect(() => {
+    if (search.length >= 3) {
+      // Trigger a refetch of searchResults when 'search' changes
+      refetchSearchResults();
+    }
+  }, [search, refetchSearchResults]);
 
   function handleSaveClick(
     recipe_id: number,
