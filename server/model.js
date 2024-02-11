@@ -181,13 +181,14 @@ module.exports = {
       })
       .join(",");
     const { data: result } = await axios.get(
-      `https://api.spoonacular.com/recipes/complexSearch?titleMatch=pasta&number=9&fillIngredients=true&includeIngredients=bacon,egg,cheese,onion,chicken&sort=min-missing-ingredients`,
+      `https://api.spoonacular.com/recipes/complexSearch?titleMatch=${term}&number=9&fillIngredients=true&includeIngredients=${ingredientsList}&sort=min-missing-ingredients`,
       {
         headers: {
           "x-api-key": process.env.API_KEY,
         },
       }
     );
+    console.log(result);
     return result;
   },
 };
