@@ -67,8 +67,8 @@ export function Navbar() {
               asChild
               className={`hidden md:block ${
                 location.pathname === "/home"
-                  ? "text-[#8FAC5F] dark:text-[#8FAC5F]"
-                  : "hover:text-[#8FAC5F] dark:hover:text-[#8FAC5F]"
+                  ? "text-lightGreen dark:text-lightGreen"
+                  : "hover:text-lightGreen dark:hover:text-lightGreen"
               }`}
             >
               <Link to="home">Recipes</Link>
@@ -79,8 +79,8 @@ export function Navbar() {
               asChild
               className={`hidden md:block ${
                 location.pathname === "/ingredients"
-                  ? "text-[#8FAC5F] dark:text-[#8FAC5F]"
-                  : "hover:text-[#8FAC5F] dark:hover:text-[#8FAC5F]"
+                  ? "text-lightGreen dark:text-lightGreen"
+                  : "hover:text-lightGreen dark:hover:text-lightGreen"
               }`}
             >
               <Link to="ingredients">Ingredients</Link>
@@ -91,8 +91,8 @@ export function Navbar() {
               asChild
               className={`hidden md:block ${
                 location.pathname === "/groceries"
-                  ? "text-[#8FAC5F] dark:text-[#8FAC5F]"
-                  : "hover:text-[#8FAC5F] dark:hover:text-[#8FAC5F]"
+                  ? "text-lightGreen dark:text-lightGreen"
+                  : "hover:text-lightGreen dark:hover:text-lightGreen"
               }`}
             >
               <Link to="groceries">Groceries</Link>
@@ -100,7 +100,7 @@ export function Navbar() {
           </NavigationMenuItem>
           <NavigationMenuItem>
             <DropdownMenu>
-              <DropdownMenuTrigger className="hidden md:block dark:text-[#fcfcf6] hover:text-[#8FAC5F] dark:hover:text-[#8FAC5F]">
+              <DropdownMenuTrigger className="hidden md:block dark:text-[#fcfcf6] hover:text-lightGreen dark:hover:text-lightGreen">
                 Profile
               </DropdownMenuTrigger>
               <DropdownMenuContent>

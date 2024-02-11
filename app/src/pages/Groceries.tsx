@@ -55,7 +55,11 @@ export function MyGroceries({ groceries }: { groceries: Groceries[] }) {
         food_name: food_name,
       })
       .then(() => handleRemoveGrocery(gro_user_id))
-      .then(() => queryClient.invalidateQueries({ queryKey: ["groceries"] }));
+      .then(() =>
+        queryClient.invalidateQueries({
+          queryKey: ["groceries", "searchResults"],
+        })
+      );
   }
 
   return (

@@ -32,8 +32,8 @@ export function RecipeCard({
   handleReadRecipe: () => void;
   handleDeleteSavedRecipe: () => void;
   isSaved: boolean;
-  missedIngredientCount: number | null;
-  missedIngredients: MissingIngredients[] | null;
+  missedIngredientCount: number;
+  missedIngredients: MissingIngredients[];
   groceries: Groceries[];
 }) {
   const [selectedRecipe, setSelectedRecipe] = useState<
@@ -76,7 +76,7 @@ export function RecipeCard({
                 {groceries
                   .map((grocery) => grocery.name)
                   .indexOf(ingredient.name) > -1 ? (
-                  <Button className="disabled bg-[#8fac5f]">
+                  <Button className="disabled bg-lightGreen">
                     In Your Groceries
                   </Button>
                 ) : (
@@ -113,17 +113,13 @@ export function RecipeCard({
         </CardHeader>
         <CardDescription
           onClick={() => setSelectedRecipe(missedIngredients)}
-          className="flex flex-grow flex-col justify-end mb-5 mx-6 cursor-pointer text-black dark:text-white"
+          className="flex flex-grow flex-col justify-end mb-5 mx-6 cursor-pointer text-black dark:text-white hover:underline"
         >
-          {!missedIngredientCount ? (
-            <div></div>
-          ) : missedIngredientCount >= 1 ? (
-            `Missing ${missedIngredientCount} Ingredient${
-              missedIngredientCount > 1 ? "s" : ""
-            }`
-          ) : (
-            `Ready To Cook!`
-          )}
+          {missedIngredientCount >= 1
+            ? `Missing ${missedIngredientCount} Ingredient${
+                missedIngredientCount > 1 ? "s" : ""
+              }`
+            : `Ready To Cook!`}
         </CardDescription>
         <CardFooter className="flex justify-between">
           <Button onClick={handleReadRecipe} variant={"link"}>

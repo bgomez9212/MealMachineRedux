@@ -96,7 +96,7 @@ const Login = ({ handleClick, authenticateUser }: LoginProps) => {
               No account yet?
               <br />
               <Button
-                className="text-[#8FAC5F]"
+                className="text-lightGreen"
                 variant={"link"}
                 onClick={handleClick}
               >
