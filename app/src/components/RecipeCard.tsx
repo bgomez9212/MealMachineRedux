@@ -76,7 +76,7 @@ export function RecipeCard({
                 {groceries
                   .map((grocery) => grocery.name)
                   .indexOf(ingredient.name) > -1 ? (
-                  <Button className="disabled bg-[#8fac5f]">
+                  <Button className="disabled bg-lightGreen">
                     In Your Groceries
                   </Button>
                 ) : (
@@ -113,7 +113,7 @@ export function RecipeCard({
         </CardHeader>
         <CardDescription
           onClick={() => setSelectedRecipe(missedIngredients)}
-          className="flex flex-grow flex-col justify-end mb-5 mx-6 cursor-pointer text-black dark:text-white"
+          className="flex flex-grow flex-col justify-end mb-5 mx-6 cursor-pointer text-black dark:text-white hover:underline"
         >
           {!missedIngredientCount ? (
             <div></div>
