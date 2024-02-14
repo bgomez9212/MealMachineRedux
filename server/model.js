@@ -188,7 +188,6 @@ module.exports = {
         },
       }
     );
-    console.log(ingredientsList);
     return result;
   },
 };
