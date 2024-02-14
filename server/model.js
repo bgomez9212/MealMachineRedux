@@ -146,7 +146,7 @@ module.exports = {
     );
     const ingredientsList = ingredients.rows
       .map(({ name }) => {
-        return name.includes(" ") ? name.split(" ").join("") : name;
+        return name.includes(" ") ? name.split(" ").join("+") : name;
       })
       .join(",+");
     const result = await axios.get(
