@@ -177,7 +177,7 @@ module.exports = {
     );
     const ingredientsList = ingredients
       .map(({ name }) => {
-        return name.includes(" ") ? name.split(" ").join("") : name;
+        return name.includes(" ") ? name.split(" ").join("+") : name;
       })
       .join(",");
     const { data: result } = await axios.get(
@@ -188,7 +188,7 @@ module.exports = {
         },
       }
     );
-    console.log(result);
+    console.log(ingredientsList);
     return result;
   },
 };
