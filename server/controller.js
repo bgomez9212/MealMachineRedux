@@ -49,7 +49,7 @@ module.exports = {
   },
   deleteIngredients: async (req, res) => {
     try {
-      await model.deleteIngredients(req.body.ing_user_id);
+      await model.deleteIngredients(req.body.user_id, req.body.food_id);
       res.sendStatus(204);
     } catch (err) {
       console.error("Error in deleteIngredients", err);
@@ -76,7 +76,7 @@ module.exports = {
   },
   deleteGroceries: async (req, res) => {
     try {
-      await model.deleteGroceries(req.body.gro_user_id);
+      await model.deleteGroceries(req.body.user_id, req.body.food_id);
       res.sendStatus(204);
     } catch (err) {
       console.error("Error in deleteGroceries", err);

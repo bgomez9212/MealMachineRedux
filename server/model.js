@@ -9,8 +9,8 @@ module.exports = {
       const query = `SELECT * FROM savedRecipes WHERE user_id = $1 ORDER BY date_added`;
       const { rows: result } = await pool.query(query, [user_id]);
       return result;
-    } catch (err.message) {
-      throw new Error(err.message)
+    } catch (err) {
+      throw new Error(err.message);
     }
   },
   postSavedRecipe: async (user_id, recipe_id, imageUrl, title) => {
@@ -19,7 +19,7 @@ module.exports = {
         "INSERT INTO savedRecipes(user_id, recipe_id, image, title) VALUES ($1, $2, $3, $4)";
       await pool.query(query, [user_id, recipe_id, imageUrl, title]);
     } catch (err) {
-      throw new Error(err.message)
+      throw new Error(err.message);
     }
   },
   deleteSavedRecipe: async (user_id, recipe_id) => {
@@ -28,7 +28,7 @@ module.exports = {
         "DELETE FROM savedRecipes WHERE user_id = $1 and recipe_id = $2";
       await pool.query(query, [user_id, recipe_id]);
     } catch (err) {
-      throw new Error(err.message)
+      throw new Error(err.message);
     }
   },
   // get ingredients for user
@@ -39,7 +39,7 @@ module.exports = {
       const result = await pool.query(query, [user_id]);
       return result;
     } catch (err) {
-      throw new Error(err.message)
+      throw new Error(err.message);
     }
   },
   // add ingredient for user, also adding name to food table if name does not exist
@@ -73,11 +73,10 @@ module.exports = {
 
         // Insert into the ingredients table, referencing the food table
         const insertIngredientQuery =
-          "INSERT INTO ingredients (user_id, food_id, ing_user_id, date_added) VALUES ($1, $2, $3, $4) ON CONFLICT (ing_user_id) DO NOTHING";
+          "INSERT INTO ingredients (user_id, food_id, date_added) VALUES ($1, $2, $3) ON CONFLICT DO NOTHING";
         await client.query(insertIngredientQuery, [
           user_id,
           food_id,
-          food_id + user_id,
           currentDate,
         ]);
 
@@ -92,16 +91,17 @@ module.exports = {
         client.release();
       }
     } catch (err) {
-      throw new Error(err.message)
+      throw new Error(err.message);
     }
   },
   // remove ingredient for user
-  deleteIngredients: async (ing_user_id) => {
+  deleteIngredients: async (user_id, food_id) => {
     try {
-      const query = "DELETE FROM ingredients WHERE ing_user_id = $1";
-      await pool.query(query, [ing_user_id]);
+      const query =
+        "DELETE FROM ingredients WHERE user_id = $1 AND food_id = $2";
+      await pool.query(query, [user_id, food_id]);
     } catch (err) {
-      throw new Error(err.message)
+      throw new Error(err.message);
     }
   },
   // get groceries for user
@@ -112,7 +112,7 @@ module.exports = {
       const result = await pool.query(query, [user_id]);
       return result;
     } catch (err) {
-      throw new Error(err.message)
+      throw new Error(err.message);
     }
   },
   // add groceries for user
@@ -144,13 +144,8 @@ module.exports = {
 
         // Insert into the groceries table, referencing the food table
         const insertGroceryQuery =
-          "INSERT INTO groceries (user_id, food_id, gro_user_id, date_added) VALUES ($1, $2, $3, $4) ON CONFLICT (gro_user_id) DO NOTHING";
-        await client.query(insertGroceryQuery, [
-          user_id,
-          food_id,
-          food_id + user_id,
-          currentDate,
-        ]);
+          "INSERT INTO groceries (user_id, food_id, date_added) VALUES ($1, $2, $3) ON CONFLICT DO NOTHING";
+        await client.query(insertGroceryQuery, [user_id, food_id, currentDate]);
 
         // Commit the transaction
         await client.query("COMMIT");
@@ -163,15 +158,15 @@ module.exports = {
         client.release();
       }
     } catch (err) {
-      throw new Error(err.message)
+      throw new Error(err.message);
     }
   },
-  deleteGroceries: async (gro_user_id) => {
+  deleteGroceries: async (user_id, food_id) => {
     try {
-      const query = "DELETE FROM groceries WHERE gro_user_id = $1";
+      const query = "DELETE FROM groceries WHERE user_id = $1 AND food_id = $2";
       await pool.query(query, [gro_user_id]);
     } catch (err) {
-      throw new Error(err.message)
+      throw new Error(err.message);
     }
   },
   getRecipes: async (user_id) => {
@@ -195,7 +190,7 @@ module.exports = {
       );
       return result.data;
     } catch (err) {
-      throw new Error(err.message)
+      throw new Error(err.message);
     }
   },
   getRecipeDetails: async (recipe_id) => {
@@ -210,7 +205,7 @@ module.exports = {
       );
       return result.data;
     } catch (err) {
-      throw new Error(err.message)
+      throw new Error(err.message);
     }
   },
   getSearchedRecipes: async (user_id, term) => {
@@ -234,7 +229,7 @@ module.exports = {
       );
       return result;
     } catch (err) {
-      throw new Error(err.message)
+      throw new Error(err.message);
     }
   },
 };
