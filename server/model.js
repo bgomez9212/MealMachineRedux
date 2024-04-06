@@ -45,50 +45,24 @@ module.exports = {
   // add ingredient for user, also adding name to food table if name does not exist
   postIngredients: async (user_id, food_name) => {
     try {
-      const client = await pool.connect();
-      try {
-        // Start a transaction
-        await client.query("BEGIN");
-
-        // Check if the food exists
-        const checkFoodQuery = "SELECT id FROM food WHERE name = $1";
-        const foodResult = await client.query(checkFoodQuery, [
+      const checkFoodQuery = "SELECT id FROM food WHERE name = $1";
+      const { rows: foodId } = await pool.query(checkFoodQuery, [
+        food_name.toLowerCase(),
+      ]);
+      if (!foodId.length) {
+        const addFoodQuery = "INSERT INTO food (name) VALUES ($1) returning id";
+        const { rows: foodId } = await pool.query(addFoodQuery, [
           food_name.toLowerCase(),
         ]);
-
-        let food_id;
-
-        if (foodResult.rows.length === 0) {
-          // If the food does not exist, insert it into the food table
-          const insertFoodQuery =
-            "INSERT INTO food (name) VALUES ($1) RETURNING id";
-          const insertFoodResult = await client.query(insertFoodQuery, [
-            food_name.toLowerCase(),
-          ]);
-          food_id = insertFoodResult.rows[0].id;
-        } else {
-          // If the food already exists, use its id
-          food_id = foodResult.rows[0].id;
-        }
-
-        // Insert into the ingredients table, referencing the food table
-        const insertIngredientQuery =
-          "INSERT INTO ingredients (user_id, food_id, date_added) VALUES ($1, $2, $3) ON CONFLICT DO NOTHING";
-        await client.query(insertIngredientQuery, [
-          user_id,
-          food_id,
-          currentDate,
-        ]);
-
-        // Commit the transaction
-        await client.query("COMMIT");
-      } catch (err) {
-        // If any error occurs, rollback the transaction
-        await client.query("ROLLBACK");
-        throw err;
-      } finally {
-        // Release the client back to the pool
-        client.release();
+        await pool.query(
+          "INSERT INTO ingredients (user_id, food_id, date) VALUES ($1, $2, $3)",
+          [user_id, foodId, date]
+        );
+      } else {
+        await pool.query(
+          "INSERT INTO ingredients (user_id, food_id, date) VALUES ($1, $2, $3)",
+          [user_id, foodId, date]
+        );
       }
     } catch (err) {
       throw new Error(err.message);
@@ -118,53 +92,31 @@ module.exports = {
   // add groceries for user
   postGroceries: async (user_id, food_name) => {
     try {
-      const client = await pool.connect();
-      try {
-        // Start a transaction
-        await client.query("BEGIN");
-
-        // Check if the food exists
-        const checkFoodQuery = "SELECT id FROM food WHERE name = $1";
-        const foodResult = await client.query(checkFoodQuery, [food_name]);
-
-        let food_id;
-
-        if (foodResult.rows.length === 0) {
-          // If the food does not exist, insert it into the food table
-          const insertFoodQuery =
-            "INSERT INTO food (name) VALUES ($1) RETURNING id";
-          const insertFoodResult = await client.query(insertFoodQuery, [
-            food_name,
-          ]);
-          food_id = insertFoodResult.rows[0].id;
-        } else {
-          // If the food already exists, use its id
-          food_id = foodResult.rows[0].id;
-        }
-
-        // Insert into the groceries table, referencing the food table
-        const insertGroceryQuery =
-          "INSERT INTO groceries (user_id, food_id, date_added) VALUES ($1, $2, $3) ON CONFLICT DO NOTHING";
-        await client.query(insertGroceryQuery, [user_id, food_id, currentDate]);
-
-        // Commit the transaction
-        await client.query("COMMIT");
-      } catch (err) {
-        // If any error occurs, rollback the transaction
-        await client.query("ROLLBACK");
-        throw err;
-      } finally {
-        // Release the client back to the pool
-        client.release();
+      let foodId;
+      const checkFoodQuery = "SELECT id FROM food WHERE name = $1";
+      const { rows: foodIdResult } = await pool.query(checkFoodQuery, [
+        food_name.toLowerCase(),
+      ]);
+      foodId = foodIdResult;
+      if (!foodId.length) {
+        const addFoodQuery = "INSERT INTO food (name) VALUES ($1) returning id";
+        const { rows: foodIdResult } = await pool.query(addFoodQuery, [
+          food_name.toLowerCase(),
+        ]);
+        foodId = foodIdResult;
       }
+      await pool.query(
+        "INSERT INTO groceries (user_id, food_id, date_added) VALUES ($1, $2, $3)",
+        [user_id, foodId[0].id, currentDate]
+      );
     } catch (err) {
       throw new Error(err.message);
     }
   },
-  deleteGroceries: async (user_id, food_id) => {
+  deleteGroceries: async (grocery_id) => {
     try {
-      const query = "DELETE FROM groceries WHERE user_id = $1 AND food_id = $2";
-      await pool.query(query, [gro_user_id]);
+      const query = "DELETE FROM groceries WHERE id = $1";
+      await pool.query(query, [grocery_id]);
     } catch (err) {
       throw new Error(err.message);
     }

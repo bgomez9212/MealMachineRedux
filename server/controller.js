@@ -76,7 +76,7 @@ module.exports = {
   },
   deleteGroceries: async (req, res) => {
     try {
-      await model.deleteGroceries(req.body.user_id, req.body.food_id);
+      await model.deleteGroceries(req.body.grocery_id);
       res.sendStatus(204);
     } catch (err) {
       console.error("Error in deleteGroceries", err);
