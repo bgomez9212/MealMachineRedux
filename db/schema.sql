@@ -7,18 +7,18 @@ CREATE TABLE IF NOT EXISTS ingredients (
   id SERIAL PRIMARY KEY,
   user_id VARCHAR(128),
   food_id INT,
-  ing_user_id VARCHAR(160) UNIQUE,
   date_added DATE,
-  FOREIGN KEY (food_id) REFERENCES food(id)
+  FOREIGN KEY (food_id) REFERENCES food(id),
+  UNIQUE (user_id, food_id)
 );
 
 CREATE TABLE IF NOT EXISTS groceries (
   id SERIAL PRIMARY KEY,
   user_id VARCHAR(128),
   food_id INT,
-  gro_user_id VARCHAR(160) UNIQUE,
   date_added DATE,
   FOREIGN KEY (food_id) REFERENCES food(id)
+  UNIQUE (user_id, food_id)
 );
 
 CREATE TABLE IF NOT EXISTS savedRecipes (
