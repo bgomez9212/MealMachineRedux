@@ -24,27 +24,16 @@ export default function App() {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
-        // User is signed in
         setUser(user.uid);
       } else {
-        // User is signed out
         setUser(null);
       }
-
-      // Set loading to false once the authentication state is determined
       setLoading(false);
     });
-
-    // Clean up the subscription when the component unmounts
     return () => unsubscribe();
-  }); // Empty dependency array ensures the effect runs only once
+  });
 
-  const {
-    data: groceries,
-    // isLoading,
-    // error,
-    // refetch,
-  } = useQuery<Groceries[]>({
+  const { data: groceries } = useQuery<Groceries[]>({
     queryKey: ["groceries"],
     queryFn: async () =>
       axios
@@ -58,8 +47,6 @@ export default function App() {
         }),
     enabled: !!user,
   });
-
-  // Show a loading indicator while checking authentication state
   if (loading) {
     return (
       <div>
@@ -67,14 +54,6 @@ export default function App() {
       </div>
     );
   }
-
-  // if (isLoading) {
-  //   return (
-  //     <div>
-  //       <ClipLoader color="#36d7b7" />
-  //     </div>
-  //   );
-  // }
 
   return (
     <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">

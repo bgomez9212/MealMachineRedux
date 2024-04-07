@@ -45,25 +45,23 @@ module.exports = {
   // add ingredient for user, also adding name to food table if name does not exist
   postIngredients: async (user_id, food_name) => {
     try {
+      let foodId;
       const checkFoodQuery = "SELECT id FROM food WHERE name = $1";
-      const { rows: foodId } = await pool.query(checkFoodQuery, [
+      const { rows: foodIdResult } = await pool.query(checkFoodQuery, [
         food_name.toLowerCase(),
       ]);
+      foodId = foodIdResult;
       if (!foodId.length) {
         const addFoodQuery = "INSERT INTO food (name) VALUES ($1) returning id";
-        const { rows: foodId } = await pool.query(addFoodQuery, [
+        const { rows: foodIdResult } = await pool.query(addFoodQuery, [
           food_name.toLowerCase(),
         ]);
-        await pool.query(
-          "INSERT INTO ingredients (user_id, food_id, date) VALUES ($1, $2, $3)",
-          [user_id, foodId, date]
-        );
-      } else {
-        await pool.query(
-          "INSERT INTO ingredients (user_id, food_id, date) VALUES ($1, $2, $3)",
-          [user_id, foodId, date]
-        );
+        foodId = foodIdResult;
       }
+      await pool.query(
+        "INSERT INTO ingredients (user_id, food_id, date_added) VALUES ($1, $2, $3) ON CONFLICT DO NOTHING",
+        [user_id, foodId[0].id, currentDate]
+      );
     } catch (err) {
       throw new Error(err.message);
     }
@@ -106,7 +104,7 @@ module.exports = {
         foodId = foodIdResult;
       }
       await pool.query(
-        "INSERT INTO groceries (user_id, food_id, date_added) VALUES ($1, $2, $3)",
+        "INSERT INTO groceries (user_id, food_id, date_added) VALUES ($1, $2, $3) ON CONFLICT DO NOTHING",
         [user_id, foodId[0].id, currentDate]
       );
     } catch (err) {

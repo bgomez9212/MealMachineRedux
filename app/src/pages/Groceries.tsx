@@ -1,61 +1,79 @@
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { GroceryCard } from "@/components/GroceryCard";
-import { useQueryClient } from "react-query";
+import { useQueryClient, useMutation } from "react-query";
 import { useContext, useState } from "react";
 import { UserContext } from "@/context/context";
 import axios from "axios";
 import { Button } from "@/components/ui/button";
 import { type Groceries } from "@/types";
 
+interface moveGroceryVariables {
+  user_id: string | null;
+  food_name: string;
+  grocery_id: number;
+}
+
 export function MyGroceries({ groceries }: { groceries: Groceries[] }) {
   const queryClient = useQueryClient();
   const user = useContext(UserContext);
   const regex = new RegExp("^[a-zA-Z]+.*$");
-
   const [groceryInput, setGroceryInput] = useState("");
 
-  function handleRemoveGrocery(gro_user_id: string) {
-    axios
-      .delete(import.meta.env.VITE_server_groceries, {
-        data: {
-          gro_user_id: gro_user_id,
-        },
-      })
-      .then(() => queryClient.invalidateQueries({ queryKey: ["groceries"] }));
+  async function removeGrocery(grocery_id: number) {
+    await axios.delete(import.meta.env.VITE_server_groceries, {
+      data: {
+        grocery_id: grocery_id,
+      },
+    });
   }
+
+  const { mutateAsync: removeGroceryMutation } = useMutation({
+    mutationFn: removeGrocery,
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["groceries"] }),
+  });
+
+  async function handleMoveGroceryToIngredientList({
+    user_id,
+    food_name,
+    grocery_id,
+  }: moveGroceryVariables) {
+    await axios
+      .post(import.meta.env.VITE_server_ingredients, {
+        user_id: user_id,
+        food_name: food_name,
+      })
+      .then(() => removeGrocery(grocery_id));
+  }
+
+  const { mutateAsync: moveGroceryMutation } = useMutation({
+    mutationFn: handleMoveGroceryToIngredientList,
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["groceries"] }),
+  });
+
+  async function addIngredient(grocery: string) {
+    if (regex.test(grocery)) {
+      await axios
+        .post(import.meta.env.VITE_server_groceries, {
+          user_id: user,
+          food_name: grocery,
+        })
+        .then(() => setGroceryInput(""));
+    }
+  }
+
+  const { mutateAsync: addIngredientMutation } = useMutation({
+    mutationFn: addIngredient,
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["groceries"] }),
+  });
 
   function handleSubmit() {
     const groceryArray = groceryInput
       .split(",")
       .map((grocery) => grocery.trim());
-
     groceryArray.forEach((grocery) => {
-      if (regex.test(grocery)) {
-        axios
-          .post(import.meta.env.VITE_server_groceries, {
-            user_id: user,
-            food_name: grocery,
-          })
-          .then(() =>
-            queryClient.invalidateQueries({ queryKey: ["groceries"] })
-          )
-          .then(() => setGroceryInput(""));
-      }
+      addIngredientMutation(grocery);
     });
-  }
-
-  function handleMoveGroceryToIngredientList(
-    gro_user_id: string,
-    food_name: string
-  ) {
-    axios
-      .post(import.meta.env.VITE_server_ingredients, {
-        user_id: user,
-        food_name: food_name,
-      })
-      .then(() => handleRemoveGrocery(gro_user_id))
-      .then(() => queryClient.invalidateQueries({ queryKey: ["groceries"] }));
   }
 
   return (
@@ -82,22 +100,36 @@ export function MyGroceries({ groceries }: { groceries: Groceries[] }) {
         <div className="mb-10">
           {groceries?.map(
             ({
+              id,
               name,
               date_added,
-              gro_user_id,
             }: {
+              id: number;
               name: string;
               date_added: string;
-              gro_user_id: string;
             }) => (
               <GroceryCard
                 key={name}
                 name={name}
                 date_added={date_added}
-                handleRemoveGrocery={() => handleRemoveGrocery(gro_user_id)}
-                handleMoveGroceryToIngredientList={() =>
-                  handleMoveGroceryToIngredientList(gro_user_id, name)
-                }
+                handleRemoveGrocery={async () => {
+                  try {
+                    removeGroceryMutation(id);
+                  } catch (e) {
+                    console.error(e);
+                  }
+                }}
+                handleMoveGroceryToIngredientList={async () => {
+                  try {
+                    moveGroceryMutation({
+                      user_id: user,
+                      food_name: name,
+                      grocery_id: id,
+                    });
+                  } catch (e) {
+                    console.error(e);
+                  }
+                }}
               />
             )
           )}

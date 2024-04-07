@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS groceries (
   user_id VARCHAR(128),
   food_id INT,
   date_added DATE,
-  FOREIGN KEY (food_id) REFERENCES food(id)
+  FOREIGN KEY (food_id) REFERENCES food(id),
   UNIQUE (user_id, food_id)
 );
 
