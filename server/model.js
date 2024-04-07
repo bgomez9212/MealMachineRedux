@@ -67,11 +67,10 @@ module.exports = {
     }
   },
   // remove ingredient for user
-  deleteIngredients: async (user_id, food_id) => {
+  deleteIngredients: async (ingredient_id) => {
     try {
-      const query =
-        "DELETE FROM ingredients WHERE user_id = $1 AND food_id = $2";
-      await pool.query(query, [user_id, food_id]);
+      const query = "DELETE FROM ingredients WHERE id = $1";
+      await pool.query(query, [ingredient_id]);
     } catch (err) {
       throw new Error(err.message);
     }

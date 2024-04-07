@@ -5,12 +5,19 @@ import { useContext, useState } from "react";
 import { Button } from "@/components/ui/button";
 import axios from "axios";
 import { UserContext } from "@/context/context";
-import { useQuery, useQueryClient } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "react-query";
+
+interface moveIngredientVariables {
+  user_id: string | null;
+  food_name: string;
+  ingredient_id: number;
+}
 
 export function MyIngredients() {
   const queryClient = useQueryClient();
   const user = useContext(UserContext);
   const regex = new RegExp("^[a-zA-Z]+.*$");
+  const [ingredientInput, setIngredientInput] = useState("");
 
   const {
     data: ingredients,
@@ -30,59 +37,61 @@ export function MyIngredients() {
         }),
   });
 
-  // user input section
-  const [textAreaData, setTextAreaData] = useState("");
-  // import.meta.env.VITE_apiKey
-  function handleSubmit() {
-    const ingredientArray = textAreaData.split(",").map((word) => word.trim());
-    ingredientArray.forEach((ingredient) => {
-      if (regex.test(ingredient)) {
-        axios
-          .post(import.meta.env.VITE_server_ingredients, {
-            user_id: user,
-            food_name: ingredient,
-          })
-          .then(() => {
-            queryClient.invalidateQueries({
-              queryKey: ["ingredients"],
-            });
-            queryClient.invalidateQueries({ queryKey: ["recipes"] });
-          })
-          .then(() => setTextAreaData(""))
-          .catch((err) => console.log(err));
-      }
+  async function removeIngredient(ingredient_id: number) {
+    await axios.delete(import.meta.env.VITE_server_ingredients, {
+      data: {
+        ingredient_id: ingredient_id,
+      },
     });
   }
 
-  function handleRemoveIngredient(ing_user_id: string) {
-    axios
-      .delete(import.meta.env.VITE_server_ingredients, {
-        data: {
-          ing_user_id: ing_user_id,
-        },
-      })
-      .then(() => {
-        queryClient.invalidateQueries({ queryKey: ["ingredients"] });
-        queryClient.invalidateQueries({ queryKey: ["recipes"] });
-      })
-      .catch((err) => console.log(err));
-  }
+  const { mutateAsync: removeIngredientMutation } = useMutation({
+    mutationFn: removeIngredient,
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: ["ingredients"] }),
+  });
 
-  function handleMoveIngredientToGroceryList(
-    ing_user_id: string,
-    food_name: string
-  ) {
-    axios
+  async function moveIngredient({
+    user_id,
+    food_name,
+    ingredient_id,
+  }: moveIngredientVariables) {
+    await axios
       .post(import.meta.env.VITE_server_groceries, {
-        user_id: user,
+        user_id: user_id,
         food_name: food_name,
       })
-      .then(() => handleRemoveIngredient(ing_user_id))
-      .then(() => {
-        queryClient.invalidateQueries({ queryKey: ["ingredients"] });
-        queryClient.invalidateQueries({ queryKey: ["recipes"] });
-        queryClient.invalidateQueries({ queryKey: ["groceries"] });
-      });
+      .then(() => removeIngredientMutation(ingredient_id));
+  }
+
+  const { mutateAsync: moveIngredientMutation } = useMutation({
+    mutationFn: moveIngredient,
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["groceries"] }),
+  });
+
+  async function addIngredient(grocery: string) {
+    if (regex.test(grocery)) {
+      await axios
+        .post(import.meta.env.VITE_server_ingredients, {
+          user_id: user,
+          food_name: grocery,
+        })
+        .then(() => setIngredientInput(""));
+    }
+  }
+
+  const { mutateAsync: addIngredientMutation } = useMutation({
+    mutationFn: addIngredient,
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["groceries"] }),
+  });
+
+  function handleSubmit() {
+    const ingredientArray = ingredientInput
+      .split(",")
+      .map((ingredient) => ingredient.trim());
+    ingredientArray.forEach((ingredient) => {
+      addIngredientMutation(ingredient);
+    });
   }
 
   if (error) {
@@ -100,8 +109,8 @@ export function MyIngredients() {
         <Textarea
           placeholder="Type your ingredients here."
           id="message-2"
-          value={textAreaData}
-          onChange={(e) => setTextAreaData(e.target.value)}
+          value={ingredientInput}
+          onChange={(e) => setIngredientInput(e.target.value)}
         />
         <div className="flex flex-col md:flex-row justify-between">
           <p className="text-sm text-muted-foreground mb-2 md:mb-0">
@@ -119,21 +128,29 @@ export function MyIngredients() {
             ({
               name,
               date_added,
-              ing_user_id,
+              id,
             }: {
               name: string;
               date_added: string;
-              ing_user_id: string;
+              id: number;
             }) => (
               <IngredientCard
                 key={name}
                 name={name}
                 date_added={date_added}
-                handleRemoveIngredient={() =>
-                  handleRemoveIngredient(ing_user_id)
-                }
+                handleRemoveIngredient={async () => {
+                  try {
+                    removeIngredientMutation(id);
+                  } catch (e) {
+                    console.error(e);
+                  }
+                }}
                 handleMoveIngredientToGroceryList={() =>
-                  handleMoveIngredientToGroceryList(ing_user_id, name)
+                  moveIngredient({
+                    user_id: user,
+                    food_name: name,
+                    ingredient_id: id,
+                  })
                 }
               />
             )

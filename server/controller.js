@@ -49,7 +49,7 @@ module.exports = {
   },
   deleteIngredients: async (req, res) => {
     try {
-      await model.deleteIngredients(req.body.user_id, req.body.food_id);
+      await model.deleteIngredients(req.body.ingredient_id);
       res.sendStatus(204);
     } catch (err) {
       console.error("Error in deleteIngredients", err);

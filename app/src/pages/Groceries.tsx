@@ -33,7 +33,7 @@ export function MyGroceries({ groceries }: { groceries: Groceries[] }) {
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["groceries"] }),
   });
 
-  async function handleMoveGroceryToIngredientList({
+  async function moveGrocery({
     user_id,
     food_name,
     grocery_id,
@@ -43,11 +43,11 @@ export function MyGroceries({ groceries }: { groceries: Groceries[] }) {
         user_id: user_id,
         food_name: food_name,
       })
-      .then(() => removeGrocery(grocery_id));
+      .then(() => removeGroceryMutation(grocery_id));
   }
 
   const { mutateAsync: moveGroceryMutation } = useMutation({
-    mutationFn: handleMoveGroceryToIngredientList,
+    mutationFn: moveGrocery,
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["groceries"] }),
   });
 
