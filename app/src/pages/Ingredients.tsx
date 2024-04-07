@@ -82,7 +82,8 @@ export function MyIngredients() {
 
   const { mutateAsync: addIngredientMutation } = useMutation({
     mutationFn: addIngredient,
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["groceries"] }),
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: ["ingredients"] }),
   });
 
   function handleSubmit() {
@@ -140,18 +141,22 @@ export function MyIngredients() {
                 date_added={date_added}
                 handleRemoveIngredient={async () => {
                   try {
-                    removeIngredientMutation(id);
+                    await removeIngredientMutation(id);
                   } catch (e) {
                     console.error(e);
                   }
                 }}
-                handleMoveIngredientToGroceryList={() =>
-                  moveIngredient({
-                    user_id: user,
-                    food_name: name,
-                    ingredient_id: id,
-                  })
-                }
+                handleMoveIngredientToGroceryList={async () => {
+                  try {
+                    await moveIngredientMutation({
+                      user_id: user,
+                      food_name: name,
+                      ingredient_id: id,
+                    });
+                  } catch (e) {
+                    console.error(e);
+                  }
+                }}
               />
             )
           )}
