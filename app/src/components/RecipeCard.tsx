@@ -116,12 +116,10 @@ export function RecipeCard({
         >
           {!missedIngredientCount ? (
             <div>Ready to make!</div>
-          ) : missedIngredientCount >= 1 ? (
+          ) : (
             `Missing ${missedIngredientCount} Ingredient${
               missedIngredientCount > 1 ? "s" : ""
             }`
-          ) : (
-            `Ready To Cook!`
           )}
         </CardDescription>
         <CardFooter className="flex justify-between">
