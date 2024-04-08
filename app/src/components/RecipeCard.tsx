@@ -111,16 +111,16 @@ export function RecipeCard({
           <CardTitle>{title}</CardTitle>
         </CardHeader>
         <CardDescription
-          onClick={() => setSelectedRecipe(missedIngredients)}
-          className="flex flex-grow flex-col justify-end mb-5 mx-6 cursor-pointer text-black dark:text-white"
+          onClick={() => {
+            missedIngredientCount ? setSelectedRecipe(missedIngredients) : "";
+          }}
+          className={`flex flex-grow flex-col justify-end mb-5 mx-6 ${missedIngredientCount ? "cursor-pointer" : ""} text-black dark:text-white`}
         >
-          {!missedIngredientCount ? (
-            <div>Ready to make!</div>
-          ) : (
-            `Missing ${missedIngredientCount} Ingredient${
-              missedIngredientCount > 1 ? "s" : ""
-            }`
-          )}
+          {!missedIngredientCount
+            ? "Ready to make!"
+            : `Missing ${missedIngredientCount} Ingredient${
+                missedIngredientCount > 1 ? "s" : ""
+              }`}
         </CardDescription>
         <CardFooter className="flex justify-between">
           <Button onClick={handleReadRecipe} variant={"link"}>
