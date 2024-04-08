@@ -66,7 +66,7 @@ export function RecipeCard({
           <div className="overflow-auto w-full">
             {selectedRecipe?.map((ingredient: MissingIngredients) => (
               <div className="flex flex-col sm:flex-row items-center justify-between py-5 border-b w-full">
-                <p className="hidden sm:block" key={ingredient.name}>
+                <p className="sm:block" key={ingredient.name}>
                   {ingredient.name
                     .split(" ")
                     .map((word) => word[0].toUpperCase() + word.substring(1))
@@ -75,7 +75,7 @@ export function RecipeCard({
                 {groceries!
                   .map((grocery) => grocery.name)
                   .indexOf(ingredient.name) > -1 ? (
-                  <Button className="disabled bg-[#8fac5f]">
+                  <Button key={ingredient.id} className="disabled bg-[#8fac5f]">
                     In Your Groceries
                   </Button>
                 ) : (
@@ -115,7 +115,7 @@ export function RecipeCard({
           className="flex flex-grow flex-col justify-end mb-5 mx-6 cursor-pointer text-black dark:text-white"
         >
           {!missedIngredientCount ? (
-            <div></div>
+            <div>Ready to make!</div>
           ) : missedIngredientCount >= 1 ? (
             `Missing ${missedIngredientCount} Ingredient${
               missedIngredientCount > 1 ? "s" : ""

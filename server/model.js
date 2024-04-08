@@ -126,7 +126,7 @@ module.exports = {
       );
       const ingredientsList = ingredients.rows
         .map(({ name }) => {
-          return name.includes(" ") ? name.split(" ").join("") : name;
+          return name.includes(" ") ? name.split(" ").join("+") : name;
         })
         .join(",+");
       const result = await axios.get(
@@ -137,6 +137,7 @@ module.exports = {
           },
         }
       );
+      console.log(result.data[0].missedIngredients);
       return result.data;
     } catch (err) {
       throw new Error(err.message);
