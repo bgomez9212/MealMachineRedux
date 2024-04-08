@@ -137,7 +137,6 @@ module.exports = {
           },
         }
       );
-      console.log(result.data[0].missedIngredients);
       return result.data;
     } catch (err) {
       throw new Error(err.message);
