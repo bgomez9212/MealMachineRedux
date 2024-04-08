@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import axios from "axios";
 import { UserContext } from "@/context/context";
 import { useMutation, useQuery, useQueryClient } from "react-query";
+import ClipLoader from "react-spinners/ClipLoader";
 
 interface moveIngredientVariables {
   user_id: string | null;
@@ -22,7 +23,7 @@ export function MyIngredients() {
   const {
     data: ingredients,
     isLoading,
-    error,
+    isError,
   } = useQuery({
     queryKey: ["ingredients"],
     queryFn: async () =>
@@ -95,14 +96,6 @@ export function MyIngredients() {
     });
   }
 
-  if (error) {
-    return <div>Sorry there seems to be something wrong on our end</div>;
-  }
-
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
-
   return (
     <div className="px-10 py-10">
       <div className="grid w-full gap-1.5">
@@ -123,7 +116,15 @@ export function MyIngredients() {
           </Button>
         </div>
       </div>
-      {ingredients.length ? (
+      {isLoading ? (
+        <div className="flex justify-center items-center pt-10">
+          <ClipLoader color="#8FAC5F" />
+        </div>
+      ) : isError ? (
+        <div className="flex justify-center items-center">
+          An Error has occured
+        </div>
+      ) : ingredients.length ? (
         <div className="mb-10">
           {ingredients?.map(
             ({
@@ -139,14 +140,14 @@ export function MyIngredients() {
                 key={name}
                 name={name}
                 date_added={date_added}
-                handleRemoveIngredient={async () => {
+                removeIngredient={async () => {
                   try {
                     await removeIngredientMutation(id);
                   } catch (e) {
                     console.error(e);
                   }
                 }}
-                handleMoveIngredientToGroceryList={async () => {
+                moveIngredient={async () => {
                   try {
                     await moveIngredientMutation({
                       user_id: user,

@@ -10,13 +10,13 @@ import { Button } from "./ui/button";
 export function GroceryCard({
   name,
   date_added,
-  handleRemoveGrocery,
-  handleMoveGroceryToIngredientList,
+  removeGrocery,
+  moveGrocery,
 }: {
   name: string;
   date_added: string;
-  handleRemoveGrocery: () => void;
-  handleMoveGroceryToIngredientList: () => void;
+  removeGrocery: () => void;
+  moveGrocery: () => void;
 }) {
   return (
     <Card className="mt-10 flex flex-col flex-wrap bg-[#FCFCF6] dark:bg-[#526345]">
@@ -33,14 +33,10 @@ export function GroceryCard({
         )}`}</CardDescription>
       </CardHeader>
       <CardFooter>
-        <Button
-          onClick={handleMoveGroceryToIngredientList}
-          className="mr-2"
-          variant={"move"}
-        >
+        <Button onClick={moveGrocery} className="mr-2" variant={"move"}>
           Move to Ingredient List
         </Button>
-        <Button onClick={handleRemoveGrocery} variant={"destructive"}>
+        <Button onClick={removeGrocery} variant={"destructive"}>
           Remove
         </Button>
       </CardFooter>

@@ -7,6 +7,7 @@ import { UserContext } from "@/context/context";
 import axios from "axios";
 import { Button } from "@/components/ui/button";
 import { useGroceryContext } from "@/context/groceryContext";
+import ClipLoader from "react-spinners/ClipLoader";
 
 interface moveGroceryVariables {
   user_id: string | null;
@@ -19,7 +20,7 @@ export function MyGroceries() {
   const user = useContext(UserContext);
   const regex = new RegExp("^[a-zA-Z]+.*$");
   const [groceryInput, setGroceryInput] = useState("");
-  const groceries = useGroceryContext();
+  const { groceries, isGroceryLoading, isGroceryError } = useGroceryContext();
   async function removeGrocery(grocery_id: number) {
     await axios.delete(import.meta.env.VITE_server_groceries, {
       data: {
@@ -96,7 +97,15 @@ export function MyGroceries() {
           </Button>
         </div>
       </div>
-      {groceries?.length ? (
+      {isGroceryLoading ? (
+        <div className="flex justify-center items-center pt-10">
+          <ClipLoader color="#8FAC5F" />
+        </div>
+      ) : isGroceryError ? (
+        <div className="flex justify-center items-center">
+          An Error has occured
+        </div>
+      ) : groceries?.length ? (
         <div className="mb-10">
           {groceries?.map(
             ({
@@ -112,14 +121,14 @@ export function MyGroceries() {
                 key={name}
                 name={name}
                 date_added={date_added}
-                handleRemoveGrocery={async () => {
+                removeGrocery={async () => {
                   try {
                     removeGroceryMutation(id);
                   } catch (e) {
                     console.error(e);
                   }
                 }}
-                handleMoveGroceryToIngredientList={async () => {
+                moveGrocery={async () => {
                   try {
                     moveGroceryMutation({
                       user_id: user,

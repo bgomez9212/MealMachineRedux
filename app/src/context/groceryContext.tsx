@@ -5,7 +5,12 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import { type Groceries } from "../types";
 
-const GroceryContext = createContext<Groceries[] | undefined>(undefined);
+interface GroceryContext {
+  groceries: Groceries[];
+  isGroceryLoading: boolean;
+  isGroceryError: boolean;
+}
+const GroceryContext = createContext<GroceryContext | undefined>(undefined);
 
 export default function GroceryContextProvider({
   children,
@@ -27,9 +32,9 @@ export default function GroceryContextProvider({
 
   const {
     data: groceries,
-    isLoading,
-    isError,
-  } = useQuery<Groceries[]>({
+    isLoading: isGroceryLoading,
+    isError: isGroceryError,
+  } = useQuery({
     queryKey: ["groceries"],
     queryFn: async () =>
       axios
@@ -45,7 +50,13 @@ export default function GroceryContextProvider({
   });
 
   return (
-    <GroceryContext.Provider value={groceries}>
+    <GroceryContext.Provider
+      value={{
+        groceries,
+        isGroceryLoading,
+        isGroceryError,
+      }}
+    >
       {children}
     </GroceryContext.Provider>
   );
@@ -53,5 +64,10 @@ export default function GroceryContextProvider({
 
 export function useGroceryContext() {
   const groceryContext = useContext(GroceryContext);
+  if (!groceryContext) {
+    throw new Error(
+      "useGroceryContext must be used within a GroceryContextProvider"
+    );
+  }
   return groceryContext;
 }

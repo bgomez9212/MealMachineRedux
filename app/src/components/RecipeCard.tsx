@@ -40,7 +40,7 @@ export function RecipeCard({
   >(null);
   const user = useContext(UserContext);
   const queryClient = useQueryClient();
-  const groceries = useGroceryContext();
+  const { groceries, isGroceryLoading, isGroceryError } = useGroceryContext();
   function handleSaveGrocery(grocery: string) {
     axios
       .post(import.meta.env.VITE_server_groceries, {
@@ -72,7 +72,7 @@ export function RecipeCard({
                     .map((word) => word[0].toUpperCase() + word.substring(1))
                     .join(" ")}
                 </p>
-                {groceries!
+                {groceries
                   .map((grocery) => grocery.name)
                   .indexOf(ingredient.name) > -1 ? (
                   <Button key={ingredient.id} className="disabled bg-[#8fac5f]">

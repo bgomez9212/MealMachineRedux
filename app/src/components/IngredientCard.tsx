@@ -10,13 +10,13 @@ import { Button } from "./ui/button";
 export function IngredientCard({
   name,
   date_added,
-  handleRemoveIngredient,
-  handleMoveIngredientToGroceryList,
+  removeIngredient,
+  moveIngredient,
 }: {
   name: string;
   date_added: string;
-  handleRemoveIngredient: () => void;
-  handleMoveIngredientToGroceryList: () => void;
+  removeIngredient: () => void;
+  moveIngredient: () => void;
 }) {
   return (
     <Card className="mt-10 flex flex-col flex-wrap bg-[#FCFCF6] dark:bg-[#526345]">
@@ -33,14 +33,10 @@ export function IngredientCard({
         )}`}</CardDescription>
       </CardHeader>
       <CardFooter>
-        <Button
-          onClick={handleMoveIngredientToGroceryList}
-          className="mr-2"
-          variant={"move"}
-        >
+        <Button onClick={moveIngredient} className="mr-2" variant={"move"}>
           Move to Grocery List
         </Button>
-        <Button onClick={handleRemoveIngredient} variant={"destructive"}>
+        <Button onClick={removeIngredient} variant={"destructive"}>
           Remove
         </Button>
       </CardFooter>
