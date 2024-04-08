@@ -14,6 +14,7 @@ import axios from "axios";
 import { UserContext } from "@/context/context";
 import { useQueryClient } from "react-query";
 import { type Groceries, type MissingIngredients } from "@/types";
+import { useGroceryContext } from "@/context/groceryContext";
 
 export function RecipeCard({
   image,
@@ -24,7 +25,6 @@ export function RecipeCard({
   handleDeleteSavedRecipe,
   isSaved,
   missedIngredients,
-  groceries,
 }: {
   image: string;
   title: string;
@@ -34,14 +34,13 @@ export function RecipeCard({
   isSaved: boolean;
   missedIngredientCount: number | null;
   missedIngredients: MissingIngredients[] | null;
-  groceries: Groceries[];
 }) {
   const [selectedRecipe, setSelectedRecipe] = useState<
     MissingIngredients[] | null
   >(null);
   const user = useContext(UserContext);
   const queryClient = useQueryClient();
-
+  const groceries = useGroceryContext();
   function handleSaveGrocery(grocery: string) {
     axios
       .post(import.meta.env.VITE_server_groceries, {
@@ -73,7 +72,7 @@ export function RecipeCard({
                     .map((word) => word[0].toUpperCase() + word.substring(1))
                     .join(" ")}
                 </p>
-                {groceries
+                {groceries!
                   .map((grocery) => grocery.name)
                   .indexOf(ingredient.name) > -1 ? (
                   <Button className="disabled bg-[#8fac5f]">

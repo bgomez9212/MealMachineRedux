@@ -5,17 +5,18 @@ import { UserContext } from "@/context/context";
 import { useNavigate } from "react-router-dom";
 import { useQuery, useQueryClient } from "react-query";
 import { useToast } from "@/components/ui/use-toast";
-import { type HomeRecipes, type SavedRecipe, type Groceries } from "@/types";
+import { type HomeRecipes, type SavedRecipe } from "@/types";
 import ClipLoader from "react-spinners/ClipLoader";
 import { Input } from "@/components/ui/input";
+import { useGroceryContext } from "@/context/groceryContext";
 
-export function Home({ groceries }: { groceries: Groceries[] }) {
+export function Home() {
   const { toast } = useToast();
   const user = useContext(UserContext);
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const [search, setSearch] = useState("");
-
+  const groceries = useGroceryContext();
   const {
     data: recipes,
     isLoading: isLoadingRecipes,
@@ -162,7 +163,6 @@ export function Home({ groceries }: { groceries: Groceries[] }) {
                 isSaved={savedRecipes?.includes(id)}
                 missedIngredientCount={missedIngredientCount}
                 missedIngredients={missedIngredients}
-                groceries={groceries}
               />
             )
           )}
@@ -191,7 +191,6 @@ export function Home({ groceries }: { groceries: Groceries[] }) {
                     isSaved={savedRecipes?.includes(id)}
                     missedIngredientCount={missedIngredientCount}
                     missedIngredients={missedIngredients}
-                    groceries={groceries}
                   />
                 )
               )}

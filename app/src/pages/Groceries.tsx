@@ -6,7 +6,7 @@ import { useContext, useState } from "react";
 import { UserContext } from "@/context/context";
 import axios from "axios";
 import { Button } from "@/components/ui/button";
-import { type Groceries } from "@/types";
+import { useGroceryContext } from "@/context/groceryContext";
 
 interface moveGroceryVariables {
   user_id: string | null;
@@ -14,12 +14,12 @@ interface moveGroceryVariables {
   grocery_id: number;
 }
 
-export function MyGroceries({ groceries }: { groceries: Groceries[] }) {
+export function MyGroceries() {
   const queryClient = useQueryClient();
   const user = useContext(UserContext);
   const regex = new RegExp("^[a-zA-Z]+.*$");
   const [groceryInput, setGroceryInput] = useState("");
-
+  const groceries = useGroceryContext();
   async function removeGrocery(grocery_id: number) {
     await axios.delete(import.meta.env.VITE_server_groceries, {
       data: {
@@ -96,7 +96,7 @@ export function MyGroceries({ groceries }: { groceries: Groceries[] }) {
           </Button>
         </div>
       </div>
-      {groceries.length ? (
+      {groceries?.length ? (
         <div className="mb-10">
           {groceries?.map(
             ({

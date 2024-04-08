@@ -11,11 +11,9 @@ import { LandingPage } from "./pages/LandingPage";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import { UserContext } from "./context/context";
 import { ThemeProvider } from "./context/themeContext";
-import { useQuery } from "react-query";
 import { RecipeDetailPage } from "./pages/RecipeDetailsPage";
-import axios from "axios";
-import { type Groceries } from "./types";
 import ClipLoader from "react-spinners/ClipLoader";
+import GroceryContextProvider from "./context/groceryContext";
 
 export default function App() {
   const [user, setUser] = useState<string | null>(null);
@@ -33,20 +31,6 @@ export default function App() {
     return () => unsubscribe();
   });
 
-  const { data: groceries } = useQuery<Groceries[]>({
-    queryKey: ["groceries"],
-    queryFn: async () =>
-      axios
-        .get(import.meta.env.VITE_server_groceries, {
-          params: {
-            user_id: user,
-          },
-        })
-        .then((res) => {
-          return res.data;
-        }),
-    enabled: !!user,
-  });
   if (loading) {
     return (
       <div>
@@ -58,50 +42,46 @@ export default function App() {
   return (
     <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
       <UserContext.Provider value={user}>
-        <BrowserRouter>
-          <Navbar />
-          <Routes>
-            <Route
-              path="/"
-              element={
-                user ? (
-                  <Navigate to="/home" />
-                ) : (
-                  <LandingPage authenticateUser={(userId) => setUser(userId)} />
-                )
-              }
-            />
-            <Route
-              path="home"
-              element={
-                <ProtectedRoute
-                  element={<Home groceries={groceries || []} />}
-                />
-              }
-            />
-            <Route
-              path="groceries"
-              element={
-                <ProtectedRoute
-                  element={<MyGroceries groceries={groceries || []} />}
-                />
-              }
-            />
-            <Route
-              path="ingredients"
-              element={<ProtectedRoute element={<MyIngredients />} />}
-            />
-            <Route
-              path="savedRecipes"
-              element={<ProtectedRoute element={<SavedRecipes />} />}
-            />
-            <Route
-              path="details/:recipe_id"
-              element={<ProtectedRoute element={<RecipeDetailPage />} />}
-            />
-            <Route path="/*" element={<Navigate to="/" />} />
-          </Routes>
-        </BrowserRouter>
+        <GroceryContextProvider>
+          <BrowserRouter>
+            <Navbar />
+            <Routes>
+              <Route
+                path="/"
+                element={
+                  user ? (
+                    <Navigate to="/home" />
+                  ) : (
+                    <LandingPage
+                      authenticateUser={(userId) => setUser(userId)}
+                    />
+                  )
+                }
+              />
+              <Route
+                path="home"
+                element={<ProtectedRoute element={<Home />} />}
+              />
+              <Route
+                path="groceries"
+                element={<ProtectedRoute element={<MyGroceries />} />}
+              />
+              <Route
+                path="ingredients"
+                element={<ProtectedRoute element={<MyIngredients />} />}
+              />
+              <Route
+                path="savedRecipes"
+                element={<ProtectedRoute element={<SavedRecipes />} />}
+              />
+              <Route
+                path="details/:recipe_id"
+                element={<ProtectedRoute element={<RecipeDetailPage />} />}
+              />
+              <Route path="/*" element={<Navigate to="/" />} />
+            </Routes>
+          </BrowserRouter>
+        </GroceryContextProvider>
       </UserContext.Provider>
     </ThemeProvider>
   );
