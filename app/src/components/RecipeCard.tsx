@@ -13,7 +13,7 @@ import Modal from "@mui/material/Modal";
 import axios from "axios";
 import { UserContext } from "@/context/context";
 import { useQueryClient } from "react-query";
-import { type Groceries, type MissingIngredients } from "@/types";
+import { type MissingIngredients } from "@/types";
 import { useGroceryContext } from "@/context/groceryContext";
 
 export function RecipeCard({

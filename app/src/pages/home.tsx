@@ -8,7 +8,6 @@ import { useToast } from "@/components/ui/use-toast";
 import { type HomeRecipes, type SavedRecipe } from "@/types";
 import ClipLoader from "react-spinners/ClipLoader";
 import { Input } from "@/components/ui/input";
-import { useGroceryContext } from "@/context/groceryContext";
 
 export function Home() {
   const { toast } = useToast();
@@ -16,7 +15,6 @@ export function Home() {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const [search, setSearch] = useState("");
-  const groceries = useGroceryContext();
   const {
     data: recipes,
     isLoading: isLoadingRecipes,
