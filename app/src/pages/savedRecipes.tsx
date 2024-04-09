@@ -54,6 +54,14 @@ export function SavedRecipes() {
     );
   }
 
+  if (isError) {
+    return (
+      <div className="flex justify-center items center pt-10">
+        An error has occured, please try again later.
+      </div>
+    );
+  }
+
   return (
     <>
       {savedRecipes.length ? (

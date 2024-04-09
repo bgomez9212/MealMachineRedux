@@ -122,7 +122,7 @@ export function MyIngredients() {
         </div>
       ) : isError ? (
         <div className="flex justify-center items-center">
-          An Error has occured
+          An Error has occured, please try again later.
         </div>
       ) : ingredients.length ? (
         <div className="mb-10">
