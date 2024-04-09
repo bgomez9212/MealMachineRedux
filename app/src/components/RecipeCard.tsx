@@ -40,7 +40,7 @@ export function RecipeCard({
   >(null);
   const user = useContext(UserContext);
   const queryClient = useQueryClient();
-  const { groceries, isGroceryLoading, isGroceryError } = useGroceryContext();
+  const { groceries } = useGroceryContext();
   function handleSaveGrocery(grocery: string) {
     axios
       .post(import.meta.env.VITE_server_groceries, {
