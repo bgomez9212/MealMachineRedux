@@ -10,12 +10,9 @@ import { SavedRecipes } from "./pages/savedRecipes";
 import { LandingPage } from "./pages/LandingPage";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import { UserContext } from "./context/context";
-import { ThemeProvider } from "./context/themeContext";
-import { useQuery } from "react-query";
 import { RecipeDetailPage } from "./pages/RecipeDetailsPage";
-import axios from "axios";
-import { type Groceries } from "./types";
 import ClipLoader from "react-spinners/ClipLoader";
+import GroceryContextProvider from "./context/groceryContext";
 
 export default function App() {
   const [user, setUser] = useState<string | null>(null);
@@ -24,61 +21,26 @@ export default function App() {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
-        // User is signed in
         setUser(user.uid);
       } else {
-        // User is signed out
         setUser(null);
       }
-
-      // Set loading to false once the authentication state is determined
       setLoading(false);
     });
-
-    // Clean up the subscription when the component unmounts
     return () => unsubscribe();
-  }); // Empty dependency array ensures the effect runs only once
-
-  const {
-    data: groceries,
-    // isLoading,
-    // error,
-    // refetch,
-  } = useQuery<Groceries[]>({
-    queryKey: ["groceries"],
-    queryFn: async () =>
-      axios
-        .get(import.meta.env.VITE_server_groceries, {
-          params: {
-            user_id: user,
-          },
-        })
-        .then((res) => {
-          return res.data;
-        }),
-    enabled: !!user,
   });
 
-  // Show a loading indicator while checking authentication state
   if (loading) {
     return (
-      <div>
-        <ClipLoader color="#36d7b7" />
+      <div className="flex justify-center items-center w-screen h-screen">
+        <ClipLoader color="#8FAC5F" />
       </div>
     );
   }
 
-  // if (isLoading) {
-  //   return (
-  //     <div>
-  //       <ClipLoader color="#36d7b7" />
-  //     </div>
-  //   );
-  // }
-
   return (
-    <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
-      <UserContext.Provider value={user}>
+    <UserContext.Provider value={user}>
+      <GroceryContextProvider>
         <BrowserRouter>
           <Navbar />
           <Routes>
@@ -94,19 +56,11 @@ export default function App() {
             />
             <Route
               path="home"
-              element={
-                <ProtectedRoute
-                  element={<Home groceries={groceries || []} />}
-                />
-              }
+              element={<ProtectedRoute element={<Home />} />}
             />
             <Route
               path="groceries"
-              element={
-                <ProtectedRoute
-                  element={<MyGroceries groceries={groceries || []} />}
-                />
-              }
+              element={<ProtectedRoute element={<MyGroceries />} />}
             />
             <Route
               path="ingredients"
@@ -123,7 +77,7 @@ export default function App() {
             <Route path="/*" element={<Navigate to="/" />} />
           </Routes>
         </BrowserRouter>
-      </UserContext.Provider>
-    </ThemeProvider>
+      </GroceryContextProvider>
+    </UserContext.Provider>
   );
 }

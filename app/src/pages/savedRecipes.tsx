@@ -4,6 +4,7 @@ import axios from "axios";
 import { useContext } from "react";
 import { useQuery, useQueryClient } from "react-query";
 import { useNavigate } from "react-router-dom";
+import ClipLoader from "react-spinners/ClipLoader";
 
 export function SavedRecipes() {
   const queryClient = useQueryClient();
@@ -17,7 +18,7 @@ export function SavedRecipes() {
   const {
     data: savedRecipes,
     isLoading,
-    // error,
+    isError,
   } = useQuery({
     queryKey: ["savedRecipes"],
     queryFn: async () =>
@@ -46,7 +47,19 @@ export function SavedRecipes() {
   }
 
   if (isLoading) {
-    return <h1>is loading...</h1>;
+    return (
+      <div className="flex justify-center items center pt-10">
+        <ClipLoader color="#8FAC5F" />
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <div className="flex justify-center items center pt-10">
+        An error has occured, please try again later.
+      </div>
+    );
   }
 
   return (

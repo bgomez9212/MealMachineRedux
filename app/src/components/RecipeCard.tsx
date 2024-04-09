@@ -13,7 +13,8 @@ import Modal from "@mui/material/Modal";
 import axios from "axios";
 import { UserContext } from "@/context/context";
 import { useQueryClient } from "react-query";
-import { type Groceries, type MissingIngredients } from "@/types";
+import { type MissingIngredients } from "@/types";
+import { useGroceryContext } from "@/context/groceryContext";
 
 export function RecipeCard({
   image,
@@ -24,7 +25,6 @@ export function RecipeCard({
   handleDeleteSavedRecipe,
   isSaved,
   missedIngredients,
-  groceries,
 }: {
   image: string;
   title: string;
@@ -32,16 +32,15 @@ export function RecipeCard({
   handleReadRecipe: () => void;
   handleDeleteSavedRecipe: () => void;
   isSaved: boolean;
-  missedIngredientCount: number;
-  missedIngredients: MissingIngredients[];
-  groceries: Groceries[];
+  missedIngredientCount: number | null;
+  missedIngredients: MissingIngredients[] | null;
 }) {
   const [selectedRecipe, setSelectedRecipe] = useState<
     MissingIngredients[] | null
   >(null);
   const user = useContext(UserContext);
   const queryClient = useQueryClient();
-
+  const { groceries, isGroceryLoading, isGroceryError } = useGroceryContext();
   function handleSaveGrocery(grocery: string) {
     axios
       .post(import.meta.env.VITE_server_groceries, {
@@ -67,7 +66,7 @@ export function RecipeCard({
           <div className="overflow-auto w-full">
             {selectedRecipe?.map((ingredient: MissingIngredients) => (
               <div className="flex flex-col sm:flex-row items-center justify-between py-5 border-b w-full">
-                <p className="hidden sm:block" key={ingredient.name}>
+                <p className="sm:block" key={ingredient.name}>
                   {ingredient.name
                     .split(" ")
                     .map((word) => word[0].toUpperCase() + word.substring(1))
@@ -76,7 +75,7 @@ export function RecipeCard({
                 {groceries
                   .map((grocery) => grocery.name)
                   .indexOf(ingredient.name) > -1 ? (
-                  <Button className="disabled bg-lightGreen">
+                  <Button key={ingredient.id} className="disabled bg-[#8fac5f]">
                     In Your Groceries
                   </Button>
                 ) : (
@@ -112,14 +111,16 @@ export function RecipeCard({
           <CardTitle>{title}</CardTitle>
         </CardHeader>
         <CardDescription
-          onClick={() => setSelectedRecipe(missedIngredients)}
-          className="flex flex-grow flex-col justify-end mb-5 mx-6 cursor-pointer text-black dark:text-white hover:underline"
+          onClick={() => {
+            missedIngredientCount ? setSelectedRecipe(missedIngredients) : "";
+          }}
+          className={`flex flex-grow flex-col justify-end mb-5 mx-6 ${missedIngredientCount ? "cursor-pointer" : ""} text-black dark:text-white`}
         >
-          {missedIngredientCount >= 1
-            ? `Missing ${missedIngredientCount} Ingredient${
+          {!missedIngredientCount
+            ? "Ready to make!"
+            : `Missing ${missedIngredientCount} Ingredient${
                 missedIngredientCount > 1 ? "s" : ""
-              }`
-            : `Ready To Cook!`}
+              }`}
         </CardDescription>
         <CardFooter className="flex justify-between">
           <Button onClick={handleReadRecipe} variant={"link"}>
