@@ -18,9 +18,9 @@ const buttonVariants = cva(
           "bg-secondary text-secondary-foreground hover:bg-secondary/80",
         ghost: "hover:bg-accent hover:text-accent-foreground",
         link: "text-primary underline-offset-4 hover:underline",
-        move: "bg-[#8fac5f] text-destructive-foreground hover:bg-[#8fac5f]/90",
+        move: "bg-lightGreen text-destructive-foreground hover:bg-lightGreen/90",
         saved:
-          "bg-[#8fac5f] text-destructive-foreground hover:bg-destructive before:content-['Saved'] hover:before:content-['Unsave']",
+          "bg-lightGreen text-destructive-foreground hover:bg-destructive before:content-['Saved'] hover:before:content-['Unsave']",
       },
       size: {
         default: "h-10 px-4 py-2",
