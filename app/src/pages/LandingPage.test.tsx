@@ -1,42 +1,31 @@
-// import { render, screen, fireEvent } from "vitest";
-// import LandingPage from "../pages/LandingPage";
+import { render, fireEvent } from "@testing-library/react";
+import { LandingPage } from "./LandingPage";
+import { BrowserRouter as Router } from "react-router-dom";
+import { vi } from "vitest";
 
-// // Mocking useState hook
-// vi.mock("react", () => ({
-//   ...vi.requireActual("react"),
-//   useState: vi.fn(),
-// }));
+// Mock authenticateUser function
+const mockAuthenticateUser = vi.fn();
 
-// describe("LandingPage Component", () => {
-//   beforeEach(() => {
-//     // Mocking useState initial state and setState function
-//     useState.mockImplementation(() => [true, vi.fn()]);
-//   });
+describe("LandingPage component", () => {
+  it("renders Login component by default", () => {
+    const { getByTestId } = render(
+      <Router>
+        <LandingPage authenticateUser={mockAuthenticateUser} />
+      </Router>
+    );
+    const loginComponent = getByTestId("login-component");
+    expect(loginComponent).toBeInTheDocument();
+  });
 
-//   it("renders Login component by default", () => {
-//     render(<LandingPage />);
-//     const loginComponent = screen.getByTestId("login-component");
-//     expect(loginComponent).toBeInTheDocument();
-//   });
-
-//   it("renders Signup component when clicking on the signup button", () => {
-//     render(<LandingPage />);
-//     const signupButton = screen.getByTestId("signup-button");
-//     fireEvent.click(signupButton);
-//     const signupComponent = screen.getByTestId("signup-component");
-//     expect(signupComponent).toBeInTheDocument();
-//   });
-
-//   it("toggles between Login and Signup components when clicking on the toggle button", () => {
-//     render(<LandingPage />);
-//     const toggleButton = screen.getByTestId("toggle-button");
-
-//     fireEvent.click(toggleButton);
-//     let signupComponent = screen.getByTestId("signup-component");
-//     expect(signupComponent).toBeInTheDocument();
-
-//     fireEvent.click(toggleButton);
-//     const loginComponent = screen.getByTestId("login-component");
-//     expect(loginComponent).toBeInTheDocument();
-//   });
-// });
+  it('renders Signup component when "Sign Up" button is clicked', () => {
+    const { getByTestId } = render(
+      <Router>
+        <LandingPage authenticateUser={mockAuthenticateUser} />
+      </Router>
+    );
+    const signUpButton = getByTestId("sign-up-button");
+    fireEvent.click(signUpButton);
+    const signupComponent = getByTestId("sign-up-component");
+    expect(signupComponent).toBeInTheDocument();
+  });
+});

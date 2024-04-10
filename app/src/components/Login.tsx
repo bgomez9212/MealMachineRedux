@@ -34,7 +34,7 @@ const Login = ({ handleClick, authenticateUser }: LoginProps) => {
 
   return (
     <>
-      <main>
+      <main data-testid="login-component">
         <section>
           <div className="flex flex-col justify-center items-center w-[300px]">
             <div className="h-[180px] w-[300px] bg-[url('/logo-landing.png')] bg-cover dark:bg-[url('/logo-landing-dark.PNG')]"></div>
@@ -77,7 +77,7 @@ const Login = ({ handleClick, authenticateUser }: LoginProps) => {
 
               <div>
                 <Button
-                  data-testid="test1"
+                  data-testid="login-button"
                   onClick={onLogin}
                   className="bg-black w-full mt-2 h-10 text-slate-50 dark:hover:text-slate-950"
                 >
@@ -96,6 +96,7 @@ const Login = ({ handleClick, authenticateUser }: LoginProps) => {
               No account yet?
               <br />
               <Button
+                data-testid="sign-up-button"
                 className="text-lightGreen"
                 variant={"link"}
                 onClick={handleClick}

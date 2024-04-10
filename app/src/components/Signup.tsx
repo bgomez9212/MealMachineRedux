@@ -52,7 +52,7 @@ const Signup = ({ handleClick, authenticateUser }: SignupProps) => {
   };
 
   return (
-    <main>
+    <main data-testid="sign-up-component">
       <section>
         <div>
           <div className="flex flex-col justify-center items-center w-[300px]">
