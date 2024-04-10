@@ -40,11 +40,13 @@ const Login = ({ handleClick, authenticateUser }: LoginProps) => {
             <form className="w-full mt-5">
               <div>
                 <Input
+                  data-testid="email-input"
                   id="email-address"
                   name="email-address"
                   type="email"
                   required
                   placeholder="Email address"
+                  value={formData.email}
                   onChange={(e) =>
                     setFormData({ ...formData, email: e.target.value })
                   }
@@ -54,15 +56,17 @@ const Login = ({ handleClick, authenticateUser }: LoginProps) => {
 
               <div className="flex items-center relative">
                 <Input
+                  data-testid="password-input"
                   type={visible ? "text" : "password"}
                   placeholder="Password"
-                  // Other input props...
                   className="w-full mt-2 h-10 bg-white px-3 text-black"
+                  value={formData.password}
                   onChange={(e) =>
                     setFormData({ ...formData, password: e.target.value })
                   }
                 />
                 <div
+                  data-testid="visibility-button"
                   className="absolute right-3 cursor-pointer mt-1"
                   onClick={() => setVisible((prevVisible) => !prevVisible)}
                 >

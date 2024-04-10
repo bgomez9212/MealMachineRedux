@@ -3,9 +3,9 @@ import { BrowserRouter as Router } from "react-router-dom";
 import Login from "./Login";
 
 describe("Login component", () => {
+  const mockAuthenticateUser = vi.fn();
+  const mockHandleClick = vi.fn();
   it("renders error message when errorMessage is present", async () => {
-    const mockAuthenticateUser = vi.fn();
-    const mockHandleClick = vi.fn();
     render(
       <Router>
         <Login
@@ -19,5 +19,43 @@ describe("Login component", () => {
     await waitFor(() =>
       expect(screen.getByTestId("login-error")).toBeInTheDocument()
     );
+  });
+  it("changes form inputs", async () => {
+    render(
+      <Router>
+        <Login
+          handleClick={mockHandleClick}
+          authenticateUser={mockAuthenticateUser}
+        />
+      </Router>
+    );
+    const emailInput = screen.getByTestId("email-input") as HTMLInputElement;
+    const passwordInput = screen.getByTestId(
+      "password-input"
+    ) as HTMLInputElement;
+
+    fireEvent.change(emailInput, { target: { value: "test@example.com" } });
+    fireEvent.change(passwordInput, { target: { value: "testpassword" } });
+
+    expect(emailInput.value).toBe("test@example.com");
+    expect(passwordInput.value).toBe("testpassword");
+  });
+  it("changes password visibility", async () => {
+    render(
+      <Router>
+        <Login
+          handleClick={mockHandleClick}
+          authenticateUser={mockAuthenticateUser}
+        />
+      </Router>
+    );
+    const visibilityButton = screen.getByTestId("visibility-button");
+    const passwordInput = screen.getByTestId(
+      "password-input"
+    ) as HTMLInputElement;
+
+    fireEvent.click(visibilityButton);
+
+    expect(passwordInput.type).toBe("text");
   });
 });
