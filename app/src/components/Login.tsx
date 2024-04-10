@@ -18,11 +18,10 @@ const Login = ({ handleClick, authenticateUser }: LoginProps) => {
   const [errorMessage, setErrorMessage] = useState("");
   const [visible, setVisible] = useState(false);
 
-  const onLogin = (e: { preventDefault: () => void }) => {
+  const onLogin = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
-    signInWithEmailAndPassword(auth, formData.email, formData.password)
+    await signInWithEmailAndPassword(auth, formData.email, formData.password)
       .then((userCredential) => {
-        // Signed in
         const user = userCredential.user;
         navigate("/home");
         authenticateUser(user.uid);
@@ -37,7 +36,7 @@ const Login = ({ handleClick, authenticateUser }: LoginProps) => {
       <main data-testid="login-component">
         <section>
           <div className="flex flex-col justify-center items-center w-[300px]">
-            <div className="h-[180px] w-[300px] bg-[url('/logo-landing.png')] bg-cover dark:bg-[url('/logo-landing-dark.PNG')]"></div>
+            <div className="h-[180px] w-[300px] bg-[url('/logo-landing.png')] bg-cover dark:bg-[url('/logo-landing-dark.PNG')]" />
             <form className="w-full mt-5">
               <div>
                 <Input
@@ -85,7 +84,10 @@ const Login = ({ handleClick, authenticateUser }: LoginProps) => {
                   LOGIN
                 </Button>
                 {errorMessage && (
-                  <p className="text-center text-red-400 dark:text-red-500">
+                  <p
+                    data-testid="login-error"
+                    className={`text-center text-red-400 dark:text-red-500`}
+                  >
                     {errorMessage}
                   </p>
                 )}
