@@ -19,7 +19,10 @@ export function IngredientCard({
   moveIngredient: () => void;
 }) {
   return (
-    <Card className="mt-10 flex flex-col flex-wrap bg-[#FCFCF6] dark:bg-[#526345]">
+    <Card
+      data-testid="ingredient-card"
+      className="mt-10 flex flex-col flex-wrap bg-[#FCFCF6] dark:bg-[#526345]"
+    >
       <CardHeader>
         <CardTitle>
           {name
