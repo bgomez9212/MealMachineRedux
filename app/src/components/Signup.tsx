@@ -61,6 +61,7 @@ const Signup = ({ handleClick, authenticateUser }: SignupProps) => {
               <div>
                 <label htmlFor="email-address" />
                 <Input
+                  data-testid="email-input"
                   type="email"
                   name="email-address"
                   value={signUpInfo.email}
@@ -78,10 +79,12 @@ const Signup = ({ handleClick, authenticateUser }: SignupProps) => {
 
               <div className="flex items-center relative">
                 <Input
+                  data-testid="password-input"
                   type={visible ? "text" : "password"}
                   placeholder="Password"
                   required
                   className="w-full mt-2 h-10 bg-white px-3 text-black"
+                  value={signUpInfo.password}
                   onChange={(e) =>
                     setSignUpInfo({ ...signUpInfo, password: e.target.value })
                   }
@@ -100,10 +103,12 @@ const Signup = ({ handleClick, authenticateUser }: SignupProps) => {
 
               <div className="flex items-center relative">
                 <Input
+                  data-testid="confirm-password-input"
                   type={visible ? "text" : "password"}
                   placeholder="Confirm Password"
                   required
                   className="w-full mt-2 h-10 bg-white px-3 text-black"
+                  value={signUpInfo.confirmPassword}
                   onChange={(e) =>
                     setSignUpInfo({
                       ...signUpInfo,
@@ -112,6 +117,7 @@ const Signup = ({ handleClick, authenticateUser }: SignupProps) => {
                   }
                 />
                 <div
+                  data-testid="visibility-button"
                   className="absolute right-3 cursor-pointer mt-1"
                   onClick={() => setVisible((prevVisible) => !prevVisible)}
                 >
@@ -124,6 +130,7 @@ const Signup = ({ handleClick, authenticateUser }: SignupProps) => {
               </div>
 
               <Button
+                data-testid="sign-in-button"
                 disabled={
                   signUpInfo.password !== signUpInfo.confirmPassword ||
                   !signUpInfo.email ||
@@ -142,7 +149,10 @@ const Signup = ({ handleClick, authenticateUser }: SignupProps) => {
                 </p>
               )}
               {errorMessage && (
-                <p className="text-center text-red-400 dark:text-red-500">
+                <p
+                  data-testid="error-message"
+                  className="text-center text-red-400 dark:text-red-500"
+                >
                   {errorMessage}
                 </p>
               )}
