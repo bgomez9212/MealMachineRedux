@@ -32,7 +32,10 @@ export default function App() {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center w-screen h-screen">
+      <div
+        data-testid="app-loader"
+        className="flex justify-center items-center w-screen h-screen"
+      >
         <ClipLoader color="#8FAC5F" />
       </div>
     );
