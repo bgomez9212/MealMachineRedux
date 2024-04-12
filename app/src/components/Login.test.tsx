@@ -3,15 +3,11 @@ import { BrowserRouter as Router } from "react-router-dom";
 import Login from "./Login";
 
 describe("Login component", () => {
-  const mockAuthenticateUser = vi.fn();
   const mockHandleClick = vi.fn();
   it("renders error message when errorMessage is present", async () => {
     render(
       <Router>
-        <Login
-          handleClick={mockHandleClick}
-          authenticateUser={mockAuthenticateUser}
-        />
+        <Login handleClick={mockHandleClick} />
       </Router>
     );
     const loginBtn = screen.getByTestId("login-button");
@@ -23,10 +19,7 @@ describe("Login component", () => {
   it("changes form inputs", async () => {
     render(
       <Router>
-        <Login
-          handleClick={mockHandleClick}
-          authenticateUser={mockAuthenticateUser}
-        />
+        <Login handleClick={mockHandleClick} />
       </Router>
     );
     const emailInput = screen.getByTestId("email-input") as HTMLInputElement;
@@ -43,10 +36,7 @@ describe("Login component", () => {
   it("changes password visibility", async () => {
     render(
       <Router>
-        <Login
-          handleClick={mockHandleClick}
-          authenticateUser={mockAuthenticateUser}
-        />
+        <Login handleClick={mockHandleClick} />
       </Router>
     );
     const visibilityButton = screen.getByTestId("visibility-button");

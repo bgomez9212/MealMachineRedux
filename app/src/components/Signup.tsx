@@ -32,9 +32,8 @@ const Signup = ({ handleClick }: SignupProps) => {
       signUpInfo.email,
       signUpInfo.password
     )
-      .then((userCredential) => {
+      .then(() => {
         // Signed in
-        const user = userCredential.user;
         signInWithEmailAndPassword(auth, signUpInfo.email, signUpInfo.password);
         // ...
         navigate("/home");

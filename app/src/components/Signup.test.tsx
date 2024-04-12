@@ -3,16 +3,12 @@ import { BrowserRouter as Router } from "react-router-dom";
 import Signup from "./Signup";
 
 describe("Login component", () => {
-  const mockAuthenticateUser = vi.fn();
   const mockHandleClick = vi.fn();
 
   it("form accepts changes", async () => {
     render(
       <Router>
-        <Signup
-          handleClick={mockHandleClick}
-          authenticateUser={mockAuthenticateUser}
-        />
+        <Signup handleClick={mockHandleClick} />
       </Router>
     );
     expect(screen.getByTestId("sign-up-component")).toBeInTheDocument();
@@ -21,10 +17,7 @@ describe("Login component", () => {
   it("changes form inputs", async () => {
     render(
       <Router>
-        <Signup
-          handleClick={mockHandleClick}
-          authenticateUser={mockAuthenticateUser}
-        />
+        <Signup handleClick={mockHandleClick} />
       </Router>
     );
     const emailInput = screen.getByTestId("email-input") as HTMLInputElement;
@@ -49,10 +42,7 @@ describe("Login component", () => {
   it("changes password visibility", async () => {
     render(
       <Router>
-        <Signup
-          handleClick={mockHandleClick}
-          authenticateUser={mockAuthenticateUser}
-        />
+        <Signup handleClick={mockHandleClick} />
       </Router>
     );
     const passwordInput = screen.getByTestId(
@@ -70,10 +60,7 @@ describe("Login component", () => {
   it("renders correct error message (invalid email)", async () => {
     render(
       <Router>
-        <Signup
-          handleClick={mockHandleClick}
-          authenticateUser={mockAuthenticateUser}
-        />
+        <Signup handleClick={mockHandleClick} />
       </Router>
     );
     const emailInput = screen.getByTestId("email-input") as HTMLInputElement;
@@ -101,10 +88,7 @@ describe("Login component", () => {
   it("renders correct error message (email already in use)", async () => {
     render(
       <Router>
-        <Signup
-          handleClick={mockHandleClick}
-          authenticateUser={mockAuthenticateUser}
-        />
+        <Signup handleClick={mockHandleClick} />
       </Router>
     );
     const emailInput = screen.getByTestId("email-input") as HTMLInputElement;

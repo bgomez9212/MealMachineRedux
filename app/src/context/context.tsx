@@ -29,7 +29,6 @@ export default function UserContextProvider({
       setLoading(false);
     });
   }
-  console.log(loading);
 
   return (
     <UserContext.Provider
