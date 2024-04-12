@@ -13,17 +13,31 @@ describe("App component", () => {
     expect(screen.getByTestId("app-loader")).toBeInTheDocument();
   });
 
-  it("navigates to landing page without no user auth", async () => {
+  it("navigates to landing page without user auth", async () => {
     const queryClient = new QueryClient();
     render(
       <QueryClientProvider client={queryClient}>
-        {/* <UserContextProvider> */}
-        <App />
-        {/* </UserContextProvider> */}
+        <UserContextProvider>
+          <App />
+        </UserContextProvider>
       </QueryClientProvider>
     );
     await waitFor(() =>
       expect(screen.getByTestId("login-component")).toBeInTheDocument()
+    );
+  });
+
+  it("navigates to home page with user auth", async () => {
+    const queryClient = new QueryClient();
+    render(
+      <QueryClientProvider client={queryClient}>
+        <UserContextProvider testUser={"user"}>
+          <App />
+        </UserContextProvider>
+      </QueryClientProvider>
+    );
+    await waitFor(() =>
+      expect(screen.getByTestId("home-component")).toBeInTheDocument()
     );
   });
 });
