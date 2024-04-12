@@ -1,17 +1,17 @@
 import { RecipeCard } from "@/components/RecipeCard";
 import axios from "axios";
-import { useContext, useEffect, useState } from "react";
-import { UserContext } from "@/context/context";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useQuery, useQueryClient } from "react-query";
 import { useToast } from "@/components/ui/use-toast";
 import { type HomeRecipes, type SavedRecipe } from "@/types";
 import ClipLoader from "react-spinners/ClipLoader";
 import { Input } from "@/components/ui/input";
+import { useUserContext } from "@/context/context";
 
 export function Home() {
   const { toast } = useToast();
-  const user = useContext(UserContext);
+  const { user } = useUserContext();
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const [search, setSearch] = useState("");
@@ -130,7 +130,7 @@ export function Home() {
   }
 
   return (
-    <div>
+    <div data-testid="home-component">
       <div className="mt-5 flex justify-center">
         <Input
           className="w-[90%]"

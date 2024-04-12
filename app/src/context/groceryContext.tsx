@@ -5,12 +5,12 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import { type Groceries } from "../types";
 
-interface GroceryContext {
+interface GroceryContextType {
   groceries: Groceries[];
   isGroceryLoading: boolean;
   isGroceryError: boolean;
 }
-const GroceryContext = createContext<GroceryContext | undefined>(undefined);
+const GroceryContext = createContext<GroceryContextType | undefined>(undefined);
 
 export default function GroceryContextProvider({
   children,

@@ -1,12 +1,12 @@
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { IngredientCard } from "@/components/IngredientCard";
-import { useContext, useState } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import axios from "axios";
-import { UserContext } from "@/context/context";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import ClipLoader from "react-spinners/ClipLoader";
+import { useUserContext } from "@/context/context";
 
 interface moveIngredientVariables {
   user_id: string | null;
@@ -16,7 +16,7 @@ interface moveIngredientVariables {
 
 export function MyIngredients() {
   const queryClient = useQueryClient();
-  const user = useContext(UserContext);
+  const { user } = useUserContext();
   const regex = new RegExp("^[a-zA-Z]+.*$");
   const [ingredientInput, setIngredientInput] = useState("");
 
@@ -97,7 +97,7 @@ export function MyIngredients() {
   }
 
   return (
-    <div className="px-10 py-10">
+    <div data-testid="ingredients-component" className="px-10 py-10">
       <div className="grid w-full gap-1.5">
         <Label htmlFor="message-2">Your Ingredients</Label>
         <Textarea

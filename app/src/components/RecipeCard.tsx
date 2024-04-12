@@ -11,10 +11,10 @@ import { useContext, useState } from "react";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import axios from "axios";
-import { UserContext } from "@/context/context";
 import { useQueryClient } from "react-query";
 import { type MissingIngredients } from "@/types";
 import { useGroceryContext } from "@/context/groceryContext";
+import { useUserContext } from "@/context/context";
 
 export function RecipeCard({
   image,
@@ -38,7 +38,7 @@ export function RecipeCard({
   const [selectedRecipe, setSelectedRecipe] = useState<
     MissingIngredients[] | null
   >(null);
-  const user = useContext(UserContext);
+  const { user } = useUserContext();
   const queryClient = useQueryClient();
   const { groceries } = useGroceryContext();
   function handleSaveGrocery(grocery: string) {

@@ -64,7 +64,7 @@ export function RecipeDetailPage() {
   }
 
   return (
-    <div className="px-10 py-10">
+    <div data-testid="recipes-details-component" className="px-10 py-10">
       <Button className="mb-5" variant={"outline"} onClick={handleBackClick}>
         {"<"}
       </Button>

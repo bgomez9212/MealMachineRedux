@@ -1,14 +1,13 @@
 import { SavedRecipeCard } from "@/components/SavedRecipeCard";
-import { UserContext } from "@/context/context";
+import { useUserContext } from "@/context/context";
 import axios from "axios";
-import { useContext } from "react";
 import { useQuery, useQueryClient } from "react-query";
 import { useNavigate } from "react-router-dom";
 import ClipLoader from "react-spinners/ClipLoader";
 
 export function SavedRecipes() {
   const queryClient = useQueryClient();
-  const user = useContext(UserContext);
+  const { user } = useUserContext();
   const navigate = useNavigate();
 
   function handleReadRecipe(recipe_id: number) {
@@ -65,7 +64,10 @@ export function SavedRecipes() {
   return (
     <>
       {savedRecipes.length ? (
-        <div className="min-[630px]:grid min-[630px]:grid-cols-2 lg:grid-cols-3 px-10 gap-x-10 mb-20">
+        <div
+          data-testid="saved-recipes-component"
+          className="min-[630px]:grid min-[630px]:grid-cols-2 lg:grid-cols-3 px-10 gap-x-10 mb-20"
+        >
           {savedRecipes.map(
             (recipe: { recipe_id: number; image: string; title: string }) => (
               <SavedRecipeCard

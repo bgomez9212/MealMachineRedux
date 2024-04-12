@@ -26,10 +26,10 @@ import DinnerDiningIcon from "@mui/icons-material/DinnerDining";
 import ChecklistIcon from "@mui/icons-material/Checklist";
 import { useState } from "react";
 import { Paper } from "@mui/material";
+
 export function Navbar() {
   const location = useLocation();
   const { setTheme } = useTheme();
-  // console.log(document.documentElement.classList.value);
   const pathsWithoutNavbar = ["/"];
   const showNavbar = !pathsWithoutNavbar.includes(location.pathname);
 
@@ -51,7 +51,10 @@ export function Navbar() {
 
   return showNavbar ? (
     <>
-      <NavigationMenu className="border-b px-10 py-5 sticky top-0">
+      <NavigationMenu
+        data-testid="navigation-bar"
+        className="border-b px-10 py-5 sticky top-0"
+      >
         <NavigationMenuList>
           <NavigationMenuItem>
             <NavigationMenuLink asChild>
@@ -71,7 +74,9 @@ export function Navbar() {
                   : "hover:text-lightGreen dark:hover:text-lightGreen"
               }`}
             >
-              <Link to="home">Recipes</Link>
+              <Link data-testid="home-link" to="home">
+                Recipes
+              </Link>
             </NavigationMenuLink>
           </NavigationMenuItem>
           <NavigationMenuItem>
@@ -83,7 +88,9 @@ export function Navbar() {
                   : "hover:text-lightGreen dark:hover:text-lightGreen"
               }`}
             >
-              <Link to="ingredients">Ingredients</Link>
+              <Link data-testid="ingredients-link" to="ingredients">
+                Ingredients
+              </Link>
             </NavigationMenuLink>
           </NavigationMenuItem>
           <NavigationMenuItem>
@@ -95,16 +102,24 @@ export function Navbar() {
                   : "hover:text-lightGreen dark:hover:text-lightGreen"
               }`}
             >
-              <Link to="groceries">Groceries</Link>
+              <Link data-testid="groceries-link" to="groceries">
+                Groceries
+              </Link>
             </NavigationMenuLink>
           </NavigationMenuItem>
           <NavigationMenuItem>
             <DropdownMenu>
-              <DropdownMenuTrigger className="hidden md:block dark:text-[#fcfcf6] hover:text-lightGreen dark:hover:text-lightGreen">
+              <DropdownMenuTrigger
+                data-testid="dropdown-menu"
+                className="hidden md:block dark:text-[#fcfcf6] hover:text-lightGreen dark:hover:text-lightGreen"
+              >
                 Profile
               </DropdownMenuTrigger>
               <DropdownMenuContent>
-                <DropdownMenuItem onClick={handleClick}>
+                <DropdownMenuItem
+                  data-testid="saved-recipes-item"
+                  onClick={handleClick}
+                >
                   Saved Recipes
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={handleSignOutClick}>

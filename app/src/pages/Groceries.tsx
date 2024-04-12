@@ -2,12 +2,12 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { GroceryCard } from "@/components/GroceryCard";
 import { useQueryClient, useMutation } from "react-query";
-import { useContext, useState } from "react";
-import { UserContext } from "@/context/context";
+import { useState } from "react";
 import axios from "axios";
 import { Button } from "@/components/ui/button";
 import { useGroceryContext } from "@/context/groceryContext";
 import ClipLoader from "react-spinners/ClipLoader";
+import { useUserContext } from "@/context/context";
 
 interface moveGroceryVariables {
   user_id: string | null;
@@ -17,7 +17,7 @@ interface moveGroceryVariables {
 
 export function MyGroceries() {
   const queryClient = useQueryClient();
-  const user = useContext(UserContext);
+  const { user } = useUserContext();
   const regex = new RegExp("^[a-zA-Z]+.*$");
   const [groceryInput, setGroceryInput] = useState("");
   const { groceries, isGroceryLoading, isGroceryError } = useGroceryContext();
@@ -78,7 +78,7 @@ export function MyGroceries() {
   }
 
   return (
-    <div className="px-10 py-10">
+    <div data-testid="groceries-component" className="px-10 py-10">
       <div className="grid w-full gap-1.5">
         <Label htmlFor="message-2">Your Groceries</Label>
         <Textarea

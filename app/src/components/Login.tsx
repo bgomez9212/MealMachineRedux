@@ -9,10 +9,9 @@ import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 
 interface LoginProps {
   handleClick: () => void;
-  authenticateUser: (userId: string) => void;
 }
 
-const Login = ({ handleClick, authenticateUser }: LoginProps) => {
+const Login = ({ handleClick }: LoginProps) => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [errorMessage, setErrorMessage] = useState("");
@@ -24,7 +23,6 @@ const Login = ({ handleClick, authenticateUser }: LoginProps) => {
       .then((userCredential) => {
         const user = userCredential.user;
         navigate("/home");
-        authenticateUser(user.uid);
       })
       .catch(() => {
         setErrorMessage("Incorrect email or password");

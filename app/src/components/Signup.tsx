@@ -12,10 +12,9 @@ import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 
 interface SignupProps {
   handleClick: () => void;
-  authenticateUser: (userId: string) => void;
 }
 
-const Signup = ({ handleClick, authenticateUser }: SignupProps) => {
+const Signup = ({ handleClick }: SignupProps) => {
   const navigate = useNavigate();
   const [signUpInfo, setSignUpInfo] = useState({
     email: "",
@@ -38,7 +37,6 @@ const Signup = ({ handleClick, authenticateUser }: SignupProps) => {
         const user = userCredential.user;
         signInWithEmailAndPassword(auth, signUpInfo.email, signUpInfo.password);
         // ...
-        authenticateUser(user.uid);
         navigate("/home");
       })
       .catch((error) => {

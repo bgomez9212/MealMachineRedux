@@ -1,5 +1,5 @@
-import { UserContext } from "@/context/context";
-import { ReactNode, useContext } from "react";
+import { useUserContext } from "@/context/context";
+import { ReactNode } from "react";
 import { Navigate } from "react-router-dom";
 
 interface ProtectedRouteProps {
@@ -7,6 +7,6 @@ interface ProtectedRouteProps {
 }
 
 export function ProtectedRoute({ element }: ProtectedRouteProps) {
-  const user = useContext(UserContext);
+  const { user } = useUserContext();
   return user ? element : <Navigate to="/" />;
 }
