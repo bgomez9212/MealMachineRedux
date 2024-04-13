@@ -14,11 +14,12 @@ const GroceryContext = createContext<GroceryContextType | undefined>(undefined);
 
 export default function GroceryContextProvider({
   children,
+  testGroceries,
 }: {
   children: any;
+  testGroceries?: Groceries[] | undefined;
 }) {
   const [user, setUser] = useState<string | null>(null);
-
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
@@ -30,7 +31,7 @@ export default function GroceryContextProvider({
     return () => unsubscribe();
   });
 
-  const {
+  let {
     data: groceries,
     isLoading: isGroceryLoading,
     isError: isGroceryError,
@@ -46,8 +47,12 @@ export default function GroceryContextProvider({
         .then((res) => {
           return res.data;
         }),
-    enabled: !!user,
+    enabled: !!user && testGroceries?.length === 0,
   });
+
+  if (!groceries) {
+    groceries = testGroceries;
+  }
 
   return (
     <GroceryContext.Provider

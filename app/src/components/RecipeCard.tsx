@@ -7,7 +7,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Button } from "./ui/button";
-import { useContext, useState } from "react";
+import { useState } from "react";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import axios from "axios";
@@ -53,6 +53,7 @@ export function RecipeCard({
   return (
     <>
       <Modal
+        data-testid="modal"
         open={!!selectedRecipe}
         onClose={() => setSelectedRecipe(null)}
         className="flex justify-center items-center"
@@ -65,7 +66,10 @@ export function RecipeCard({
           <p className="text-2xl mb-4">Missing Ingredients:</p>
           <div className="overflow-auto w-full">
             {selectedRecipe?.map((ingredient: MissingIngredients) => (
-              <div className="flex flex-col sm:flex-row items-center justify-between py-5 border-b w-full">
+              <div
+                data-testid="missing-ingredients"
+                className="flex flex-col sm:flex-row items-center justify-between py-5 border-b w-full"
+              >
                 <p className="sm:block" key={ingredient.name}>
                   {ingredient.name
                     .split(" ")
@@ -103,14 +107,18 @@ export function RecipeCard({
           </Button>
         </Box>
       </Modal>
-      <Card className="w-full mt-10 flex flex-col overflow-hidden recipe-card bg-[#FCFCF6] dark:bg-[#526345]">
+      <Card
+        data-testid="recipe-card"
+        className="w-full mt-10 flex flex-col overflow-hidden recipe-card bg-[#FCFCF6] dark:bg-[#526345]"
+      >
         <CardContent className="h-50 overflow-hidden flex items-center justify-center">
-          <img src={image} className="w-full" />
+          <img data-testid="test-image" src={image} className="w-full" />
         </CardContent>
         <CardHeader className="flex mb-0">
           <CardTitle>{title}</CardTitle>
         </CardHeader>
         <CardDescription
+          data-testid="card-description"
           onClick={() => {
             missedIngredientCount ? setSelectedRecipe(missedIngredients) : "";
           }}
@@ -132,7 +140,9 @@ export function RecipeCard({
               onClick={handleDeleteSavedRecipe}
             ></Button>
           ) : (
-            <Button onClick={handleSaveClick}>Save Recipe</Button>
+            <Button data-testid="save-button" onClick={handleSaveClick}>
+              Save Recipe
+            </Button>
           )}
         </CardFooter>
       </Card>

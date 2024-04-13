@@ -22,7 +22,6 @@ export type Groceries = {
   id: number;
   name: string;
   date_added: string;
-  gro_user_id: string;
 };
 
 export type Recipe = {
