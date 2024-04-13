@@ -1,56 +1,36 @@
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
-import { Navbar } from "./Navbar";
-import { BrowserRouter, MemoryRouter } from "react-router-dom";
-import { UserContext } from "@/context/context";
-import App from "@/App";
+import { fireEvent, render, screen } from "@testing-library/react";
 import { QueryClient, QueryClientProvider } from "react-query";
-const queryClient = new QueryClient();
+import UserContextProvider from "@/context/context";
+import App from "@/App";
 
 describe("Navbar component", () => {
-  // it("renders the navbar component", async () => {
-  //   render(
-  //     <QueryClientProvider client={queryClient}>
-  //       <UserContext.Provider value="user">
-  //         <App />
-  //       </UserContext.Provider>
-  //     </QueryClientProvider>
-  //   );
-  //   await waitFor(() => {
-  //     expect(screen.getByTestId("home-component")).toBeInTheDocument();
-  //   });
-  // });
+  const queryClient = new QueryClient();
 
-  it("does not render navbar component", () => {
+  it("navigates to ingredients screen", () => {
     render(
-      <MemoryRouter initialEntries={["/"]}>
-        <Navbar />
-      </MemoryRouter>
+      <UserContextProvider testUser="testuser">
+        <QueryClientProvider client={queryClient}>
+          <App />
+        </QueryClientProvider>
+      </UserContextProvider>
     );
-    expect(screen.queryByTestId("navigation-bar")).not.toBeInTheDocument();
+    const ingredientsLink = screen.getByTestId("ingredients-link");
+    fireEvent.click(ingredientsLink);
+    expect(window.location.pathname).toBe("/ingredients");
   });
 
-  // it("navigates to ingredients", async () => {
-  //   render(
-  //     <UserContext.Provider value="user">
-  //       <MemoryRouter initialEntries={["/home"]}>
-  //         <Navbar />
-  //       </MemoryRouter>
-  //     </UserContext.Provider>
-  //   );
-  //   const ingredientsLink = screen.getByTestId("ingredients-link");
-  //   fireEvent.click(ingredientsLink);
-  // });
-
-  // it("navigates to groceries", async () => {
-  //   render(
-  //     <UserContext.Provider value="user">
-  //       <MemoryRouter initialEntries={["/home"]}>
-  //         <Navbar />
-  //       </MemoryRouter>
-  //     </UserContext.Provider>
-  //   );
-  //   const groceriesLink = screen.getByTestId("groceries-link");
-  //   fireEvent.click(groceriesLink);
-  // });
-  // it("bottom navigation works (need to figure out how to display that in a test since it is dependant on screen size")
+  it("navigates to groceries screen", () => {
+    render(
+      <UserContextProvider testUser="testuser">
+        <QueryClientProvider client={queryClient}>
+          <App />
+        </QueryClientProvider>
+      </UserContextProvider>
+    );
+    const groceriesLink = screen.getByTestId("groceries-link");
+    fireEvent.click(groceriesLink);
+    expect(window.location.pathname).toBe("/groceries");
+  });
+  // need test for dropdown menu item that navigates to saved recipes
+  // need test for bottom navigation that is rendered on smaller screens
 });

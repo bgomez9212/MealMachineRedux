@@ -110,12 +110,12 @@ export function Navbar() {
           <NavigationMenuItem>
             <DropdownMenu>
               <DropdownMenuTrigger
-                data-testid="dropdown-menu"
+                data-testid="dropdown-menu-trigger"
                 className="hidden md:block dark:text-[#fcfcf6] hover:text-lightGreen dark:hover:text-lightGreen"
               >
                 Profile
               </DropdownMenuTrigger>
-              <DropdownMenuContent>
+              <DropdownMenuContent data-testid="dropdown-menu">
                 <DropdownMenuItem
                   data-testid="saved-recipes-item"
                   onClick={handleClick}
