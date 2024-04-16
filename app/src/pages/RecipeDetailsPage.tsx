@@ -11,20 +11,6 @@ export function RecipeDetailPage() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
-  // const {
-  //   data: recipe,
-  //   isLoading,
-  //   // error,
-  // } = useQuery<Recipe>({
-  //   queryKey: ["recipeDetails"],
-  //   queryFn: async () =>
-  //     axios
-  //       .get(`http://127.0.0.1:8888/api/recipeDetails?recipe_id=${recipe_id}`)
-  //       .then((res) => {
-  //         return res.data;
-  //       }),
-  // });
-
   const {
     data: recipe,
     isLoading,
@@ -94,7 +80,6 @@ export function RecipeDetailPage() {
           ) : (
             ""
           )}
-          {/* Number of ingredients missing */}
         </div>
         <div className="max-h-[320px] hidden md:flex justify-end md:min-w-[400px]">
           <img
