@@ -1,16 +1,16 @@
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { GroceryCard } from "@/components/GroceryCard";
-import { useQueryClient, useMutation } from "react-query";
+import { useQueryClient, useMutation, useQuery } from "react-query";
 import { useState } from "react";
 import axios from "axios";
 import { Button } from "@/components/ui/button";
-import { useGroceryContext } from "@/context/groceryContext";
 import ClipLoader from "react-spinners/ClipLoader";
 import { useUserContext } from "@/context/context";
+import getGroceries from "@/hooks/api-hooks";
 
 interface moveGroceryVariables {
-  user_id: string | null;
+  user_id: string | undefined;
   food_name: string;
   grocery_id: number;
 }
@@ -20,7 +20,17 @@ export function MyGroceries() {
   const { user } = useUserContext();
   const regex = new RegExp("^[a-zA-Z]+.*$");
   const [groceryInput, setGroceryInput] = useState("");
-  const { groceries, isGroceryLoading, isGroceryError } = useGroceryContext();
+
+  const {
+    data: groceries,
+    isLoading: isGroceryLoading,
+    isError: isGroceryError,
+  } = useQuery({
+    queryKey: ["groceries"],
+    queryFn: () => getGroceries(user),
+    enabled: !!user,
+  });
+
   async function removeGrocery(grocery_id: number) {
     await axios.delete(import.meta.env.VITE_server_groceries, {
       data: {

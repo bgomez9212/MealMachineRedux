@@ -11,10 +11,10 @@ import { useState } from "react";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import axios from "axios";
-import { useQueryClient } from "react-query";
-import { type MissingIngredients } from "@/types";
-import { useGroceryContext } from "@/context/groceryContext";
+import { useQuery, useQueryClient } from "react-query";
+import { Groceries, type MissingIngredients } from "@/types";
 import { useUserContext } from "@/context/context";
+import getGroceries from "@/hooks/api-hooks";
 
 export function RecipeCard({
   image,
@@ -40,7 +40,13 @@ export function RecipeCard({
   >(null);
   const { user } = useUserContext();
   const queryClient = useQueryClient();
-  const { groceries } = useGroceryContext();
+
+  const { data: groceries } = useQuery<Groceries[]>({
+    queryKey: ["groceries"],
+    queryFn: () => getGroceries(user),
+    enabled: !!user,
+  });
+
   function handleSaveGrocery(grocery: string) {
     axios
       .post(import.meta.env.VITE_server_groceries, {
@@ -68,6 +74,7 @@ export function RecipeCard({
             {selectedRecipe?.map((ingredient: MissingIngredients) => (
               <div
                 data-testid="missing-ingredients"
+                key={ingredient.id}
                 className="flex flex-col sm:flex-row items-center justify-between py-5 border-b w-full"
               >
                 <p className="sm:block" key={ingredient.name}>
@@ -76,7 +83,8 @@ export function RecipeCard({
                     .map((word) => word[0].toUpperCase() + word.substring(1))
                     .join(" ")}
                 </p>
-                {groceries
+                {groceries &&
+                groceries
                   .map((grocery) => grocery.name)
                   .indexOf(ingredient.name) > -1 ? (
                   <Button key={ingredient.id} className="disabled bg-[#8fac5f]">
