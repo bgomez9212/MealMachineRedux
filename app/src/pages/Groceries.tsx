@@ -62,7 +62,7 @@ export function MyGroceries() {
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["groceries"] }),
   });
 
-  async function addIngredient(grocery: string) {
+  async function addGrocery(grocery: string) {
     if (regex.test(grocery)) {
       await axios
         .post(import.meta.env.VITE_server_groceries, {
@@ -73,8 +73,8 @@ export function MyGroceries() {
     }
   }
 
-  const { mutateAsync: addIngredientMutation } = useMutation({
-    mutationFn: addIngredient,
+  const { mutateAsync: addGroceryMutation } = useMutation({
+    mutationFn: addGrocery,
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["groceries"] }),
   });
 
@@ -83,7 +83,7 @@ export function MyGroceries() {
       .split(",")
       .map((grocery) => grocery.trim());
     groceryArray.forEach((grocery) => {
-      addIngredientMutation(grocery);
+      addGroceryMutation(grocery);
     });
   }
 
@@ -154,7 +154,7 @@ export function MyGroceries() {
           )}
         </div>
       ) : (
-        <div className="text-center mt-10">
+        <div className="text-center mt-10" data-testid="no-groceries-message">
           ⬆️ Get started by adding some groceries to your grocery list ⬆️
         </div>
       )}

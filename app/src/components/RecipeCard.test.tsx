@@ -1,4 +1,4 @@
-import { screen, render, fireEvent } from "@testing-library/react";
+import { screen, render, fireEvent, waitFor } from "@testing-library/react";
 import { RecipeCard } from "./RecipeCard";
 import UserContextProvider from "@/context/context";
 import { QueryClient, QueryClientProvider } from "react-query";
@@ -53,6 +53,28 @@ describe("Recipe card component", () => {
     );
   });
 
+  it("renders correct message when user is missing 1 ingredient", async () => {
+    render(
+      <UserContextProvider testUser="test-user">
+        <QueryClientProvider client={queryClient}>
+          <RecipeCard
+            image="test-image"
+            title="test-title"
+            handleSaveClick={mockHandleSaveClick}
+            handleReadRecipe={mockHandleReadRecipe}
+            handleDeleteSavedRecipe={mockHandleDeleteSavedRecipe}
+            isSaved={true}
+            missedIngredients={[]}
+            missedIngredientCount={1}
+          />
+        </QueryClientProvider>
+      </UserContextProvider>
+    );
+    expect(screen.getByTestId("card-description")).toHaveTextContent(
+      "Missing 1 Ingredient"
+    );
+  });
+
   it("renders a saved recipe correctly", () => {
     render(
       <UserContextProvider testUser="test-user">
@@ -72,7 +94,7 @@ describe("Recipe card component", () => {
     );
   });
 
-  it("calls handle save grocery", () => {
+  it("calls handle save grocery", async () => {
     render(
       <UserContextProvider testUser="test-user">
         <QueryClientProvider client={queryClient}>
@@ -97,5 +119,8 @@ describe("Recipe card component", () => {
     fireEvent.click(screen.getByTestId("card-description"));
     // click button to save grocery
     fireEvent.click(screen.getByTestId("1-test"));
+    await waitFor(() =>
+      expect(screen.getByTestId("disabled-button")).toBeInTheDocument()
+    );
   });
 });
