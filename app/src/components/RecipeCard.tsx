@@ -92,6 +92,7 @@ export function RecipeCard({
                   </Button>
                 ) : (
                   <Button
+                    data-testid={`${ingredient.id}-test`}
                     className="whitespace-normal h-auto"
                     onClick={() => handleSaveGrocery(ingredient.name)}
                     key={ingredient.id}

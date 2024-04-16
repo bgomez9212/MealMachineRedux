@@ -71,4 +71,32 @@ describe("Recipe card component", () => {
       </UserContextProvider>
     );
   });
+
+  it("calls handle save grocery", () => {
+    render(
+      <UserContextProvider testUser="test-user">
+        <QueryClientProvider client={queryClient}>
+          <RecipeCard
+            image="test-image"
+            title="test-title"
+            handleSaveClick={mockHandleSaveClick}
+            handleReadRecipe={mockHandleReadRecipe}
+            handleDeleteSavedRecipe={mockHandleDeleteSavedRecipe}
+            isSaved={false}
+            missedIngredients={[
+              { name: "Tomato", id: 1 },
+              { name: "oranges", id: 11 },
+            ]}
+            missedIngredientCount={2}
+          />
+        </QueryClientProvider>
+      </UserContextProvider>
+    );
+
+    // open modal
+    fireEvent.click(screen.getByTestId("card-description"));
+    // click button to save grocery
+    fireEvent.click(screen.getByTestId("1-test"));
+    screen.debug();
+  });
 });
