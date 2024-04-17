@@ -3,6 +3,7 @@ import { server } from "@/mocks/browser";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { MyIngredients } from "./Ingredients";
 import UserContextProvider from "@/context/context";
+import { HttpResponse, http } from "msw";
 
 describe("Ingredients component", () => {
   const queryClient = new QueryClient();
@@ -60,9 +61,26 @@ describe("Ingredients component", () => {
     fireEvent.change(textBox, { target: { value: "carrots, peas, potatoes" } });
     fireEvent.click(screen.getByTestId("ingredients-submit"));
   });
+  // message when there are no ingredients
+  it("message should render when there are no ingredients", async () => {
+    server.use(
+      http.get(import.meta.env.VITE_server_ingredients, () => {
+        return HttpResponse.json([]);
+      })
+    );
+    render(
+      <UserContextProvider>
+        <QueryClientProvider client={queryClient}>
+          <MyIngredients />
+        </QueryClientProvider>
+      </UserContextProvider>
+    );
+    await waitFor(() => {
+      expect(screen.getByTestId("no-ingredients-message")).toBeInTheDocument();
+    });
+  });
 });
 
 // error fetching ingredients
 // remove ingredient (ingredient card)
 // move ingredient (ingredient card)
-// message when there are no ingredients

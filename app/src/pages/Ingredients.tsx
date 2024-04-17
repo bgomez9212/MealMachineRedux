@@ -168,7 +168,7 @@ export function MyIngredients() {
           )}
         </div>
       ) : (
-        <div className="text-center mt-10">
+        <div data-testid="no-ingredients-message" className="text-center mt-10">
           ⬆️ Start by adding some ingredients to your kitchen ⬆️
         </div>
       )}
