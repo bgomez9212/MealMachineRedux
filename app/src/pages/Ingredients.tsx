@@ -9,7 +9,7 @@ import ClipLoader from "react-spinners/ClipLoader";
 import { useUserContext } from "@/context/context";
 
 interface moveIngredientVariables {
-  user_id: string | null;
+  user_id: string | undefined;
   food_name: string;
   ingredient_id: number;
 }

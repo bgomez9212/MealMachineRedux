@@ -2,8 +2,14 @@ import { render, screen, waitFor } from "@testing-library/react";
 import App from "./App";
 import { QueryClient, QueryClientProvider } from "react-query";
 import UserContextProvider from "./context/context";
+import { server } from "./mocks/browser";
 
 describe("App component", () => {
+  const queryClient = new QueryClient();
+  beforeAll(() => server.listen());
+  afterEach(() => server.resetHandlers());
+  afterAll(() => server.close());
+
   it("renders app component", () => {
     render(
       <UserContextProvider>
@@ -14,7 +20,6 @@ describe("App component", () => {
   });
 
   it("navigates to landing page without user auth", async () => {
-    const queryClient = new QueryClient();
     render(
       <QueryClientProvider client={queryClient}>
         <UserContextProvider>
@@ -28,7 +33,6 @@ describe("App component", () => {
   });
 
   it("navigates to home page with user auth", async () => {
-    const queryClient = new QueryClient();
     render(
       <QueryClientProvider client={queryClient}>
         <UserContextProvider testUser={"user"}>
