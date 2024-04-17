@@ -36,10 +36,19 @@ export function GroceryCard({
         )}`}</CardDescription>
       </CardHeader>
       <CardFooter>
-        <Button onClick={moveGrocery} className="mr-2" variant={"move"}>
+        <Button
+          data-testid="move-grocery"
+          onClick={moveGrocery}
+          className="mr-2"
+          variant={"move"}
+        >
           Move to Ingredient List
         </Button>
-        <Button onClick={removeGrocery} variant={"destructive"}>
+        <Button
+          data-testid="remove-grocery"
+          onClick={removeGrocery}
+          variant={"destructive"}
+        >
           Remove
         </Button>
       </CardFooter>

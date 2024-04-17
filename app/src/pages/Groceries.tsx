@@ -92,6 +92,7 @@ export function MyGroceries() {
       <div className="grid w-full gap-1.5">
         <Label htmlFor="message-2">Your Groceries</Label>
         <Textarea
+          data-testid="groceries-test-input"
           placeholder="Type your groceries here."
           id="message-2"
           value={groceryInput}
@@ -102,7 +103,11 @@ export function MyGroceries() {
             You can enter multiple groceries by submitting a comma-separated
             list.
           </p>
-          <Button className="order-last" onClick={handleSubmit}>
+          <Button
+            data-testid="input-submit-button"
+            className="order-last"
+            onClick={handleSubmit}
+          >
             SUBMIT
           </Button>
         </div>
@@ -116,7 +121,7 @@ export function MyGroceries() {
           An Error has occured, please try again later.
         </div>
       ) : groceries?.length ? (
-        <div className="mb-10">
+        <div data-testid="groceries-container" className="mb-10">
           {groceries?.map(
             ({
               id,
@@ -128,7 +133,7 @@ export function MyGroceries() {
               date_added: string;
             }) => (
               <GroceryCard
-                key={name}
+                key={id}
                 name={name}
                 date_added={date_added}
                 removeGrocery={async () => {
