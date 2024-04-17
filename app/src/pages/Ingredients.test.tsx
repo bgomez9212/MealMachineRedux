@@ -33,13 +33,35 @@ describe("Ingredients component", () => {
         </QueryClientProvider>
       </UserContextProvider>
     );
-    fireEvent.click(screen.getByTestId("move-ingredient"));
     fireEvent.click(screen.getByTestId("remove-ingredient"));
+  });
+
+  // move ingredient
+  it("should call api endpoint that moves ingredient to groceries", () => {
+    render(
+      <UserContextProvider>
+        <QueryClientProvider client={queryClient}>
+          <MyIngredients />
+        </QueryClientProvider>
+      </UserContextProvider>
+    );
+    fireEvent.click(screen.getByTestId("move-ingredient"));
+  });
+  // add ingredient + handle submit
+  it("should fill text box with ingredients and submit should call ingredients post", () => {
+    render(
+      <UserContextProvider>
+        <QueryClientProvider client={queryClient}>
+          <MyIngredients />
+        </QueryClientProvider>
+      </UserContextProvider>
+    );
+    const textBox = screen.getByTestId("ingredients-input");
+    fireEvent.change(textBox, { target: { value: "carrots, peas, potatoes" } });
+    fireEvent.click(screen.getByTestId("ingredients-submit"));
   });
 });
 
-// move ingredient
-// add ingredient + handle submit
 // error fetching ingredients
 // remove ingredient (ingredient card)
 // move ingredient (ingredient card)

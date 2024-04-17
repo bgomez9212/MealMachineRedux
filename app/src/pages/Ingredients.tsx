@@ -101,6 +101,7 @@ export function MyIngredients() {
       <div className="grid w-full gap-1.5">
         <Label htmlFor="message-2">Your Ingredients</Label>
         <Textarea
+          data-testid="ingredients-input"
           placeholder="Type your ingredients here."
           id="message-2"
           value={ingredientInput}
@@ -111,7 +112,11 @@ export function MyIngredients() {
             You can enter multiple ingredients by submitting a comma-separated
             list.
           </p>
-          <Button className="order-last" onClick={handleSubmit}>
+          <Button
+            data-testid="ingredients-submit"
+            className="order-last"
+            onClick={handleSubmit}
+          >
             SUBMIT
           </Button>
         </div>
