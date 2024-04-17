@@ -1,4 +1,4 @@
-import { SavedRecipeCard } from "@/components/SavedRecipeCard";
+import { RecipeCard } from "@/components/RecipeCard";
 import { useUserContext } from "@/context/context";
 import axios from "axios";
 import { useQuery, useQueryClient } from "react-query";
@@ -70,7 +70,7 @@ export function SavedRecipes() {
         >
           {savedRecipes.map(
             (recipe: { recipe_id: number; image: string; title: string }) => (
-              <SavedRecipeCard
+              <RecipeCard
                 key={recipe.recipe_id}
                 image={recipe.image}
                 title={recipe.title}
@@ -78,7 +78,8 @@ export function SavedRecipes() {
                   handleDeleteSavedRecipe(recipe.recipe_id)
                 }
                 handleReadRecipe={() => handleReadRecipe(recipe.recipe_id)}
-              ></SavedRecipeCard>
+                isSaved={true}
+              ></RecipeCard>
             )
           )}
         </div>

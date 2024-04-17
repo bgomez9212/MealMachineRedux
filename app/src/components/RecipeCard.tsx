@@ -28,12 +28,12 @@ export function RecipeCard({
 }: {
   image: string;
   title: string;
-  handleSaveClick: () => void;
+  handleSaveClick?: () => void;
   handleReadRecipe: () => void;
   handleDeleteSavedRecipe: () => void;
   isSaved: boolean;
-  missedIngredientCount: number | null;
-  missedIngredients: MissingIngredients[] | null;
+  missedIngredientCount?: number | null;
+  missedIngredients?: MissingIngredients[] | null;
 }) {
   const [selectedRecipe, setSelectedRecipe] = useState<
     MissingIngredients[] | null
@@ -133,7 +133,9 @@ export function RecipeCard({
         <CardDescription
           data-testid="card-description"
           onClick={() => {
-            missedIngredientCount && setSelectedRecipe(missedIngredients);
+            missedIngredients &&
+              missedIngredients.length &&
+              setSelectedRecipe(missedIngredients);
           }}
           className={`flex flex-grow flex-col justify-end mb-5 mx-6 ${missedIngredientCount ? "cursor-pointer" : ""} text-black dark:text-white`}
         >
