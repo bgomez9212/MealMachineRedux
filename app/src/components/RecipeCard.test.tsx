@@ -1,13 +1,17 @@
-import { screen, render, fireEvent, waitFor } from "@testing-library/react";
+import { screen, render, fireEvent } from "@testing-library/react";
 import { RecipeCard } from "./RecipeCard";
 import UserContextProvider from "@/context/context";
 import { QueryClient, QueryClientProvider } from "react-query";
+import { server } from "@/mocks/browser";
 
 describe("Recipe card component", () => {
   const mockHandleSaveClick = vi.fn();
   const mockHandleReadRecipe = vi.fn();
   const mockHandleDeleteSavedRecipe = vi.fn();
   const queryClient = new QueryClient();
+  beforeAll(() => server.listen());
+  afterEach(() => server.resetHandlers());
+  afterAll(() => server.close());
 
   it("renders recipes card component", async () => {
     render(
@@ -94,7 +98,7 @@ describe("Recipe card component", () => {
     );
   });
 
-  it("calls handle save grocery", async () => {
+  it("calls handle save grocery api", async () => {
     render(
       <UserContextProvider testUser="test-user">
         <QueryClientProvider client={queryClient}>
@@ -116,11 +120,8 @@ describe("Recipe card component", () => {
     );
 
     // open modal
-    // fireEvent.click(screen.getByTestId("card-description"));
+    fireEvent.click(screen.getByTestId("card-description"));
     // click button to save grocery
-    // fireEvent.click(screen.getByTestId("1-test"));
-    // await waitFor(() =>
-    //   expect(screen.getByTestId("disabled-button")).toBeInTheDocument()
-    // );
+    fireEvent.click(screen.getByTestId("11-test"));
   });
 });
