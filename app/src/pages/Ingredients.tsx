@@ -122,11 +122,17 @@ export function MyIngredients() {
         </div>
       </div>
       {isLoading ? (
-        <div className="flex justify-center items-center pt-10">
+        <div
+          data-testid="ingredients-loader"
+          className="flex justify-center items-center pt-10"
+        >
           <ClipLoader color="#8FAC5F" />
         </div>
       ) : isError ? (
-        <div className="flex justify-center items-center">
+        <div
+          data-testid="ingredients-error"
+          className="flex justify-center items-center"
+        >
           An Error has occured, please try again later.
         </div>
       ) : ingredients.length ? (

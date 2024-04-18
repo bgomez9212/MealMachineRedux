@@ -1,4 +1,10 @@
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import {
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+  waitForElementToBeRemoved,
+} from "@testing-library/react";
 import { server } from "@/mocks/browser";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { MyIngredients } from "./Ingredients";
@@ -6,11 +12,42 @@ import UserContextProvider from "@/context/context";
 import { HttpResponse, http } from "msw";
 
 describe("Ingredients component", () => {
-  const queryClient = new QueryClient();
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        retryDelay: 1,
+        retry: 0,
+      },
+    },
+  });
   beforeAll(() => server.listen());
   afterEach(() => server.resetHandlers());
   afterAll(() => server.close());
 
+  it("message should render when there are no ingredients", async () => {
+    server.use(
+      http.get(
+        import.meta.env.VITE_server_ingredients,
+        () => {
+          return new HttpResponse(null, { status: 404 });
+        },
+        { once: true }
+      )
+    );
+    render(
+      <UserContextProvider>
+        <QueryClientProvider client={queryClient}>
+          <MyIngredients />
+        </QueryClientProvider>
+      </UserContextProvider>
+    );
+    await waitForElementToBeRemoved(() =>
+      screen.getByTestId("ingredients-loader")
+    );
+    await waitFor(() => {
+      expect(screen.getByTestId("ingredients-error"));
+    });
+  });
   it("should render component", async () => {
     render(
       <UserContextProvider>
@@ -64,9 +101,13 @@ describe("Ingredients component", () => {
   // message when there are no ingredients
   it("message should render when there are no ingredients", async () => {
     server.use(
-      http.get(import.meta.env.VITE_server_ingredients, () => {
-        return HttpResponse.json([]);
-      })
+      http.get(
+        import.meta.env.VITE_server_ingredients,
+        () => {
+          return HttpResponse.json([]);
+        },
+        { once: true }
+      )
     );
     render(
       <UserContextProvider>
