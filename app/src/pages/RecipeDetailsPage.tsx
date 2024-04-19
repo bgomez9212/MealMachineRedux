@@ -33,7 +33,11 @@ export function RecipeDetailPage() {
     if (condition === undefined) {
       return "";
     }
-    return condition ? <Check color="#008a09" /> : <X color="#ff0000" />;
+    return condition ? (
+      <Check color="#008a09" />
+    ) : (
+      <X data-testid="x-mark" color="#ff0000" />
+    );
   }
 
   function handleBackClick() {
@@ -43,7 +47,10 @@ export function RecipeDetailPage() {
 
   if (isLoading) {
     return (
-      <div className="w-full flex items-center justify-center mt-20">
+      <div
+        data-testid="recipe-details-loader"
+        className="w-full flex items-center justify-center mt-20"
+      >
         <ClipLoader color="#8FAC5F" />
       </div>
     );
