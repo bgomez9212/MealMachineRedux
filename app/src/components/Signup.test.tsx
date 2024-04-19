@@ -3,23 +3,19 @@ import { BrowserRouter as Router } from "react-router-dom";
 import Signup from "./Signup";
 
 describe("Login component", () => {
-  const mockHandleClick = vi.fn();
+  const signIn = (
+    <Router>
+      <Signup handleClick={vi.fn} />
+    </Router>
+  );
 
   it("form accepts changes", async () => {
-    render(
-      <Router>
-        <Signup handleClick={mockHandleClick} />
-      </Router>
-    );
+    render(signIn);
     expect(screen.getByTestId("sign-up-component")).toBeInTheDocument();
   });
 
   it("changes form inputs", async () => {
-    render(
-      <Router>
-        <Signup handleClick={mockHandleClick} />
-      </Router>
-    );
+    render(signIn);
     const emailInput = screen.getByTestId("email-input") as HTMLInputElement;
     const passwordInput = screen.getByTestId(
       "password-input"
@@ -40,11 +36,7 @@ describe("Login component", () => {
   });
 
   it("changes password visibility", async () => {
-    render(
-      <Router>
-        <Signup handleClick={mockHandleClick} />
-      </Router>
-    );
+    render(signIn);
     const passwordInput = screen.getByTestId(
       "password-input"
     ) as HTMLInputElement;
@@ -58,11 +50,7 @@ describe("Login component", () => {
   });
 
   it("renders correct error message (invalid email)", async () => {
-    render(
-      <Router>
-        <Signup handleClick={mockHandleClick} />
-      </Router>
-    );
+    render(signIn);
     const emailInput = screen.getByTestId("email-input") as HTMLInputElement;
     const passwordInput = screen.getByTestId(
       "password-input"
@@ -86,11 +74,7 @@ describe("Login component", () => {
   });
 
   it("renders correct error message (email already in use)", async () => {
-    render(
-      <Router>
-        <Signup handleClick={mockHandleClick} />
-      </Router>
-    );
+    render(signIn);
     const emailInput = screen.getByTestId("email-input") as HTMLInputElement;
     const passwordInput = screen.getByTestId(
       "password-input"
