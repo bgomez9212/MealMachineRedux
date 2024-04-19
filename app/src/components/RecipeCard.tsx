@@ -153,6 +153,7 @@ export function RecipeCard({
             <Button
               variant={"saved"}
               onClick={handleDeleteSavedRecipe}
+              data-testid="remove-recipe"
             ></Button>
           ) : (
             <Button data-testid="save-button" onClick={handleSaveClick}>

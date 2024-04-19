@@ -62,4 +62,10 @@ export const handlers = [
       ],
     });
   }),
+  http.get(import.meta.env.VITE_server_savedRecipes, () => {
+    return HttpResponse.json([{ recipe_id: 1, image: "test", title: "test" }]);
+  }),
+  http.delete(import.meta.env.VITE_server_savedRecipes, () => {
+    return new HttpResponse(null, { status: 201, statusText: "deleted" });
+  }),
 ];

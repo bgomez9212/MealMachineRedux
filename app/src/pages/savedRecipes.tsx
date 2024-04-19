@@ -55,7 +55,10 @@ export function SavedRecipes() {
 
   if (isError) {
     return (
-      <div className="flex justify-center items center pt-10">
+      <div
+        data-testid="saved-ingredients-error"
+        className="flex justify-center items center pt-10"
+      >
         An error has occured, please try again later.
       </div>
     );
@@ -84,7 +87,9 @@ export function SavedRecipes() {
           )}
         </div>
       ) : (
-        <div className="text-center mt-10">View Saved Recipes Here</div>
+        <div data-testid="no-recipes-message" className="text-center mt-10">
+          View Saved Recipes Here
+        </div>
       )}
     </>
   );
