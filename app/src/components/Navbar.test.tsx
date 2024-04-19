@@ -5,28 +5,22 @@ import App from "@/App";
 
 describe("Navbar component", () => {
   const queryClient = new QueryClient();
-
+  const navbar = (
+    <UserContextProvider testUser="testuser">
+      <QueryClientProvider client={queryClient}>
+        <App />
+      </QueryClientProvider>
+    </UserContextProvider>
+  );
   it("navigates to ingredients screen", () => {
-    render(
-      <UserContextProvider testUser="testuser">
-        <QueryClientProvider client={queryClient}>
-          <App />
-        </QueryClientProvider>
-      </UserContextProvider>
-    );
+    render(navbar);
     const ingredientsLink = screen.getByTestId("ingredients-link");
     fireEvent.click(ingredientsLink);
     expect(window.location.pathname).toBe("/ingredients");
   });
 
   it("navigates to groceries screen", () => {
-    render(
-      <UserContextProvider testUser="testuser">
-        <QueryClientProvider client={queryClient}>
-          <App />
-        </QueryClientProvider>
-      </UserContextProvider>
-    );
+    render(navbar);
     const groceriesLink = screen.getByTestId("groceries-link");
     fireEvent.click(groceriesLink);
     expect(window.location.pathname).toBe("/groceries");
