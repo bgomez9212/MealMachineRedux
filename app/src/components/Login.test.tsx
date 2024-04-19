@@ -4,12 +4,13 @@ import Login from "./Login";
 
 describe("Login component", () => {
   const mockHandleClick = vi.fn();
+  const loginComponent = (
+    <Router>
+      <Login handleClick={mockHandleClick} />
+    </Router>
+  );
   it("renders error message when errorMessage is present", async () => {
-    render(
-      <Router>
-        <Login handleClick={mockHandleClick} />
-      </Router>
-    );
+    render(loginComponent);
     const loginBtn = screen.getByTestId("login-button");
     fireEvent.click(loginBtn);
     await waitFor(() =>
@@ -17,11 +18,7 @@ describe("Login component", () => {
     );
   });
   it("changes form inputs", async () => {
-    render(
-      <Router>
-        <Login handleClick={mockHandleClick} />
-      </Router>
-    );
+    render(loginComponent);
     const emailInput = screen.getByTestId("email-input") as HTMLInputElement;
     const passwordInput = screen.getByTestId(
       "password-input"
@@ -34,11 +31,7 @@ describe("Login component", () => {
     expect(passwordInput.value).toBe("testpassword");
   });
   it("changes password visibility", async () => {
-    render(
-      <Router>
-        <Login handleClick={mockHandleClick} />
-      </Router>
-    );
+    render(loginComponent);
     const visibilityButton = screen.getByTestId("visibility-button");
     const passwordInput = screen.getByTestId(
       "password-input"
