@@ -12,6 +12,7 @@ describe("Navbar component", () => {
       </QueryClientProvider>
     </UserContextProvider>
   );
+
   it("navigates to ingredients screen", () => {
     render(navbar);
     const ingredientsLink = screen.getByTestId("ingredients-link");
@@ -25,6 +26,7 @@ describe("Navbar component", () => {
     fireEvent.click(groceriesLink);
     expect(window.location.pathname).toBe("/groceries");
   });
-  // need test for dropdown menu item that navigates to saved recipes
-  // need test for bottom navigation that is rendered on smaller screens
 });
+
+// need test for dropdown menu item that navigates to saved recipes
+// need test for bottom navigation that is rendered on smaller screens
