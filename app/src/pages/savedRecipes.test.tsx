@@ -15,19 +15,22 @@ describe("saved recipes component", () => {
       },
     },
   });
+
+  const savedRecipes = (
+    <UserContextProvider testUser="test-user">
+      <QueryClientProvider client={queryClient}>
+        <Router>
+          <SavedRecipes />
+        </Router>
+      </QueryClientProvider>
+    </UserContextProvider>
+  );
+
   beforeAll(() => server.listen());
   afterEach(() => server.resetHandlers());
   afterAll(() => server.close());
   it("renders component and calls delete recipe", async () => {
-    render(
-      <UserContextProvider testUser="test-user">
-        <QueryClientProvider client={queryClient}>
-          <Router>
-            <SavedRecipes />
-          </Router>
-        </QueryClientProvider>
-      </UserContextProvider>
-    );
+    render(savedRecipes);
     await waitFor(() => {
       expect(screen.getByTestId("saved-recipes-component")).toBeInTheDocument();
       fireEvent.click(screen.getByTestId("remove-recipe"));
@@ -44,15 +47,7 @@ describe("saved recipes component", () => {
         { once: true }
       )
     );
-    render(
-      <UserContextProvider testUser="test-user">
-        <QueryClientProvider client={queryClient}>
-          <Router>
-            <SavedRecipes />
-          </Router>
-        </QueryClientProvider>
-      </UserContextProvider>
-    );
+    render(savedRecipes);
     await waitFor(() =>
       expect(screen.getByTestId("no-recipes-message")).toBeInTheDocument()
     );
@@ -68,15 +63,7 @@ describe("saved recipes component", () => {
         { once: true }
       )
     );
-    render(
-      <UserContextProvider testUser="test-user">
-        <QueryClientProvider client={queryClient}>
-          <Router>
-            <SavedRecipes />
-          </Router>
-        </QueryClientProvider>
-      </UserContextProvider>
-    );
+    render(savedRecipes);
     await waitFor(() =>
       expect(screen.getByTestId("saved-ingredients-error")).toBeInTheDocument()
     );

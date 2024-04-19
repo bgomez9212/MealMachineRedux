@@ -6,19 +6,19 @@ import { server } from "@/mocks/browser";
 import { http, HttpResponse } from "msw";
 
 describe("MyGroceries page", () => {
+  const queryClient = new QueryClient();
   beforeAll(() => server.listen());
   afterEach(() => server.resetHandlers());
   afterAll(() => server.close());
-
-  const queryClient = new QueryClient();
+  const groceries = (
+    <UserContextProvider testUser="test-user">
+      <QueryClientProvider client={queryClient}>
+        <MyGroceries />
+      </QueryClientProvider>
+    </UserContextProvider>
+  );
   it("calls delete and move grocery functions", async () => {
-    render(
-      <UserContextProvider testUser="test-user">
-        <QueryClientProvider client={queryClient}>
-          <MyGroceries />
-        </QueryClientProvider>
-      </UserContextProvider>
-    );
+    render(groceries);
     await waitFor(() => {
       expect(screen.getByTestId("groceries-container")).toBeInTheDocument();
     });
@@ -27,13 +27,7 @@ describe("MyGroceries page", () => {
   });
 
   it("calls post grocery endpoint", () => {
-    render(
-      <UserContextProvider testUser="test-user">
-        <QueryClientProvider client={queryClient}>
-          <MyGroceries />
-        </QueryClientProvider>
-      </UserContextProvider>
-    );
+    render(groceries);
     const textInput = screen.getByTestId(
       "groceries-test-input"
     ) as HTMLInputElement;
@@ -52,13 +46,7 @@ describe("MyGroceries page", () => {
         }
       )
     );
-    render(
-      <UserContextProvider testUser="test-user">
-        <QueryClientProvider client={queryClient}>
-          <MyGroceries />
-        </QueryClientProvider>
-      </UserContextProvider>
-    );
+    render(groceries);
     await waitFor(() => {
       expect(screen.getByTestId("no-groceries-message")).toBeInTheDocument();
     });

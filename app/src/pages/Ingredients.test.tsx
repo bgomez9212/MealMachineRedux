@@ -20,6 +20,15 @@ describe("Ingredients component", () => {
       },
     },
   });
+
+  const ingredients = (
+    <UserContextProvider>
+      <QueryClientProvider client={queryClient}>
+        <MyIngredients />
+      </QueryClientProvider>
+    </UserContextProvider>
+  );
+
   beforeAll(() => server.listen());
   afterEach(() => server.resetHandlers());
   afterAll(() => server.close());
@@ -34,13 +43,7 @@ describe("Ingredients component", () => {
         { once: true }
       )
     );
-    render(
-      <UserContextProvider>
-        <QueryClientProvider client={queryClient}>
-          <MyIngredients />
-        </QueryClientProvider>
-      </UserContextProvider>
-    );
+    render(ingredients);
     await waitForElementToBeRemoved(() =>
       screen.getByTestId("ingredients-loader")
     );
@@ -49,13 +52,7 @@ describe("Ingredients component", () => {
     });
   });
   it("should render component", async () => {
-    render(
-      <UserContextProvider>
-        <QueryClientProvider client={queryClient}>
-          <MyIngredients />
-        </QueryClientProvider>
-      </UserContextProvider>
-    );
+    render(ingredients);
     await waitFor(() => {
       expect(screen.getByTestId("ingredients-component")).toHaveTextContent(
         "Apples"
@@ -64,36 +61,18 @@ describe("Ingredients component", () => {
   });
   // remove ingredient
   it("should call api endpoint that deletes ingredient", () => {
-    render(
-      <UserContextProvider>
-        <QueryClientProvider client={queryClient}>
-          <MyIngredients />
-        </QueryClientProvider>
-      </UserContextProvider>
-    );
+    render(ingredients);
     fireEvent.click(screen.getByTestId("remove-ingredient"));
   });
 
   // move ingredient
   it("should call api endpoint that moves ingredient to groceries", () => {
-    render(
-      <UserContextProvider>
-        <QueryClientProvider client={queryClient}>
-          <MyIngredients />
-        </QueryClientProvider>
-      </UserContextProvider>
-    );
+    render(ingredients);
     fireEvent.click(screen.getByTestId("move-ingredient"));
   });
   // add ingredient + handle submit
   it("should fill text box with ingredients and submit should call ingredients post", () => {
-    render(
-      <UserContextProvider>
-        <QueryClientProvider client={queryClient}>
-          <MyIngredients />
-        </QueryClientProvider>
-      </UserContextProvider>
-    );
+    render(ingredients);
     const textBox = screen.getByTestId("ingredients-input");
     fireEvent.change(textBox, { target: { value: "carrots, peas, potatoes" } });
     fireEvent.click(screen.getByTestId("ingredients-submit"));
@@ -109,13 +88,7 @@ describe("Ingredients component", () => {
         { once: true }
       )
     );
-    render(
-      <UserContextProvider>
-        <QueryClientProvider client={queryClient}>
-          <MyIngredients />
-        </QueryClientProvider>
-      </UserContextProvider>
-    );
+    render(ingredients);
     await waitFor(() => {
       expect(screen.getByTestId("no-ingredients-message")).toBeInTheDocument();
     });

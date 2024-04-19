@@ -10,36 +10,30 @@ describe("App component", () => {
   afterEach(() => server.resetHandlers());
   afterAll(() => server.close());
 
-  it("renders app component", () => {
-    render(
-      <UserContextProvider>
-        <App />
-      </UserContextProvider>
-    );
-    expect(screen.getByTestId("app-loader")).toBeInTheDocument();
-  });
-
-  it("navigates to landing page without user auth", async () => {
-    render(
+  function app(user?: string) {
+    return (
       <QueryClientProvider client={queryClient}>
-        <UserContextProvider>
+        <UserContextProvider testUser={user}>
           <App />
         </UserContextProvider>
       </QueryClientProvider>
     );
+  }
+
+  it("renders app component", () => {
+    render(app());
+    expect(screen.getByTestId("app-loader")).toBeInTheDocument();
+  });
+
+  it("navigates to landing page without user auth", async () => {
+    render(app());
     await waitFor(() =>
       expect(screen.getByTestId("login-component")).toBeInTheDocument()
     );
   });
 
   it("navigates to home page with user auth", async () => {
-    render(
-      <QueryClientProvider client={queryClient}>
-        <UserContextProvider testUser={"user"}>
-          <App />
-        </UserContextProvider>
-      </QueryClientProvider>
-    );
+    render(app("test-user"));
     await waitFor(() =>
       expect(screen.getByTestId("home-component")).toBeInTheDocument()
     );
