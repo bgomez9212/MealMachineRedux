@@ -140,7 +140,10 @@ export function Home() {
         />
       </div>
       {search.length >= 3 ? (
-        <div className="min-[630px]:grid min-[630px]:grid-cols-2 lg:grid-cols-3 px-10 gap-x-10 mb-20">
+        <div
+          data-testid="search-recipe-results"
+          className="min-[630px]:grid min-[630px]:grid-cols-2 lg:grid-cols-3 px-10 gap-x-10 mb-20"
+        >
           {searchResults?.map(
             ({
               title,
@@ -194,7 +197,7 @@ export function Home() {
               )}
             </div>
           ) : (
-            <div className="text-center mt-10">
+            <div data-testid="no-ingredients-msg" className="text-center mt-10">
               <h1 className="underline text-xl mb-2">How To Get Started</h1>
               <p className="px-14">
                 To get your recommended recipes, add some ingredients to your

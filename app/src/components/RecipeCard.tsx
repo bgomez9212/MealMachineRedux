@@ -156,7 +156,7 @@ export function RecipeCard({
               data-testid="remove-recipe"
             ></Button>
           ) : (
-            <Button data-testid="save-button" onClick={handleSaveClick}>
+            <Button data-testid="save-recipe" onClick={handleSaveClick}>
               Save Recipe
             </Button>
           )}
