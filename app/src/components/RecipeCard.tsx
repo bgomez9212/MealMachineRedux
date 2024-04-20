@@ -146,7 +146,11 @@ export function RecipeCard({
               }`}
         </CardDescription>
         <CardFooter className="flex justify-between">
-          <Button onClick={handleReadRecipe} variant={"link"}>
+          <Button
+            data-testid={`read-${title}`}
+            onClick={handleReadRecipe}
+            variant={"link"}
+          >
             Read Recipe
           </Button>
           {isSaved ? (

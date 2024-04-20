@@ -33,7 +33,7 @@ describe("Ingredients component", () => {
   afterEach(() => server.resetHandlers());
   afterAll(() => server.close());
 
-  it("message should render when there are no ingredients", async () => {
+  it("message should render when there is an error", async () => {
     server.use(
       http.get(
         import.meta.env.VITE_server_ingredients,

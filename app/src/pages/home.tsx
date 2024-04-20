@@ -54,7 +54,7 @@ export function Home() {
   const {
     data: searchResults,
     refetch: refetchSearchResults,
-    // isLoading: isSearchLoading
+    isLoading: isSearchLoading,
   } = useQuery<HomeRecipes[]>({
     queryKey: ["searchResults"],
     enabled: search.length >= 3,
@@ -133,13 +133,21 @@ export function Home() {
     <div data-testid="home-component">
       <div className="mt-5 flex justify-center">
         <Input
+          data-testid="recipe-search"
           className="w-[90%]"
           placeholder="Search For Recipes"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
       </div>
-      {search.length >= 3 ? (
+      {isSearchLoading ? (
+        <div
+          data-testid="search-loading"
+          className="w-full flex items-center justify-center mt-20"
+        >
+          <ClipLoader color="#8FAC5F" />
+        </div>
+      ) : search.length >= 3 ? (
         <div
           data-testid="search-recipe-results"
           className="min-[630px]:grid min-[630px]:grid-cols-2 lg:grid-cols-3 px-10 gap-x-10 mb-20"

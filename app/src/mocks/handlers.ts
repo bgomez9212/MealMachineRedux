@@ -65,6 +65,9 @@ export const handlers = [
   http.get(import.meta.env.VITE_server_savedRecipes, () => {
     return HttpResponse.json([{ recipe_id: 1, image: "test", title: "test" }]);
   }),
+  http.post(import.meta.env.VITE_server_savedRecipes, () => {
+    return new HttpResponse(null, { status: 201, statusText: "created" });
+  }),
   http.delete(import.meta.env.VITE_server_savedRecipes, () => {
     return new HttpResponse(null, { status: 201, statusText: "deleted" });
   }),
@@ -72,45 +75,37 @@ export const handlers = [
     return HttpResponse.json([
       {
         id: 1,
-        title: "test",
+        title: "test1",
         image: "test-img",
         missedIngredientCount: 2,
         missedIngredients: [],
       },
       {
         id: 7,
-        title: "test",
+        title: "test7",
         image: "test-img",
         missedIngredientCount: 4,
         missedIngredients: [],
       },
     ]);
   }),
-  http.get(import.meta.env.VITE_server_searchRecipes, () => {
-    return HttpResponse.json({
-      id: 1,
-      image: "test-source",
-      title: "test-recipe",
-      readyInMinutes: 30,
-      vegetarian: undefined,
-      vegan: true,
-      glutenFree: false,
-      servings: 20,
-      sourceUrl: "string",
-      extendedIngredients: [
-        { id: 1, original: "string" },
-        { id: 2, original: "string" },
-      ],
-      analyzedInstructions: [
-        {
-          name: "string",
-          steps: [
-            { number: 1, step: "string" },
-            { number: 2, step: "string" },
-            { number: 3, step: "string" },
-          ],
-        },
-      ],
-    });
-  }),
+  // http.get(import.meta.env.VITE_server_searchRecipes, () => {
+  //   console.log("SEARCH RECIPES WAS USED");
+  //   return HttpResponse.json([
+  //     {
+  //       id: 1,
+  //       title: "test1",
+  //       image: "test-img",
+  //       missedIngredientCount: 2,
+  //       missedIngredients: [],
+  //     },
+  //     {
+  //       id: 7,
+  //       title: "test7",
+  //       image: "test-img",
+  //       missedIngredientCount: 4,
+  //       missedIngredients: [],
+  //     },
+  //   ]);
+  // }),
 ];

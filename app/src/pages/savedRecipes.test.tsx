@@ -68,17 +68,6 @@ describe("saved recipes component", () => {
       expect(screen.getByTestId("saved-ingredients-error")).toBeInTheDocument()
     );
   });
-  // it("renders message when there are no recipes", async () => {
-  //   render(
-  //     <UserContextProvider testUser="test-user">
-  //       <QueryClientProvider client={queryClient}>
-  //         <Router>
-  //           <SavedRecipes />
-  //         </Router>
-  //       </QueryClientProvider>
-  //     </UserContextProvider>
-  //   );
-  // });
 });
 
 // navigate to recipe details page
