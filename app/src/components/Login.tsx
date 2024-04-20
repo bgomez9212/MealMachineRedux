@@ -20,8 +20,7 @@ const Login = ({ handleClick }: LoginProps) => {
   const onLogin = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
     await signInWithEmailAndPassword(auth, formData.email, formData.password)
-      .then((userCredential) => {
-        const user = userCredential.user;
+      .then(() => {
         navigate("/home");
       })
       .catch(() => {
