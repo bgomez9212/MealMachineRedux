@@ -6,8 +6,7 @@ module.exports = {
       const result = await model.getSavedRecipes(req.query.user_id);
       res.send(result).status(200);
     } catch (err) {
-      console.error("Error in getSavedRecipes:", err);
-      res.status(500).send("Internal Server Error");
+      res.status(404).send("Internal Server Error");
     }
   },
   postSavedRecipe: async (req, res) => {

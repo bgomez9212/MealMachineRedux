@@ -5,6 +5,9 @@ const currentDate = new Date().toLocaleDateString();
 module.exports = {
   // get saved recipes for user
   getSavedRecipes: async (user_id) => {
+    if (user_id === undefined) {
+      throw new Error("User ID is required");
+    }
     try {
       const query = `SELECT * FROM savedRecipes WHERE user_id = $1 ORDER BY date_added`;
       const { rows: result } = await pool.query(query, [user_id]);
@@ -14,6 +17,9 @@ module.exports = {
     }
   },
   postSavedRecipe: async (user_id, recipe_id, imageUrl, title) => {
+    if (user_id === undefined || recipe_id === undefined) {
+      throw new Error("missing parameter in postSavedRecipe");
+    }
     try {
       const query =
         "INSERT INTO savedRecipes(user_id, recipe_id, image, title) VALUES ($1, $2, $3, $4)";
