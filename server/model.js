@@ -102,7 +102,6 @@ module.exports = {
       throw new Error(err.message);
     }
   },
-  // add groceries for user
   postGroceries: async (user_id, food_name) => {
     if (!user_id || !food_name) {
       throw new Error("missing param in post groceries");
