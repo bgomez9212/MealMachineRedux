@@ -79,8 +79,7 @@ module.exports = {
       const result = await model.getRecipes(req.query.user_id);
       res.send(result);
     } catch (err) {
-      console.error("Error in getRecipes", err);
-      res.status(500).send("Internal Server Error");
+      res.status(404).send(err);
     }
   },
   getRecipeDetails: async (req, res) => {

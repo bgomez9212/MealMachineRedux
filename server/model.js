@@ -140,6 +140,10 @@ module.exports = {
     }
   },
   getRecipes: async (user_id) => {
+    if (!user_id) {
+      throw new Error("user_id missing in get recipes");
+    }
+
     try {
       const ingredients = await pool.query(
         "SELECT name FROM food INNER JOIN ingredients ON food.id = ingredients.food_id WHERE ingredients.user_id = $1",
