@@ -27,5 +27,6 @@ CREATE TABLE IF NOT EXISTS savedRecipes (
   recipe_id INT,
   image VARCHAR(128),
   date_added DATE,
-  title VARCHAR(128)
+  title VARCHAR(128),
+  UNIQUE (user_id, recipe_id)
 );
