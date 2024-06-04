@@ -6,7 +6,7 @@ module.exports = {
       const result = await model.getSavedRecipes(req.query.user_id);
       res.send(result).status(200);
     } catch (err) {
-      res.status(404).send("Internal Server Error");
+      res.status(404).send(err);
     }
   },
   postSavedRecipe: async (req, res) => {
@@ -15,8 +15,7 @@ module.exports = {
       await model.postSavedRecipe(user_id, recipe_id, image, title);
       res.sendStatus(201);
     } catch (err) {
-      console.error("Error in postSavedRecipe", err);
-      res.status(500).send("Internal Server Error");
+      res.status(500).send(err);
     }
   },
   deleteSavedRecipe: async (req, res) => {
@@ -24,8 +23,7 @@ module.exports = {
       await model.deleteSavedRecipe(req.body.user_id, req.body.recipe_id);
       res.sendStatus(204);
     } catch (err) {
-      console.error("Error in deleteSavedRecipe", err);
-      res.status(500).send("Internal Server Error");
+      res.status(500).send(err);
     }
   },
   getIngredients: async (req, res) => {
@@ -33,8 +31,7 @@ module.exports = {
       const result = await model.getIngredients(req.query.user_id);
       res.send(result.rows).status(200);
     } catch (err) {
-      console.error("Error in getIngredients", err);
-      res.status(404).send("Internal Server Error");
+      res.status(404).send(err);
     }
   },
   postIngredients: async (req, res) => {
@@ -42,8 +39,7 @@ module.exports = {
       await model.postIngredients(req.body.user_id, req.body.food_name);
       res.sendStatus(201);
     } catch (err) {
-      console.error("Error in postIngredients", err);
-      res.status(500).send("Internal Server Error");
+      res.status(404).send(err);
     }
   },
   deleteIngredients: async (req, res) => {

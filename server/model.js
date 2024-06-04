@@ -3,9 +3,8 @@ const axios = require("axios");
 const pool = require("./db.js");
 const currentDate = new Date().toLocaleDateString();
 module.exports = {
-  // get saved recipes for user
   getSavedRecipes: async (user_id) => {
-    if (user_id === undefined) {
+    if (!user_id) {
       throw new Error("User ID is required");
     }
     try {
@@ -17,7 +16,7 @@ module.exports = {
     }
   },
   postSavedRecipe: async (user_id, recipe_id, image, title) => {
-    if (user_id === undefined || recipe_id === undefined) {
+    if (!user_id || !recipe_id) {
       throw new Error("missing parameter in postSavedRecipe");
     }
     try {
@@ -40,7 +39,6 @@ module.exports = {
       throw new Error(err.message);
     }
   },
-  // get ingredients for user
   getIngredients: async (user_id) => {
     if (!user_id) {
       throw new Error("ingredients missing user_id");
@@ -54,8 +52,10 @@ module.exports = {
       throw new Error(err.message);
     }
   },
-  // add ingredient for user, also adding name to food table if name does not exist
   postIngredients: async (user_id, food_name) => {
+    if (!user_id || !food_name) {
+      throw new Error("missing parameter in post ingredients");
+    }
     try {
       let foodId;
       const checkFoodQuery = "SELECT id FROM food WHERE name = $1";
