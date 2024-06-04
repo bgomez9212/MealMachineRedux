@@ -15,7 +15,7 @@ module.exports = {
       await model.postSavedRecipe(user_id, recipe_id, image, title);
       res.sendStatus(201);
     } catch (err) {
-      res.status(500).send(err);
+      res.status(404).send(err);
     }
   },
   deleteSavedRecipe: async (req, res) => {
@@ -23,7 +23,7 @@ module.exports = {
       await model.deleteSavedRecipe(req.body.user_id, req.body.recipe_id);
       res.sendStatus(204);
     } catch (err) {
-      res.status(500).send(err);
+      res.status(404).send(err);
     }
   },
   getIngredients: async (req, res) => {
