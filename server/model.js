@@ -168,6 +168,9 @@ module.exports = {
     }
   },
   getRecipeDetails: async (recipe_id) => {
+    if (!recipe_id) {
+      throw new Error("get recipe details missing recipe id");
+    }
     try {
       const result = await axios.get(
         `https://api.spoonacular.com/recipes/${recipe_id}/information`,
