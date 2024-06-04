@@ -1,6 +1,7 @@
 const request = require("supertest");
 const app = require("./app");
 const pool = require("./db");
+const axios = require("axios");
 
 afterAll(async () => {
   await pool.end();
@@ -238,6 +239,12 @@ describe("test groceries route", () => {
 describe("test get recipes", () => {
   it("should return an error when a user_id is not passed to get", async () => {
     const res = await request(app).get("/api/recipes");
+    expect(res.status).toBe(404);
+  });
+
+  it("should return an error when there is a database error: get", async () => {
+    mockDb();
+    const res = await request(app).get("/api/recipes").query({ user_id: 1 });
     expect(res.status).toBe(404);
   });
 
