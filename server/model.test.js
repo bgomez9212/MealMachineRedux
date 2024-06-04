@@ -2,22 +2,11 @@ const request = require("supertest");
 const app = require("./app");
 const pool = require("./db"); // Adjust the path to your db module
 
-// let client;
-
-// beforeAll(async () => {
-//   client = await pool.connect();
-//   await client.query("BEGIN");
-// });
-
-// afterEach(async () => {
-//   await client.query("ROLLBACK");
-// });
-
 afterAll(async () => {
   await pool.end();
 });
 
-describe("testing saved recipes route", () => {
+describe("test saved recipes route", () => {
   it("should return a 200 status code when a user_id is passed", async () => {
     const res = await request(app)
       .get("/api/savedRecipes")
@@ -50,6 +39,13 @@ describe("testing saved recipes route", () => {
     expect(res.status).toBe(500);
   });
 
+  it("should throw an error if delete recipe is missing a parameter", async () => {
+    const res = await request(app).delete("/api/savedRecipes").send({
+      user_id: 12345,
+    });
+    expect(res.status).toBe(500);
+  });
+
   it("should not allow a recipe to be saved by a user if it is already saved", async () => {
     const res = await request(app).delete("/api/savedRecipes").send({
       user_id: 12345,
@@ -58,3 +54,5 @@ describe("testing saved recipes route", () => {
     expect(res.status).toBe(204);
   });
 });
+
+describe("test ingredients route", () => {});

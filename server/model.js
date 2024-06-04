@@ -29,6 +29,9 @@ module.exports = {
     }
   },
   deleteSavedRecipe: async (user_id, recipe_id) => {
+    if (!user_id || !recipe_id) {
+      throw new Error("missing parameter in deleteSavedRecipe");
+    }
     try {
       const query =
         "DELETE FROM savedRecipes WHERE user_id = $1 and recipe_id = $2";
