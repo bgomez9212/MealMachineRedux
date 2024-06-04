@@ -98,3 +98,47 @@ describe("test ingredients route", () => {
     expect(res.status).toBe(404);
   });
 });
+
+describe("test groceries route", () => {
+  it("should return status 200 when getting groceries", async () => {
+    const res = await request(app)
+      .get("/api/groceries")
+      .query({ user_id: 12345 });
+    expect(res.status).toBe(200);
+  });
+
+  it("should return an error when missing user_id in params", async () => {
+    const res = await request(app).get("/api/groceries");
+    expect(res.status).toBe(404);
+  });
+
+  it("should return a 201 status when posting an groceries", async () => {
+    const res = await request(app)
+      .post("/api/groceries")
+      .send({ user_id: 12345, food_name: "onions" });
+    expect(res.status).toBe(201);
+  });
+
+  it("should return a 404 status when missing a parameter", async () => {
+    const res = await request(app)
+      .post("/api/groceries")
+      .send({ food_name: "carrots" });
+    expect(res.status).toBe(404);
+  });
+
+  it("should delete an ingredient", async () => {
+    const { rows: groceryId } = await pool.query(
+      `SELECT id FROM groceries WHERE user_id = $1 AND food_id = (SELECT id FROM food WHERE name = $2)`,
+      ["12345", "onions"]
+    );
+    const res = await request(app)
+      .delete("/api/groceries")
+      .send({ grocery_id: groceryId[0].id });
+    expect(res.status).toBe(204);
+  });
+
+  it("should send an error when ingredient id is missing", async () => {
+    const res = await request(app).delete("/api/groceries");
+    expect(res.status).toBe(404);
+  });
+});

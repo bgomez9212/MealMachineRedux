@@ -89,8 +89,10 @@ module.exports = {
       throw new Error(err.message);
     }
   },
-  // get groceries for user
   getGroceries: async (user_id) => {
+    if (!user_id) {
+      throw new Error("missing user id in groceries");
+    }
     try {
       const query =
         "SELECT * FROM food INNER JOIN groceries ON food.id = groceries.food_id WHERE groceries.user_id = $1";
@@ -102,6 +104,9 @@ module.exports = {
   },
   // add groceries for user
   postGroceries: async (user_id, food_name) => {
+    if (!user_id || !food_name) {
+      throw new Error("missing param in post groceries");
+    }
     try {
       let foodId;
       const checkFoodQuery = "SELECT id FROM food WHERE name = $1";
@@ -125,6 +130,9 @@ module.exports = {
     }
   },
   deleteGroceries: async (grocery_id) => {
+    if (!grocery_id) {
+      throw new Error("missing grocery id in delete groceries");
+    }
     try {
       const query = "DELETE FROM groceries WHERE id = $1";
       await pool.query(query, [grocery_id]);

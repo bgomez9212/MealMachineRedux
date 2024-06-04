@@ -55,8 +55,7 @@ module.exports = {
       const result = await model.getGroceries(req.query.user_id);
       res.send(result.rows).status(200);
     } catch (err) {
-      console.error("Error in getGroceries", err);
-      res.status(500).send("Internal Server Error");
+      res.status(404).send(err);
     }
   },
   postGroceries: async (req, res) => {
@@ -64,8 +63,7 @@ module.exports = {
       await model.postGroceries(req.body.user_id, req.body.food_name);
       res.sendStatus(201);
     } catch (err) {
-      console.error("Error in postGroceries", err);
-      res.status(500).send("Internal Server Error");
+      res.status(404).send(err);
     }
   },
   deleteGroceries: async (req, res) => {
@@ -73,8 +71,7 @@ module.exports = {
       await model.deleteGroceries(req.body.grocery_id);
       res.sendStatus(204);
     } catch (err) {
-      console.error("Error in deleteGroceries", err);
-      res.status(500).send("Internal Server Error");
+      res.status(404).send(err);
     }
   },
   getRecipes: async (req, res) => {
