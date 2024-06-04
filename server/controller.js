@@ -34,7 +34,7 @@ module.exports = {
       res.send(result.rows).status(200);
     } catch (err) {
       console.error("Error in getIngredients", err);
-      res.status(500).send("Internal Server Error");
+      res.status(404).send("Internal Server Error");
     }
   },
   postIngredients: async (req, res) => {

@@ -42,6 +42,9 @@ module.exports = {
   },
   // get ingredients for user
   getIngredients: async (user_id) => {
+    if (!user_id) {
+      throw new Error("ingredients missing user_id");
+    }
     try {
       const query =
         "SELECT * FROM food INNER JOIN ingredients ON food.id = ingredients.food_id WHERE ingredients.user_id = $1";

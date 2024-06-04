@@ -55,4 +55,16 @@ describe("test saved recipes route", () => {
   });
 });
 
-describe("test ingredients route", () => {});
+describe("test ingredients route", () => {
+  it("should return status 200 when getting ingredients", async () => {
+    const res = await request(app)
+      .get("/api/ingredients")
+      .query({ user_id: 12345 });
+    expect(res.status).toBe(200);
+  });
+
+  it("should return an error when missing user_id in params", async () => {
+    const res = await request(app).get("/api/ingredients");
+    expect(res.status).toBe(404);
+  });
+});
