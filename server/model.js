@@ -78,8 +78,10 @@ module.exports = {
       throw new Error(err.message);
     }
   },
-  // remove ingredient for user
   deleteIngredients: async (ingredient_id) => {
+    if (!ingredient_id) {
+      throw new Error("missing ingredient id in deletion");
+    }
     try {
       const query = "DELETE FROM ingredients WHERE id = $1";
       await pool.query(query, [ingredient_id]);

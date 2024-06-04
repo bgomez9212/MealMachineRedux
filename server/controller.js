@@ -47,8 +47,7 @@ module.exports = {
       await model.deleteIngredients(req.body.ingredient_id);
       res.sendStatus(204);
     } catch (err) {
-      console.error("Error in deleteIngredients", err);
-      res.status(500).send("Internal Server Error");
+      res.status(404).send(err);
     }
   },
   getGroceries: async (req, res) => {
