@@ -16,14 +16,14 @@ module.exports = {
       throw new Error(err.message);
     }
   },
-  postSavedRecipe: async (user_id, recipe_id, imageUrl, title) => {
+  postSavedRecipe: async (user_id, recipe_id, image, title) => {
     if (user_id === undefined || recipe_id === undefined) {
       throw new Error("missing parameter in postSavedRecipe");
     }
     try {
       const query =
         "INSERT INTO savedRecipes(user_id, recipe_id, image, title) VALUES ($1, $2, $3, $4)";
-      await pool.query(query, [user_id, recipe_id, imageUrl, title]);
+      await pool.query(query, [user_id, recipe_id, image, title]);
     } catch (err) {
       throw new Error(err.message);
     }

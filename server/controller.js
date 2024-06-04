@@ -10,6 +10,7 @@ module.exports = {
     }
   },
   postSavedRecipe: async (req, res) => {
+    console.log(req);
     try {
       const { user_id, recipe_id, image, title } = req.body;
       await model.postSavedRecipe(user_id, recipe_id, image, title);

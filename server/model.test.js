@@ -34,9 +34,27 @@ describe("testing saved recipes route", () => {
     const res = await request(app).post("/api/savedRecipes").send({
       user_id: 12345,
       recipe_id: 54321,
-      imageUrl: "testImage",
+      image: "testImage",
       title: "testTitle",
     });
     expect(res.status).toBe(201);
+  });
+
+  it("should not allow a recipe to be saved by a user if it is already saved", async () => {
+    const res = await request(app).post("/api/savedRecipes").send({
+      user_id: 12345,
+      recipe_id: 54321,
+      image: "testImage",
+      title: "testTitle",
+    });
+    expect(res.status).toBe(500);
+  });
+
+  it("should not allow a recipe to be saved by a user if it is already saved", async () => {
+    const res = await request(app).delete("/api/savedRecipes").send({
+      user_id: 12345,
+      recipe_id: 54321,
+    });
+    expect(res.status).toBe(204);
   });
 });
