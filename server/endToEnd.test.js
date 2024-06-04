@@ -1,7 +1,6 @@
 const request = require("supertest");
 const app = require("./app");
 const pool = require("./db");
-const axios = require("axios");
 
 afterAll(async () => {
   await pool.end();
@@ -270,6 +269,13 @@ describe("recipe details tests", () => {
     expect(res.body.title).toBe(
       "Pasta with Garlic, Scallions, Cauliflower & Breadcrumbs"
     );
+  });
+
+  it("returns an error when a nonexistent recipe id is passed", async () => {
+    const res = await request(app)
+      .get("/api/recipeDetails")
+      .query({ recipe_id: 0 });
+    expect(res.status).toBe(404);
   });
 });
 
