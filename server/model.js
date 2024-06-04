@@ -186,6 +186,9 @@ module.exports = {
     }
   },
   getSearchedRecipes: async (user_id, term) => {
+    if (!user_id || !term) {
+      throw new Error("parameters missing from search recipes");
+    }
     try {
       const { rows: ingredients } = await pool.query(
         "SELECT name FROM food INNER JOIN ingredients ON food.id = ingredients.food_id WHERE ingredients.user_id = $1",

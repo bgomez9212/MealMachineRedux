@@ -97,9 +97,8 @@ module.exports = {
         req.query.term
       );
       res.send(result);
-    } catch {
-      console.error("Error in getSearchedRecipes", err);
-      res.status(500).send("Internal Server Error");
+    } catch (err) {
+      res.status(404).send(err);
     }
   },
 };

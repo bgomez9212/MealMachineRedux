@@ -182,11 +182,25 @@ describe("recipe details tests", () => {
     const res = await request(app)
       .get("/api/recipeDetails")
       .query({ recipe_id: 716429 });
-    console.log(res.body);
     expect(res.status).toBe(200);
     expect(res.body.id).toBe(716429);
     expect(res.body.title).toBe(
       "Pasta with Garlic, Scallions, Cauliflower & Breadcrumbs"
     );
+  });
+});
+
+describe("test search recipes", () => {
+  it("returns an error if search is missing parameters", async () => {
+    const res = await request(app).get("/api/searchRecipes");
+    expect(res.status).toBe(404);
+  });
+
+  it("returns a list of recipes when passing correct parameters", async () => {
+    const res = await request(app)
+      .get("/api/searchRecipes")
+      .query({ user_id: 12345, term: "pasta" });
+    expect(res.status).toBe(200);
+    expect(res.body.results.length).toBe(9);
   });
 });
