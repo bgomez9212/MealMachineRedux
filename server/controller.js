@@ -6,8 +6,7 @@ module.exports = {
       const result = await model.getSavedRecipes(req.query.user_id);
       res.send(result).status(200);
     } catch (err) {
-      console.error("Error in getSavedRecipes:", err);
-      res.status(500).send("Internal Server Error");
+      res.status(404).send(err);
     }
   },
   postSavedRecipe: async (req, res) => {
@@ -16,8 +15,7 @@ module.exports = {
       await model.postSavedRecipe(user_id, recipe_id, image, title);
       res.sendStatus(201);
     } catch (err) {
-      console.error("Error in postSavedRecipe", err);
-      res.status(500).send("Internal Server Error");
+      res.status(404).send(err);
     }
   },
   deleteSavedRecipe: async (req, res) => {
@@ -25,8 +23,7 @@ module.exports = {
       await model.deleteSavedRecipe(req.body.user_id, req.body.recipe_id);
       res.sendStatus(204);
     } catch (err) {
-      console.error("Error in deleteSavedRecipe", err);
-      res.status(500).send("Internal Server Error");
+      res.status(404).send(err);
     }
   },
   getIngredients: async (req, res) => {
@@ -34,8 +31,7 @@ module.exports = {
       const result = await model.getIngredients(req.query.user_id);
       res.send(result.rows).status(200);
     } catch (err) {
-      console.error("Error in getIngredients", err);
-      res.status(500).send("Internal Server Error");
+      res.status(404).send(err);
     }
   },
   postIngredients: async (req, res) => {
@@ -43,8 +39,7 @@ module.exports = {
       await model.postIngredients(req.body.user_id, req.body.food_name);
       res.sendStatus(201);
     } catch (err) {
-      console.error("Error in postIngredients", err);
-      res.status(500).send("Internal Server Error");
+      res.status(404).send(err);
     }
   },
   deleteIngredients: async (req, res) => {
@@ -52,8 +47,7 @@ module.exports = {
       await model.deleteIngredients(req.body.ingredient_id);
       res.sendStatus(204);
     } catch (err) {
-      console.error("Error in deleteIngredients", err);
-      res.status(500).send("Internal Server Error");
+      res.status(404).send(err);
     }
   },
   getGroceries: async (req, res) => {
@@ -61,8 +55,7 @@ module.exports = {
       const result = await model.getGroceries(req.query.user_id);
       res.send(result.rows).status(200);
     } catch (err) {
-      console.error("Error in getGroceries", err);
-      res.status(500).send("Internal Server Error");
+      res.status(404).send(err);
     }
   },
   postGroceries: async (req, res) => {
@@ -70,8 +63,7 @@ module.exports = {
       await model.postGroceries(req.body.user_id, req.body.food_name);
       res.sendStatus(201);
     } catch (err) {
-      console.error("Error in postGroceries", err);
-      res.status(500).send("Internal Server Error");
+      res.status(404).send(err);
     }
   },
   deleteGroceries: async (req, res) => {
@@ -79,8 +71,7 @@ module.exports = {
       await model.deleteGroceries(req.body.grocery_id);
       res.sendStatus(204);
     } catch (err) {
-      console.error("Error in deleteGroceries", err);
-      res.status(500).send("Internal Server Error");
+      res.status(404).send(err);
     }
   },
   getRecipes: async (req, res) => {
@@ -88,8 +79,7 @@ module.exports = {
       const result = await model.getRecipes(req.query.user_id);
       res.send(result);
     } catch (err) {
-      console.error("Error in getRecipes", err);
-      res.status(500).send("Internal Server Error");
+      res.status(404).send(err);
     }
   },
   getRecipeDetails: async (req, res) => {
@@ -97,8 +87,7 @@ module.exports = {
       const result = await model.getRecipeDetails(req.query.recipe_id);
       res.send(result);
     } catch (err) {
-      console.error("Error in getRecipeDetails", err);
-      res.status(500).send("Internal Server Error");
+      res.status(404).send(err);
     }
   },
   getSearchedRecipes: async (req, res) => {
@@ -108,9 +97,8 @@ module.exports = {
         req.query.term
       );
       res.send(result);
-    } catch {
-      console.error("Error in getSearchedRecipes", err);
-      res.status(500).send("Internal Server Error");
+    } catch (err) {
+      res.status(404).send(err);
     }
   },
 };
