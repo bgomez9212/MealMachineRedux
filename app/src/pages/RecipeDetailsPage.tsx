@@ -32,11 +32,7 @@ export function RecipeDetailPage() {
         }),
   });
 
-  const {
-    data: ingredients,
-    // isLoading,
-    // isError,
-  } = useQuery({
+  const { data: ingredients } = useQuery({
     queryKey: ["ingredients"],
     queryFn: async () =>
       axios
@@ -50,11 +46,7 @@ export function RecipeDetailPage() {
         }),
   });
 
-  const {
-    data: groceries,
-    // isLoading: isGroceryLoading,
-    // isError: isGroceryError,
-  } = useQuery({
+  const { data: groceries } = useQuery({
     queryKey: ["groceries"],
     queryFn: () => getGroceries(user),
     enabled: !!user,
@@ -80,6 +72,7 @@ export function RecipeDetailPage() {
     if (userIngredients?.indexOf(recipeIngredient) > -1) {
       return (
         <Button
+          className="md:w-1/4"
           onClick={() => console.log(recipeIngredient)}
           variant="secondary"
         >
@@ -90,6 +83,7 @@ export function RecipeDetailPage() {
     if (userGroceries?.indexOf(recipeIngredient) > -1) {
       return (
         <Button
+          className="md:w-1/4"
           onClick={() => console.log(recipeIngredient)}
           variant="secondary"
         >
@@ -99,10 +93,10 @@ export function RecipeDetailPage() {
     }
     return (
       <Button
-        className="sm:w-1/4 text-wrap sm:h-auto"
+        className="md:w-1/4 text-wrap md:h-auto"
         onClick={() => handleSaveGrocery(recipeIngredient)}
       >
-        Add {recipeIngredient} to groceries
+        Add to groceries
       </Button>
     );
   }
@@ -183,7 +177,7 @@ export function RecipeDetailPage() {
             {recipe?.ingredientList.map(
               ({ ingredientWithMeasurement, id, ingredientName }) => (
                 <li
-                  className="mb-5 mr-10 flex sm:flex-row sm:items-center sm:justify-between flex-col"
+                  className="mb-5 mr-10 flex md:flex-row md:items-center md:justify-between flex-col"
                   key={id}
                 >
                   {ingredientWithMeasurement}
