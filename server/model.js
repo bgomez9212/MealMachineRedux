@@ -158,6 +158,14 @@ module.exports = {
           },
         }
       );
+      const ingredientList = result.data.extendedIngredients.map(
+        (ingredientObj) => ({
+          id: ingredientObj.id,
+          ingredientName: ingredientObj.nameClean,
+          ingredientWithMeasurement: ingredientObj.original,
+        })
+      );
+      result.data.ingredientList = ingredientList;
       return result.data;
     } catch (err) {
       throw new Error(err.message);

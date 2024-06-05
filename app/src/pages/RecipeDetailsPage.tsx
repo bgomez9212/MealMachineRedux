@@ -102,16 +102,19 @@ export function RecipeDetailPage() {
             Ingredients
           </h1>
           <ul className="list-disc list-inside">
-            {recipe?.extendedIngredients
-              .filter(
-                (obj, index, self) =>
-                  index === self.findIndex((o) => o.id === obj.id)
-              )
-              .map(({ original, id }) => (
-                <li className="mb-2" key={id}>
-                  {original}
+            {recipe?.ingredientList.map(
+              ({ ingredientWithMeasurement, id, ingredientName }) => (
+                <li
+                  className="mb-5 mr-10 flex items-center justify-between"
+                  key={id}
+                >
+                  {ingredientWithMeasurement}
+                  <Button onClick={() => console.log(ingredientName)}>
+                    {`Add ${ingredientName} to groceries`}
+                  </Button>
                 </li>
-              ))}
+              )
+            )}
           </ul>
         </div>
         <div className="md:w-[47%] mb-10">
