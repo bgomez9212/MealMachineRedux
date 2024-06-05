@@ -24,6 +24,12 @@ export type Groceries = {
   date_added: string;
 };
 
+export type Ingredients = {
+  id: number;
+  name: string;
+  date_added: string;
+};
+
 export type Recipe = {
   id: number;
   image: string;
