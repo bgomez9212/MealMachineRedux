@@ -139,11 +139,13 @@ export function RecipeCard({
           }}
           className={`flex flex-grow flex-col justify-end mb-5 mx-6 ${missedIngredientCount ? "cursor-pointer" : ""} text-black dark:text-white`}
         >
-          {!missedIngredientCount
+          {missedIngredientCount === 0
             ? "Ready to make!"
-            : `Missing ${missedIngredientCount} Ingredient${
-                missedIngredientCount > 1 ? "s" : ""
-              }`}
+            : !missedIngredientCount
+              ? ""
+              : `Missing ${missedIngredientCount} Ingredient${
+                  missedIngredientCount > 1 ? "s" : ""
+                }`}
         </CardDescription>
         <CardFooter className="flex justify-between">
           <Button
