@@ -1,6 +1,8 @@
 const request = require("supertest");
 const app = require("./app");
 const pool = require("./db");
+const { setupServer } = require("msw/node");
+const handlers = require("./handlers");
 
 afterAll(async () => {
   await pool.end();
@@ -12,6 +14,8 @@ function mockDb() {
     throw new Error("Database error");
   });
 }
+
+const server = setupServer(...handlers);
 
 describe("test saved recipes route", () => {
   it("should throw an error with 404 status code if a user_id is not passed to get", async () => {
@@ -271,7 +275,7 @@ describe("recipe details tests", () => {
     );
   });
 
-  it("returns an error when a nonexistent recipe id is passed", async () => {
+  it("returns an error when a nonexistent recipe id is passed (external API error)", async () => {
     const res = await request(app)
       .get("/api/recipeDetails")
       .query({ recipe_id: 0 });
@@ -291,5 +295,14 @@ describe("test search recipes", () => {
       .query({ user_id: 12345, term: "pasta" });
     expect(res.status).toBe(200);
     expect(res.body.results.length).toBe(9);
+  });
+
+  it("returns an error when there is an external api error", async () => {
+    server.listen();
+    const res = await request(app)
+      .get("/api/searchRecipes")
+      .query({ user_id: 1234, term: "eggs" });
+    expect(res.status).toBe(404);
+    server.close();
   });
 });
