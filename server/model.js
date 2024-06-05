@@ -2,6 +2,12 @@ const dotenv = require("dotenv").config();
 const axios = require("axios");
 const pool = require("./db.js");
 const currentDate = new Date().toLocaleDateString();
+const {
+  getFoodId,
+  createIngredientsList,
+  createIngredientsListSearchedRecipes,
+} = require("./utils.js");
+
 module.exports = {
   getSavedRecipes: async (user_id) => {
     if (!user_id) {
@@ -57,22 +63,10 @@ module.exports = {
       throw new Error("missing parameter in post ingredients");
     }
     try {
-      let foodId;
-      const checkFoodQuery = "SELECT id FROM food WHERE name = $1";
-      const { rows: foodIdResult } = await pool.query(checkFoodQuery, [
-        food_name.toLowerCase(),
-      ]);
-      foodId = foodIdResult;
-      if (!foodId.length) {
-        const addFoodQuery = "INSERT INTO food (name) VALUES ($1) returning id";
-        const { rows: foodIdResult } = await pool.query(addFoodQuery, [
-          food_name.toLowerCase(),
-        ]);
-        foodId = foodIdResult;
-      }
+      foodId = await getFoodId(food_name);
       await pool.query(
         "INSERT INTO ingredients (user_id, food_id, date_added) VALUES ($1, $2, $3) ON CONFLICT DO NOTHING",
-        [user_id, foodId[0].id, currentDate]
+        [user_id, foodId, currentDate]
       );
     } catch (err) {
       throw new Error(err.message);
@@ -107,22 +101,10 @@ module.exports = {
       throw new Error("missing param in post groceries");
     }
     try {
-      let foodId;
-      const checkFoodQuery = "SELECT id FROM food WHERE name = $1";
-      const { rows: foodIdResult } = await pool.query(checkFoodQuery, [
-        food_name.toLowerCase(),
-      ]);
-      foodId = foodIdResult;
-      if (!foodId.length) {
-        const addFoodQuery = "INSERT INTO food (name) VALUES ($1) returning id";
-        const { rows: foodIdResult } = await pool.query(addFoodQuery, [
-          food_name.toLowerCase(),
-        ]);
-        foodId = foodIdResult;
-      }
+      foodId = await getFoodId(food_name);
       await pool.query(
         "INSERT INTO groceries (user_id, food_id, date_added) VALUES ($1, $2, $3) ON CONFLICT DO NOTHING",
-        [user_id, foodId[0].id, currentDate]
+        [user_id, foodId, currentDate]
       );
     } catch (err) {
       throw new Error(err.message);
@@ -149,11 +131,7 @@ module.exports = {
         "SELECT name FROM food INNER JOIN ingredients ON food.id = ingredients.food_id WHERE ingredients.user_id = $1",
         [user_id]
       );
-      const ingredientsList = ingredients.rows
-        .map(({ name }) => {
-          return name.includes(" ") ? name.split(" ").join("+") : name;
-        })
-        .join(",+");
+      const ingredientsList = createIngredientsList(ingredients.rows);
       const result = await axios.get(
         `https://api.spoonacular.com/recipes/findByIngredients?ingredients=${ingredientsList}&number=9&ranking=2`,
         {
@@ -194,11 +172,7 @@ module.exports = {
         "SELECT name FROM food INNER JOIN ingredients ON food.id = ingredients.food_id WHERE ingredients.user_id = $1",
         [user_id]
       );
-      const ingredientsList = ingredients
-        .map(({ name }) => {
-          return name.includes(" ") ? name.split(" ").join("") : name;
-        })
-        .join(",");
+      const ingredientsList = createIngredientsListSearchedRecipes(ingredients);
       const { data: result } = await axios.get(
         `https://api.spoonacular.com/recipes/complexSearch?titleMatch=${term}&number=9&fillIngredients=true&includeIngredients=${ingredientsList}&sort=min-missing-ingredients`,
         {
