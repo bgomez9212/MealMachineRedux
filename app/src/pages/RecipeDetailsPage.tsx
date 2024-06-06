@@ -175,7 +175,7 @@ export function RecipeDetailPage() {
             Ingredients
           </h1>
           <ul className="list-disc list-inside">
-            {recipe?.ingredientList.map(
+            {recipe?.ingredientList?.map(
               ({ ingredientWithMeasurement, id, ingredientName }) => (
                 <li
                   className="mb-5 mr-10 flex md:flex-row md:items-center md:justify-between flex-col"

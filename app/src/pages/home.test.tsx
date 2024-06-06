@@ -79,16 +79,20 @@ describe("home component", () => {
       })
     );
     render(home);
-    const textInput = screen.getByTestId("recipe-search") as HTMLInputElement;
+    const textInput = (await waitFor(() =>
+      screen.getByTestId("recipe-search")
+    )) as HTMLInputElement;
     fireEvent.change(textInput, { target: { value: "eggs" } });
     await waitFor(() => {
       expect(screen.getByTestId("search-recipe-results")).toBeInTheDocument();
     });
   });
 
-  it("calls function to navigate to recipe details page", () => {
+  it("calls function to navigate to recipe details page", async () => {
     render(home);
-    fireEvent.click(screen.getByTestId("read-test7"));
+    const readRecipeBtn = await waitFor(() => screen.getByTestId("read-test7"));
+    // fireEvent.click(screen.getByTestId("read-test7"));
+    fireEvent.click(readRecipeBtn);
   });
 });
 
