@@ -30,6 +30,7 @@ export function RecipeDetailPage() {
         .then((res) => {
           return res.data;
         }),
+    refetchOnWindowFocus: false,
   });
 
   const { data: ingredients } = useQuery({
