@@ -17,7 +17,7 @@ export function Home() {
   const [search, setSearch] = useState("");
   const {
     data: recipes,
-    isLoading: isLoadingRecipes,
+    isRefetching: isLoadingRecipes,
     // error,
   } = useQuery<HomeRecipes[]>({
     queryKey: ["recipes"],
@@ -31,6 +31,7 @@ export function Home() {
         .then((res) => {
           return res.data;
         }),
+    refetchOnWindowFocus: false,
   });
 
   const {
@@ -67,6 +68,7 @@ export function Home() {
           },
         })
         .then((res) => res.data.results),
+    refetchOnWindowFocus: false,
   });
 
   useEffect(() => {

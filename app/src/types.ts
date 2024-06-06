@@ -24,6 +24,12 @@ export type Groceries = {
   date_added: string;
 };
 
+export type Ingredients = {
+  id: number;
+  name: string;
+  date_added: string;
+};
+
 export type Recipe = {
   id: number;
   image: string;
@@ -34,13 +40,14 @@ export type Recipe = {
   glutenFree: boolean;
   servings: number;
   sourceUrl: string;
-  extendedIngredients: ExtendedIngredients[];
+  ingredientList: ingredientList[];
   analyzedInstructions: AnalyzedInstructions[];
 };
 
-export type ExtendedIngredients = {
+export type ingredientList = {
   id: number;
-  original: string;
+  ingredientName: string;
+  ingredientWithMeasurement: string;
 };
 
 export type AnalyzedInstructions = {
