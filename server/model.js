@@ -69,6 +69,7 @@ module.exports = {
         [user_id, foodId, currentDate]
       );
     } catch (err) {
+      console.log(err);
       throw new Error(err.message);
     }
   },
@@ -107,6 +108,7 @@ module.exports = {
         [user_id, foodId, currentDate]
       );
     } catch (err) {
+      console.log(err);
       throw new Error(err.message);
     }
   },
