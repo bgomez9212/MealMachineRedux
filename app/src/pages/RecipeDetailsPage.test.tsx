@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { RecipeDetailPage } from "./RecipeDetailsPage";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { BrowserRouter as Router } from "react-router-dom";
@@ -37,5 +37,11 @@ describe("recipe details page", async () => {
         screen.getByTestId("recipes-details-component")
       ).toBeInTheDocument();
     });
+    await waitFor(() => {
+      const groceryBtn = screen.getByTestId("recipe-detail-button-string2");
+      fireEvent.click(groceryBtn);
+    });
+    const backBtn = screen.getByTestId("back-button");
+    fireEvent.click(backBtn);
   });
 });

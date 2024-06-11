@@ -94,6 +94,7 @@ export function RecipeDetailPage() {
     }
     return (
       <Button
+        data-testid={`recipe-detail-button-${recipeIngredient}`}
         className="md:w-1/4 text-wrap md:h-auto"
         onClick={() => handleSaveGrocery(recipeIngredient)}
       >
@@ -131,7 +132,12 @@ export function RecipeDetailPage() {
 
   return (
     <div data-testid="recipes-details-component" className="px-10 py-10">
-      <Button className="mb-5" variant={"outline"} onClick={handleBackClick}>
+      <Button
+        data-testid="back-button"
+        className="mb-5"
+        variant={"outline"}
+        onClick={handleBackClick}
+      >
         {"<"}
       </Button>
       <header className="flex flex-col md:flex md:flex-row mb-10 justify-between border md:max-h-[300px] p-5 rounded-md">

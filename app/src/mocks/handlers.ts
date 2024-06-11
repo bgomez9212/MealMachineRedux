@@ -46,17 +46,18 @@ export const handlers = [
       glutenFree: false,
       servings: 20,
       sourceUrl: "string",
-      extendedIngredients: [
-        { id: 1, original: "string" },
-        { id: 2, original: "string" },
+      ingredientList: [
+        { id: 1, ingredientName: "Tomato" },
+        { id: 2, ingredientName: "string2" },
+        { id: 3, ingredientName: "Apples" },
       ],
       analyzedInstructions: [
         {
           name: "string",
           steps: [
-            { number: 1, step: "string" },
-            { number: 2, step: "string" },
-            { number: 3, step: "string" },
+            { number: 1, step: "string1" },
+            { number: 2, step: "string2" },
+            { number: 3, step: "string3" },
           ],
         },
       ],
