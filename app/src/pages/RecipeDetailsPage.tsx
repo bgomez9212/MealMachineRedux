@@ -184,7 +184,7 @@ export function RecipeDetailPage() {
             Directions
           </h1>
           <ol className="list-decimal list-inside">
-            {recipe?.analyzedInstructions[0].steps.map((step) => (
+            {recipe?.analyzedInstructions[0]?.steps?.map((step) => (
               <li className="mb-2" key={step.number}>
                 {step.step}
               </li>
