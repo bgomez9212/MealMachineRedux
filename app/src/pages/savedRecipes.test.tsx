@@ -29,6 +29,13 @@ describe("saved recipes component", () => {
   beforeAll(() => server.listen());
   afterEach(() => server.resetHandlers());
   afterAll(() => server.close());
+  it("triggers function to navigate to recipe details", async () => {
+    render(savedRecipes);
+    await waitFor(() => {
+      expect(screen.getByTestId("saved-recipes-component")).toBeInTheDocument();
+      fireEvent.click(screen.getByTestId("read-test"));
+    });
+  });
   it("renders component and calls delete recipe", async () => {
     render(savedRecipes);
     await waitFor(() => {

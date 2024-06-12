@@ -1,7 +1,7 @@
 import { RecipeCard } from "@/components/RecipeCard";
 import { useUserContext } from "@/context/context";
-import axios from "axios";
-import { useQuery, useQueryClient } from "react-query";
+import { getSavedRecipes, removeSavedRecipe } from "@/hooks/recipes";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useNavigate } from "react-router-dom";
 import ClipLoader from "react-spinners/ClipLoader";
 
@@ -20,30 +20,15 @@ export function SavedRecipes() {
     isError,
   } = useQuery({
     queryKey: ["savedRecipes"],
-    queryFn: async () =>
-      axios
-        .get(import.meta.env.VITE_server_savedRecipes, {
-          params: {
-            user_id: user,
-          },
-        })
-        .then((res) => {
-          return res.data;
-        }),
+    queryFn: () => getSavedRecipes(user),
+    refetchOnWindowFocus: false,
   });
 
-  function handleDeleteSavedRecipe(recipe_id: number) {
-    axios
-      .delete(import.meta.env.VITE_server_savedRecipes, {
-        data: {
-          user_id: user,
-          recipe_id: recipe_id,
-        },
-      })
-      .then(() => {
-        queryClient.invalidateQueries({ queryKey: ["savedRecipes"] });
-      });
-  }
+  const { mutateAsync: removeSavedRecipeMutation } = useMutation({
+    mutationFn: removeSavedRecipe,
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: ["savedRecipes"] }),
+  });
 
   if (isLoading) {
     return (
@@ -78,7 +63,11 @@ export function SavedRecipes() {
                 image={recipe.image}
                 title={recipe.title}
                 handleDeleteSavedRecipe={() =>
-                  handleDeleteSavedRecipe(recipe.recipe_id)
+                  removeSavedRecipeMutation({
+                    user,
+                    id: recipe.recipe_id,
+                    title: recipe.title,
+                  })
                 }
                 handleReadRecipe={() => handleReadRecipe(recipe.recipe_id)}
                 isSaved={true}

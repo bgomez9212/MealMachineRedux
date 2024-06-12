@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input";
 import { useUserContext } from "@/context/context";
 import {
   getRecipes,
-  getSavedRecipes,
+  getSavedRecipesIds,
   getSearchResults,
   removeSavedRecipe,
   saveRecipe,
@@ -35,7 +35,7 @@ export function Home() {
 
   const { data: savedRecipes } = useQuery({
     queryKey: ["savedRecipes"],
-    queryFn: () => getSavedRecipes(user),
+    queryFn: () => getSavedRecipesIds(user),
     refetchOnWindowFocus: false,
   });
 

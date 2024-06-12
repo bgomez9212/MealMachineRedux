@@ -13,7 +13,7 @@ export async function getRecipes(user: string | undefined) {
     });
 }
 
-export async function getSavedRecipes(user: string | undefined) {
+export async function getSavedRecipesIds(user: string | undefined) {
   return axios
     .get(import.meta.env.VITE_server_savedRecipes, {
       params: {
@@ -22,6 +22,18 @@ export async function getSavedRecipes(user: string | undefined) {
     })
     .then((res) => {
       return res.data.map((recipe: SavedRecipe) => recipe.recipe_id);
+    });
+}
+
+export async function getSavedRecipes(user: string | undefined) {
+  return axios
+    .get(import.meta.env.VITE_server_savedRecipes, {
+      params: {
+        user_id: user,
+      },
+    })
+    .then((res) => {
+      return res.data;
     });
 }
 
@@ -74,6 +86,19 @@ export async function removeSavedRecipe({
     data: {
       user_id: user,
       recipe_id: id,
+      title: title,
     },
   });
+}
+
+export async function getRecipeDetails(recipe_id: string | undefined) {
+  return axios
+    .get(import.meta.env.VITE_server_recipeDetails, {
+      params: {
+        recipe_id: recipe_id,
+      },
+    })
+    .then((res) => {
+      return res.data;
+    });
 }

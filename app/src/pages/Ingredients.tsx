@@ -96,7 +96,7 @@ export function MyIngredients() {
         >
           An Error has occured, please try again later.
         </div>
-      ) : ingredients.length ? (
+      ) : ingredients?.length ? (
         <div className="mb-10">
           {ingredients?.map(
             ({
