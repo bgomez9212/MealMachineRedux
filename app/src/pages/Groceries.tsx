@@ -42,7 +42,10 @@ export function MyGroceries() {
 
   const { mutateAsync: addGroceryMutation } = useMutation({
     mutationFn: addGrocery,
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["groceries"] }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["groceries"] });
+      setGroceryInput("");
+    },
   });
 
   function handleSubmit() {

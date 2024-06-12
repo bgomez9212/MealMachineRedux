@@ -26,7 +26,7 @@ export function Home() {
   const {
     data: recipes,
     isFetching: isLoadingRecipes,
-    // error,
+    error,
   } = useQuery<HomeRecipes[]>({
     queryKey: ["recipes"],
     queryFn: () => getRecipes(user),
@@ -78,6 +78,14 @@ export function Home() {
     return (
       <div className="w-full flex items-center justify-center mt-20">
         <ClipLoader color="#8FAC5F" />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="w-full flex items-center justify-center mt-20">
+        There seems to be an error. Try again later.
       </div>
     );
   }
