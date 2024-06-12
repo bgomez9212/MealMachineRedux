@@ -90,8 +90,6 @@ export function Home() {
     );
   }
 
-  console.log(searchResults);
-
   return (
     <div data-testid="home-component">
       <div className="mt-5 flex justify-center">
