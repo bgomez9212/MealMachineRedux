@@ -163,7 +163,7 @@ module.exports = {
       const ingredientList = result.data.extendedIngredients.map(
         (ingredientObj) => ({
           id: ingredientObj.id,
-          ingredientName: ingredientObj.nameClean,
+          ingredientName: ingredientObj.name,
           ingredientWithMeasurement: ingredientObj.original,
         })
       );
