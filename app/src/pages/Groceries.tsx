@@ -3,22 +3,19 @@ import { Label } from "@/components/ui/label";
 import { GroceryCard } from "@/components/GroceryCard";
 import { useQueryClient, useMutation, useQuery } from "react-query";
 import { useState } from "react";
-import axios from "axios";
 import { Button } from "@/components/ui/button";
 import ClipLoader from "react-spinners/ClipLoader";
 import { useUserContext } from "@/context/context";
-import getGroceries from "@/hooks/api-hooks";
-
-interface moveGroceryVariables {
-  user_id: string | undefined;
-  food_name: string;
-  grocery_id: number;
-}
+import {
+  getGroceries,
+  removeGrocery,
+  moveGrocery,
+  addGrocery,
+} from "@/hooks/groceries";
 
 export function MyGroceries() {
   const queryClient = useQueryClient();
   const { user } = useUserContext();
-  const regex = new RegExp("^[a-zA-Z]+.*$");
   const [groceryInput, setGroceryInput] = useState("");
 
   const {
@@ -31,47 +28,17 @@ export function MyGroceries() {
     enabled: !!user,
   });
 
-  async function removeGrocery(grocery_id: number) {
-    await axios.delete(import.meta.env.VITE_server_groceries, {
-      data: {
-        grocery_id: grocery_id,
-      },
-    });
-  }
-
   const { mutateAsync: removeGroceryMutation } = useMutation({
     mutationFn: removeGrocery,
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["groceries"] }),
   });
 
-  async function moveGrocery({
-    user_id,
-    food_name,
-    grocery_id,
-  }: moveGroceryVariables) {
-    await axios
-      .post(import.meta.env.VITE_server_ingredients, {
-        user_id: user_id,
-        food_name: food_name,
-      })
-      .then(() => removeGroceryMutation(grocery_id));
-  }
-
   const { mutateAsync: moveGroceryMutation } = useMutation({
     mutationFn: moveGrocery,
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["groceries"] }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["groceries"] });
+    },
   });
-
-  async function addGrocery(grocery: string) {
-    if (regex.test(grocery)) {
-      await axios
-        .post(import.meta.env.VITE_server_groceries, {
-          user_id: user,
-          food_name: grocery,
-        })
-        .then(() => setGroceryInput(""));
-    }
-  }
 
   const { mutateAsync: addGroceryMutation } = useMutation({
     mutationFn: addGrocery,
@@ -83,7 +50,7 @@ export function MyGroceries() {
       .split(",")
       .map((grocery) => grocery.trim());
     groceryArray.forEach((grocery) => {
-      addGroceryMutation(grocery);
+      addGroceryMutation({ grocery, user });
     });
   }
 

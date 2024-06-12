@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { type Recipe, type Ingredients, type Groceries } from "@/types";
 import ClipLoader from "react-spinners/ClipLoader";
 import { useUserContext } from "@/context/context";
-import getGroceries from "@/hooks/api-hooks";
+import { getGroceries } from "@/hooks/groceries";
 
 export function RecipeDetailPage() {
   const { recipe_id } = useParams();

@@ -14,7 +14,7 @@ import axios from "axios";
 import { useQuery, useQueryClient } from "react-query";
 import { Groceries, type MissingIngredients } from "@/types";
 import { useUserContext } from "@/context/context";
-import getGroceries from "@/hooks/api-hooks";
+import { getGroceries } from "@/hooks/groceries";
 
 export function RecipeCard({
   image,
