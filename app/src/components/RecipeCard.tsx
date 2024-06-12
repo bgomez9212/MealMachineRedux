@@ -46,15 +46,6 @@ export function RecipeCard({
     enabled: !!user,
   });
 
-  // function handleSaveGrocery(grocery: string) {
-  //   axios
-  //     .post(import.meta.env.VITE_server_groceries, {
-  //       user_id: user,
-  //       food_name: grocery,
-  //     })
-  //     .then(() => queryClient.invalidateQueries({ queryKey: ["groceries"] }));
-  // }
-
   const { mutateAsync: saveGroceryMutation } = useMutation({
     mutationFn: addGrocery,
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["groceries"] }),
