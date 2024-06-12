@@ -1,12 +1,13 @@
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { Check, X } from "lucide-react";
-import { useQuery, useQueryClient } from "react-query";
-import axios from "axios";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import { Button } from "@/components/ui/button";
 import { type Recipe, type Ingredients, type Groceries } from "@/types";
 import ClipLoader from "react-spinners/ClipLoader";
 import { useUserContext } from "@/context/context";
-import getGroceries from "@/hooks/api-hooks";
+import { addGrocery, getGroceries } from "@/hooks/groceries";
+import { getIngredients } from "@/hooks/ingredients";
+import { getRecipeDetails } from "@/hooks/recipes";
 
 export function RecipeDetailPage() {
   const { recipe_id } = useParams();
@@ -17,34 +18,16 @@ export function RecipeDetailPage() {
   const {
     data: recipe,
     isFetching,
-    // error,
+    error,
   } = useQuery<Recipe>({
     queryKey: ["recipeDetails"],
-    queryFn: async () =>
-      axios
-        .get(import.meta.env.VITE_server_recipeDetails, {
-          params: {
-            recipe_id: recipe_id,
-          },
-        })
-        .then((res) => {
-          return res.data;
-        }),
+    queryFn: () => getRecipeDetails(recipe_id),
     refetchOnWindowFocus: false,
   });
 
   const { data: ingredients } = useQuery({
     queryKey: ["ingredients"],
-    queryFn: async () =>
-      axios
-        .get(import.meta.env.VITE_server_ingredients, {
-          params: {
-            user_id: user,
-          },
-        })
-        .then((res) => {
-          return res.data;
-        }),
+    queryFn: () => getIngredients(user),
   });
 
   const { data: groceries } = useQuery({
@@ -53,14 +36,10 @@ export function RecipeDetailPage() {
     enabled: !!user,
   });
 
-  function handleSaveGrocery(grocery: string) {
-    axios
-      .post(import.meta.env.VITE_server_groceries, {
-        user_id: user,
-        food_name: grocery,
-      })
-      .then(() => queryClient.invalidateQueries({ queryKey: ["groceries"] }));
-  }
+  const { mutateAsync: saveGroceryMutation } = useMutation({
+    mutationFn: addGrocery,
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["groceries"] }),
+  });
 
   function renderButton(recipeIngredient: string) {
     const userIngredients = ingredients?.map(
@@ -96,7 +75,7 @@ export function RecipeDetailPage() {
       <Button
         data-testid={`recipe-detail-button-${recipeIngredient}`}
         className="md:w-1/4 text-wrap md:h-auto"
-        onClick={() => handleSaveGrocery(recipeIngredient)}
+        onClick={() => saveGroceryMutation({ grocery: recipeIngredient, user })}
       >
         Add to groceries
       </Button>
@@ -128,6 +107,12 @@ export function RecipeDetailPage() {
         <ClipLoader color="#8FAC5F" />
       </div>
     );
+  }
+
+  if (error) {
+    <div className="w-full flex items-center justify-center mt-20">
+      There seems to be an error. Try again later.
+    </div>;
   }
 
   return (

@@ -59,3 +59,15 @@ export type Steps = {
   number: number;
   step: string;
 };
+
+export type moveGroceryVariables = {
+  user_id: string | undefined;
+  food_name: string;
+  grocery_id: number;
+};
+
+export type moveIngredientVariables = {
+  user_id: string | undefined;
+  food_name: string;
+  ingredient_id: number;
+};

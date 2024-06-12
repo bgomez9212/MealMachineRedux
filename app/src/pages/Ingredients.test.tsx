@@ -22,7 +22,7 @@ describe("Ingredients component", () => {
   });
 
   const ingredients = (
-    <UserContextProvider>
+    <UserContextProvider testUser="test-user">
       <QueryClientProvider client={queryClient}>
         <MyIngredients />
       </QueryClientProvider>

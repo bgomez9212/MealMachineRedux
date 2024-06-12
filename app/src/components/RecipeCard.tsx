@@ -10,11 +10,10 @@ import { Button } from "./ui/button";
 import { useState } from "react";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
-import axios from "axios";
-import { useQuery, useQueryClient } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import { Groceries, type MissingIngredients } from "@/types";
 import { useUserContext } from "@/context/context";
-import getGroceries from "@/hooks/api-hooks";
+import { addGrocery, getGroceries } from "@/hooks/groceries";
 
 export function RecipeCard({
   image,
@@ -47,14 +46,10 @@ export function RecipeCard({
     enabled: !!user,
   });
 
-  function handleSaveGrocery(grocery: string) {
-    axios
-      .post(import.meta.env.VITE_server_groceries, {
-        user_id: user,
-        food_name: grocery,
-      })
-      .then(() => queryClient.invalidateQueries({ queryKey: ["groceries"] }));
-  }
+  const { mutateAsync: saveGroceryMutation } = useMutation({
+    mutationFn: addGrocery,
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["groceries"] }),
+  });
 
   return (
     <>
@@ -98,7 +93,9 @@ export function RecipeCard({
                   <Button
                     data-testid={`${ingredient.id}-test`}
                     className="whitespace-normal h-auto"
-                    onClick={() => handleSaveGrocery(ingredient.name)}
+                    onClick={() =>
+                      saveGroceryMutation({ grocery: ingredient.name, user })
+                    }
                     key={ingredient.id}
                   >
                     Add "

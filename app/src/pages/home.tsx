@@ -1,13 +1,20 @@
 import { RecipeCard } from "@/components/RecipeCard";
-import axios from "axios";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useQuery, useQueryClient } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useToast } from "@/components/ui/use-toast";
-import { type HomeRecipes, type SavedRecipe } from "@/types";
+import { type HomeRecipes } from "@/types";
 import ClipLoader from "react-spinners/ClipLoader";
 import { Input } from "@/components/ui/input";
 import { useUserContext } from "@/context/context";
+import {
+  getRecipes,
+  getSavedRecipesIds,
+  getSearchResults,
+  removeSavedRecipe,
+  saveRecipe,
+} from "@/hooks/recipes";
+import { useDebounce } from "use-debounce";
 
 export function Home() {
   const { toast } = useToast();
@@ -15,118 +22,70 @@ export function Home() {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const [search, setSearch] = useState("");
+  const [debouncedSearch] = useDebounce(search, 500);
   const {
     data: recipes,
-    isRefetching: isLoadingRecipes,
-    // error,
+    isFetching: isLoadingRecipes,
+    error,
   } = useQuery<HomeRecipes[]>({
     queryKey: ["recipes"],
-    queryFn: async () =>
-      axios
-        .get(import.meta.env.VITE_server_recipes, {
-          params: {
-            user_id: user,
-          },
-        })
-        .then((res) => {
-          return res.data;
-        }),
+    queryFn: () => getRecipes(user),
     refetchOnWindowFocus: false,
   });
 
-  const {
-    data: savedRecipes,
-    isLoading: isLoadingSavedRecipes,
-    // error,
-  } = useQuery({
+  const { data: savedRecipes } = useQuery({
     queryKey: ["savedRecipes"],
-    queryFn: async () =>
-      axios
-        .get(import.meta.env.VITE_server_savedRecipes, {
-          params: {
-            user_id: user,
-          },
-        })
-        .then((res) => {
-          return res.data.map((recipe: SavedRecipe) => recipe.recipe_id);
-        }),
-  });
-
-  const {
-    data: searchResults,
-    refetch: refetchSearchResults,
-    isLoading: isSearchLoading,
-  } = useQuery<HomeRecipes[]>({
-    queryKey: ["searchResults"],
-    enabled: search.length >= 3,
-    queryFn: async () =>
-      axios
-        .get(import.meta.env.VITE_server_searchRecipes, {
-          params: {
-            user_id: user,
-            term: search,
-          },
-        })
-        .then((res) => res.data.results),
+    queryFn: () => getSavedRecipesIds(user),
     refetchOnWindowFocus: false,
   });
 
-  useEffect(() => {
-    if (search.length >= 3) {
-      // Trigger a refetch of searchResults when 'search' changes
-      refetchSearchResults();
-    }
-  }, [search, refetchSearchResults]);
+  const { data: searchResults, isFetching: isSearchLoading } = useQuery<
+    HomeRecipes[]
+  >({
+    queryKey: ["searchResults", debouncedSearch],
+    queryFn: () => getSearchResults({ user, debouncedSearch }),
+    refetchOnWindowFocus: false,
+    enabled: debouncedSearch.length >= 3,
+  });
 
-  function handleSaveClick(
-    recipe_id: number,
-    recipe_title: string,
-    imageUrl: string
-  ) {
-    axios
-      .post(import.meta.env.VITE_server_savedRecipes, {
-        user_id: user,
-        recipe_id: recipe_id,
-        image: imageUrl,
-        title: recipe_title,
-      })
-      .then(() => {
-        queryClient.invalidateQueries({ queryKey: ["savedRecipes"] });
-        toast({
-          title: "Recipe Saved!",
-          description: `${recipe_title} added to your saved recipes!`,
-        });
-      })
-      .catch((err) => {
-        console.error("Error:", err);
+  const { mutateAsync: saveRecipeMutation } = useMutation({
+    mutationFn: saveRecipe,
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ["savedRecipes"] });
+      toast({
+        title: "Recipe Saved!",
+        description: `${variables.title} added to your saved recipes!`,
       });
-  }
+    },
+  });
 
   function handleReadRecipe(recipe_id: number) {
     navigate(`/details/${recipe_id}`);
   }
 
-  function handleDeleteSavedRecipe(recipe_id: number, recipe_title: string) {
-    axios
-      .delete(import.meta.env.VITE_server_savedRecipes, {
-        data: {
-          user_id: user,
-          recipe_id: recipe_id,
-        },
-      })
-      .then(() => {
-        queryClient.invalidateQueries({ queryKey: ["savedRecipes"] });
-        toast({
-          title: "Recipe Removed",
-          description: `${recipe_title} removed from your saved recipes!`,
-        });
+  const { mutateAsync: removeSavedRecipeMutation } = useMutation({
+    mutationFn: removeSavedRecipe,
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ["savedRecipes"] });
+      toast({
+        title: "Recipe Removed",
+        description: `${variables.title} removed from your saved recipes!`,
       });
-  }
+    },
+  });
 
-  if (isLoadingRecipes || isLoadingSavedRecipes) {
+  if (isLoadingRecipes) {
     return (
       <div className="w-full flex items-center justify-center mt-20">
         <ClipLoader color="#8FAC5F" />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="w-full flex items-center justify-center mt-20">
+        There seems to be an error. Try again later.
       </div>
     );
   }
@@ -166,10 +125,12 @@ export function Home() {
                 key={title}
                 title={title}
                 image={image}
-                handleSaveClick={() => handleSaveClick(id, title, image)}
+                handleSaveClick={() =>
+                  saveRecipeMutation({ user, id, image, title })
+                }
                 handleReadRecipe={() => handleReadRecipe(id)}
                 handleDeleteSavedRecipe={() =>
-                  handleDeleteSavedRecipe(id, title)
+                  removeSavedRecipeMutation({ user, id, title })
                 }
                 isSaved={savedRecipes?.includes(id)}
                 missedIngredientCount={missedIngredientCount}
@@ -194,10 +155,12 @@ export function Home() {
                     key={title}
                     title={title}
                     image={image}
-                    handleSaveClick={() => handleSaveClick(id, title, image)}
+                    handleSaveClick={() =>
+                      saveRecipeMutation({ user, id, title, image })
+                    }
                     handleReadRecipe={() => handleReadRecipe(id)}
                     handleDeleteSavedRecipe={() =>
-                      handleDeleteSavedRecipe(id, title)
+                      removeSavedRecipeMutation({ user, id, title })
                     }
                     isSaved={savedRecipes?.includes(id)}
                     missedIngredientCount={missedIngredientCount}

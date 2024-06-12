@@ -3,21 +3,19 @@ import { Label } from "@/components/ui/label";
 import { IngredientCard } from "@/components/IngredientCard";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import axios from "axios";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import ClipLoader from "react-spinners/ClipLoader";
 import { useUserContext } from "@/context/context";
-
-interface moveIngredientVariables {
-  user_id: string | undefined;
-  food_name: string;
-  ingredient_id: number;
-}
+import {
+  addIngredient,
+  getIngredients,
+  moveIngredient,
+  removeIngredient,
+} from "@/hooks/ingredients";
 
 export function MyIngredients() {
   const queryClient = useQueryClient();
   const { user } = useUserContext();
-  const regex = new RegExp("^[a-zA-Z]+.*$");
   const [ingredientInput, setIngredientInput] = useState("");
 
   const {
@@ -26,25 +24,9 @@ export function MyIngredients() {
     isError,
   } = useQuery({
     queryKey: ["ingredients"],
-    queryFn: async () =>
-      axios
-        .get(import.meta.env.VITE_server_ingredients, {
-          params: {
-            user_id: user,
-          },
-        })
-        .then((res) => {
-          return res.data;
-        }),
+    queryFn: () => getIngredients(user),
+    enabled: !!user,
   });
-
-  async function removeIngredient(ingredient_id: number) {
-    await axios.delete(import.meta.env.VITE_server_ingredients, {
-      data: {
-        ingredient_id: ingredient_id,
-      },
-    });
-  }
 
   const { mutateAsync: removeIngredientMutation } = useMutation({
     mutationFn: removeIngredient,
@@ -52,47 +34,26 @@ export function MyIngredients() {
       queryClient.invalidateQueries({ queryKey: ["ingredients"] }),
   });
 
-  async function moveIngredient({
-    user_id,
-    food_name,
-    ingredient_id,
-  }: moveIngredientVariables) {
-    await axios
-      .post(import.meta.env.VITE_server_groceries, {
-        user_id: user_id,
-        food_name: food_name,
-      })
-      .then(() => removeIngredientMutation(ingredient_id));
-  }
-
   const { mutateAsync: moveIngredientMutation } = useMutation({
     mutationFn: moveIngredient,
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["groceries"] }),
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: ["ingredients"] }),
   });
-
-  async function addIngredient(grocery: string) {
-    if (regex.test(grocery)) {
-      await axios
-        .post(import.meta.env.VITE_server_ingredients, {
-          user_id: user,
-          food_name: grocery,
-        })
-        .then(() => setIngredientInput(""));
-    }
-  }
 
   const { mutateAsync: addIngredientMutation } = useMutation({
     mutationFn: addIngredient,
-    onSuccess: () =>
-      queryClient.invalidateQueries({ queryKey: ["ingredients"] }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["ingredients"] });
+      setIngredientInput("");
+    },
   });
 
   function handleSubmit() {
     const ingredientArray = ingredientInput
       .split(",")
       .map((ingredient) => ingredient.trim());
-    ingredientArray.forEach((ingredient) => {
-      addIngredientMutation(ingredient);
+    ingredientArray.forEach((ingredients) => {
+      addIngredientMutation({ user, ingredients });
     });
   }
 
@@ -135,7 +96,7 @@ export function MyIngredients() {
         >
           An Error has occured, please try again later.
         </div>
-      ) : ingredients.length ? (
+      ) : ingredients?.length ? (
         <div className="mb-10">
           {ingredients?.map(
             ({

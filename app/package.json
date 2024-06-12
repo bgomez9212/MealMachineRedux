@@ -33,7 +33,8 @@
     "react-router-dom": "^6.17.0",
     "react-spinners": "^0.13.8",
     "tailwind-merge": "^2.0.0",
-    "tailwindcss-animate": "^1.0.7"
+    "tailwindcss-animate": "^1.0.7",
+    "use-debounce": "^10.0.1"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^5.16.4",
