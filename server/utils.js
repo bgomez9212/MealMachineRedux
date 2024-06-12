@@ -4,7 +4,7 @@ async function getFoodId(foodName) {
   let foodId;
   const { rows: foodIdFromDb } = await pool.query(
     "SELECT id FROM food WHERE name = $1",
-    [foodName]
+    [foodName.toLowerCase()]
   );
   foodId = foodIdFromDb;
   if (!foodId.length) {
