@@ -90,6 +90,8 @@ export function Home() {
     );
   }
 
+  console.log(searchResults);
+
   return (
     <div data-testid="home-component">
       <div className="mt-5 flex justify-center">
@@ -113,31 +115,23 @@ export function Home() {
           data-testid="search-recipe-results"
           className="min-[630px]:grid min-[630px]:grid-cols-2 lg:grid-cols-3 px-10 gap-x-10 mb-20"
         >
-          {searchResults?.map(
-            ({
-              title,
-              id,
-              image,
-              missedIngredientCount,
-              missedIngredients,
-            }) => (
-              <RecipeCard
-                key={title}
-                title={title}
-                image={image}
-                handleSaveClick={() =>
-                  saveRecipeMutation({ user, id, image, title })
-                }
-                handleReadRecipe={() => handleReadRecipe(id)}
-                handleDeleteSavedRecipe={() =>
-                  removeSavedRecipeMutation({ user, id, title })
-                }
-                isSaved={savedRecipes?.includes(id)}
-                missedIngredientCount={missedIngredientCount}
-                missedIngredients={missedIngredients}
-              />
-            )
-          )}
+          {searchResults?.map(({ title, id, image, missedIngredients }) => (
+            <RecipeCard
+              key={title}
+              title={title}
+              image={image}
+              handleSaveClick={() =>
+                saveRecipeMutation({ user, id, image, title })
+              }
+              handleReadRecipe={() => handleReadRecipe(id)}
+              handleDeleteSavedRecipe={() =>
+                removeSavedRecipeMutation({ user, id, title })
+              }
+              isSaved={savedRecipes?.includes(id)}
+              missedIngredientCount={missedIngredients.length}
+              missedIngredients={missedIngredients}
+            />
+          ))}
         </div>
       ) : (
         <div>
