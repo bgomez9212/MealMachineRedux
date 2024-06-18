@@ -123,26 +123,32 @@ module.exports = {
       throw new Error(err.message);
     }
   },
-  getRecipes: async (user_id) => {
+  getRecipes: async (user_id, page) => {
+    console.log("page ", page);
+    console.log("user", user_id);
     if (!user_id) {
       throw new Error("user_id missing in get recipes");
     }
-
     try {
+      const itemsPerPage = 3;
+      const cursor = page * itemsPerPage;
       const ingredients = await pool.query(
         "SELECT name FROM food INNER JOIN ingredients ON food.id = ingredients.food_id WHERE ingredients.user_id = $1",
         [user_id]
       );
       const ingredientsList = createIngredientsList(ingredients.rows);
       const result = await axios.get(
-        `https://api.spoonacular.com/recipes/findByIngredients?ingredients=${ingredientsList}&number=9&ranking=2`,
+        `https://api.spoonacular.com/recipes/findByIngredients?ingredients=${ingredientsList}&number=3&offset=${cursor}&ranking=2`,
         {
           headers: {
             "x-api-key": process.env.API_KEY,
           },
         }
       );
-      return result.data;
+      return {
+        data: result.data,
+        nextCursor: Number(page) + 1,
+      };
     } catch (err) {
       throw new Error(err.message);
     }

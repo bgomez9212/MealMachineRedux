@@ -1,7 +1,12 @@
 import { RecipeCard } from "@/components/RecipeCard";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useMutation, useQuery, useQueryClient } from "react-query";
+import {
+  useInfiniteQuery,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "react-query";
 import { useToast } from "@/components/ui/use-toast";
 import { type HomeRecipes } from "@/types";
 import ClipLoader from "react-spinners/ClipLoader";
@@ -15,6 +20,7 @@ import {
   saveRecipe,
 } from "@/hooks/recipes";
 import { useDebounce } from "use-debounce";
+import { Button } from "@mui/material";
 
 export function Home() {
   const { toast } = useToast();
@@ -23,56 +29,72 @@ export function Home() {
   const navigate = useNavigate();
   const [search, setSearch] = useState("");
   const [debouncedSearch] = useDebounce(search, 500);
+  // const {
+  //   data: recipes,
+  //   isFetching: isLoadingRecipes,
+  //   error,
+  // } = useQuery<HomeRecipes[]>({
+  //   queryKey: ["recipes"],
+  //   queryFn: () => getRecipes(user),
+  //   refetchOnWindowFocus: false,
+  // });
+
   const {
-    data: recipes,
-    isFetching: isLoadingRecipes,
+    data,
     error,
-  } = useQuery<HomeRecipes[]>({
+    fetchNextPage,
+    isFetching: isLoadingRecipes,
+    isFetchingNextPage,
+  } = useInfiniteQuery({
     queryKey: ["recipes"],
-    queryFn: () => getRecipes(user),
+    queryFn: ({ pageParam = 0 }) =>
+      getRecipes({ user: user, pageParam: pageParam }),
+    getNextPageParam: (lastPage, pages) => lastPage.nextCursor,
     refetchOnWindowFocus: false,
   });
 
-  const { data: savedRecipes } = useQuery({
-    queryKey: ["savedRecipes"],
-    queryFn: () => getSavedRecipesIds(user),
-    refetchOnWindowFocus: false,
-  });
+  console.log(data);
 
-  const { data: searchResults, isFetching: isSearchLoading } = useQuery<
-    HomeRecipes[]
-  >({
-    queryKey: ["searchResults", debouncedSearch],
-    queryFn: () => getSearchResults({ user, debouncedSearch }),
-    refetchOnWindowFocus: false,
-    enabled: debouncedSearch.length >= 3,
-  });
+  // const { data: savedRecipes } = useQuery({
+  //   queryKey: ["savedRecipes"],
+  //   queryFn: () => getSavedRecipesIds(user),
+  //   refetchOnWindowFocus: false,
+  // });
 
-  const { mutateAsync: saveRecipeMutation } = useMutation({
-    mutationFn: saveRecipe,
-    onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({ queryKey: ["savedRecipes"] });
-      toast({
-        title: "Recipe Saved!",
-        description: `${variables.title} added to your saved recipes!`,
-      });
-    },
-  });
+  // const { data: searchResults, isFetching: isSearchLoading } = useQuery<
+  //   HomeRecipes[]
+  // >({
+  //   queryKey: ["searchResults", debouncedSearch],
+  //   queryFn: () => getSearchResults({ user, debouncedSearch }),
+  //   refetchOnWindowFocus: false,
+  //   enabled: debouncedSearch.length >= 3,
+  // });
 
-  function handleReadRecipe(recipe_id: number) {
-    navigate(`/details/${recipe_id}`);
-  }
+  // const { mutateAsync: saveRecipeMutation } = useMutation({
+  //   mutationFn: saveRecipe,
+  //   onSuccess: (_, variables) => {
+  //     queryClient.invalidateQueries({ queryKey: ["savedRecipes"] });
+  //     toast({
+  //       title: "Recipe Saved!",
+  //       description: `${variables.title} added to your saved recipes!`,
+  //     });
+  //   },
+  // });
 
-  const { mutateAsync: removeSavedRecipeMutation } = useMutation({
-    mutationFn: removeSavedRecipe,
-    onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({ queryKey: ["savedRecipes"] });
-      toast({
-        title: "Recipe Removed",
-        description: `${variables.title} removed from your saved recipes!`,
-      });
-    },
-  });
+  // function handleReadRecipe(recipe_id: number) {
+  //   navigate(`/details/${recipe_id}`);
+  // }
+
+  // const { mutateAsync: removeSavedRecipeMutation } = useMutation({
+  //   mutationFn: removeSavedRecipe,
+  //   onSuccess: (_, variables) => {
+  //     queryClient.invalidateQueries({ queryKey: ["savedRecipes"] });
+  //     toast({
+  //       title: "Recipe Removed",
+  //       description: `${variables.title} removed from your saved recipes!`,
+  //     });
+  //   },
+  // });
 
   if (isLoadingRecipes) {
     return (
@@ -92,7 +114,8 @@ export function Home() {
 
   return (
     <div data-testid="home-component">
-      <div className="mt-5 flex justify-center">
+      <Button onClick={() => fetchNextPage()}>Click Me</Button>
+      {/* <div className="mt-5 flex justify-center">
         <Input
           data-testid="recipe-search"
           className="w-[90%]"
@@ -175,7 +198,7 @@ export function Home() {
             </div>
           )}
         </div>
-      )}
+      )} */}
     </div>
   );
 }

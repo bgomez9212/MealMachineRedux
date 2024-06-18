@@ -1,11 +1,18 @@
 import { SavedRecipe } from "@/types";
 import axios from "axios";
 
-export async function getRecipes(user: string | undefined) {
+export async function getRecipes({
+  user,
+  pageParam,
+}: {
+  user: string | undefined;
+  pageParam: number;
+}) {
   return axios
     .get(import.meta.env.VITE_server_recipes, {
       params: {
         user_id: user,
+        page: pageParam,
       },
     })
     .then((res) => {

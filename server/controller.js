@@ -76,7 +76,7 @@ module.exports = {
   },
   getRecipes: async (req, res) => {
     try {
-      const result = await model.getRecipes(req.query.user_id);
+      const result = await model.getRecipes(req.query.user_id, req.query.page);
       res.send(result);
     } catch (err) {
       res.status(404).send(err);
