@@ -3,11 +3,24 @@ import App from "./App";
 import { QueryClient, QueryClientProvider } from "react-query";
 import UserContextProvider from "./context/context";
 import { server } from "./mocks/browser";
+import { setupIntersectionMocking } from "react-intersection-observer/test-utils";
 
 describe("App component", () => {
   const queryClient = new QueryClient();
   beforeAll(() => server.listen());
-  afterEach(() => server.resetHandlers());
+  beforeEach(() =>
+    setupIntersectionMocking(
+      vi.fn as unknown as {
+        (): jest.Mock<any, any, any>;
+        <T, Y extends any[], C = any>(
+          implementation?: (this: C, ...args: Y) => T
+        ): jest.Mock<T, Y, C>;
+      }
+    )
+  );
+  afterEach(() => {
+    server.resetHandlers();
+  });
   afterAll(() => server.close());
 
   function app(user?: string) {
@@ -32,10 +45,10 @@ describe("App component", () => {
     );
   });
 
-  // it("navigates to home page with user auth", async () => {
-  //   render(app("test-user"));
-  //   await waitFor(() =>
-  //     expect(screen.getByTestId("home-component")).toBeInTheDocument()
-  //   );
-  // });
+  it("navigates to home page with user auth", async () => {
+    render(app("test-user"));
+    await waitFor(() =>
+      expect(screen.getByTestId("home-component")).toBeInTheDocument()
+    );
+  });
 });
