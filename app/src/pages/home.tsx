@@ -30,29 +30,14 @@ export function Home() {
   const navigate = useNavigate();
   const [search, setSearch] = useState("");
   const [debouncedSearch] = useDebounce(search, 500);
-  // const {
-  //   data: recipes,
-  //   isFetching: isLoadingRecipes,
-  //   error,
-  // } = useQuery<HomeRecipes[]>({
-  //   queryKey: ["recipes"],
-  //   queryFn: () => getRecipes(user),
-  //   refetchOnWindowFocus: false,
-  // });
 
   function removeDuplicates(pagesArr) {
-    // Flatten the array of objects
     const combined = pagesArr.flatMap((obj) => obj.data);
-
-    // Create a map to count occurrences
     const occurrences = combined.reduce((acc, obj) => {
       acc[obj.id] = (acc[obj.id] || 0) + 1;
       return acc;
     }, {});
-
-    // Filter out duplicates
     const result = combined.filter((obj) => occurrences[obj.id] === 1);
-
     return result;
   }
 
@@ -73,55 +58,46 @@ export function Home() {
     },
   });
 
-  console.log(data);
+  const { data: savedRecipes } = useQuery({
+    queryKey: ["savedRecipes"],
+    queryFn: () => getSavedRecipesIds(user),
+    refetchOnWindowFocus: false,
+  });
 
-  // console.log(
-  //   removeDuplicates(
-  //     data?.pages[data.pages.length - 1],
-  //     data?.pages[data.pages.length - 2]
-  //   )
-  // );
+  const { data: searchResults, isFetching: isSearchLoading } = useQuery<
+    HomeRecipes[]
+  >({
+    queryKey: ["searchResults", debouncedSearch],
+    queryFn: () => getSearchResults({ user, debouncedSearch }),
+    refetchOnWindowFocus: false,
+    enabled: debouncedSearch.length >= 3,
+  });
 
-  // const { data: savedRecipes } = useQuery({
-  //   queryKey: ["savedRecipes"],
-  //   queryFn: () => getSavedRecipesIds(user),
-  //   refetchOnWindowFocus: false,
-  // });
+  const { mutateAsync: saveRecipeMutation } = useMutation({
+    mutationFn: saveRecipe,
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ["savedRecipes"] });
+      toast({
+        title: "Recipe Saved!",
+        description: `${variables.title} added to your saved recipes!`,
+      });
+    },
+  });
 
-  // const { data: searchResults, isFetching: isSearchLoading } = useQuery<
-  //   HomeRecipes[]
-  // >({
-  //   queryKey: ["searchResults", debouncedSearch],
-  //   queryFn: () => getSearchResults({ user, debouncedSearch }),
-  //   refetchOnWindowFocus: false,
-  //   enabled: debouncedSearch.length >= 3,
-  // });
+  function handleReadRecipe(recipe_id: number) {
+    navigate(`/details/${recipe_id}`);
+  }
 
-  // const { mutateAsync: saveRecipeMutation } = useMutation({
-  //   mutationFn: saveRecipe,
-  //   onSuccess: (_, variables) => {
-  //     queryClient.invalidateQueries({ queryKey: ["savedRecipes"] });
-  //     toast({
-  //       title: "Recipe Saved!",
-  //       description: `${variables.title} added to your saved recipes!`,
-  //     });
-  //   },
-  // });
-
-  // function handleReadRecipe(recipe_id: number) {
-  //   navigate(`/details/${recipe_id}`);
-  // }
-
-  // const { mutateAsync: removeSavedRecipeMutation } = useMutation({
-  //   mutationFn: removeSavedRecipe,
-  //   onSuccess: (_, variables) => {
-  //     queryClient.invalidateQueries({ queryKey: ["savedRecipes"] });
-  //     toast({
-  //       title: "Recipe Removed",
-  //       description: `${variables.title} removed from your saved recipes!`,
-  //     });
-  //   },
-  // });
+  const { mutateAsync: removeSavedRecipeMutation } = useMutation({
+    mutationFn: removeSavedRecipe,
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ["savedRecipes"] });
+      toast({
+        title: "Recipe Removed",
+        description: `${variables.title} removed from your saved recipes!`,
+      });
+    },
+  });
 
   // if (isLoadingRecipes) {
   //   return (
@@ -142,14 +118,38 @@ export function Home() {
   return (
     <div data-testid="home-component">
       <Button onClick={() => fetchNextPage()}>Click Me</Button>
+      {/*
       {data?.pages.map((group, i) => (
         <React.Fragment key={i}>
-          {group.data.map((recipe) => (
-            <p key={recipe.id}>{recipe.title}</p>
-          ))}
+          {group.data.map(
+            ({
+              title,
+              image,
+              id,
+              missedIngredientCount,
+              missedIngredients,
+            }) => (
+              <RecipeCard
+                key={title}
+                title={title}
+                image={image}
+                handleSaveClick={() =>
+                  saveRecipeMutation({ user, id, title, image })
+                }
+                handleReadRecipe={() => handleReadRecipe(id)}
+                handleDeleteSavedRecipe={() =>
+                  removeSavedRecipeMutation({ user, id, title })
+                }
+                isSaved={savedRecipes?.includes(id)}
+                missedIngredientCount={missedIngredientCount}
+                missedIngredients={missedIngredients}
+              />
+            )
+          )}
         </React.Fragment>
       ))}
-      {/* <div className="mt-5 flex justify-center">
+       */}
+      <div className="mt-5 flex justify-center">
         <Input
           data-testid="recipe-search"
           className="w-[90%]"
@@ -190,33 +190,37 @@ export function Home() {
         </div>
       ) : (
         <div>
-          {recipes?.length ? (
+          {data?.pages.length ? (
             <div className="min-[630px]:grid min-[630px]:grid-cols-2 lg:grid-cols-3 px-10 gap-x-10 mb-20">
-              {recipes?.map(
-                ({
-                  title,
-                  image,
-                  id,
-                  missedIngredientCount,
-                  missedIngredients,
-                }) => (
-                  <RecipeCard
-                    key={title}
-                    title={title}
-                    image={image}
-                    handleSaveClick={() =>
-                      saveRecipeMutation({ user, id, title, image })
-                    }
-                    handleReadRecipe={() => handleReadRecipe(id)}
-                    handleDeleteSavedRecipe={() =>
-                      removeSavedRecipeMutation({ user, id, title })
-                    }
-                    isSaved={savedRecipes?.includes(id)}
-                    missedIngredientCount={missedIngredientCount}
-                    missedIngredients={missedIngredients}
-                  />
-                )
-              )}
+              {data?.pages.map((group, i) => (
+                <React.Fragment key={i}>
+                  {group.data.map(
+                    ({
+                      title,
+                      image,
+                      id,
+                      missedIngredientCount,
+                      missedIngredients,
+                    }) => (
+                      <RecipeCard
+                        key={title}
+                        title={title}
+                        image={image}
+                        handleSaveClick={() =>
+                          saveRecipeMutation({ user, id, title, image })
+                        }
+                        handleReadRecipe={() => handleReadRecipe(id)}
+                        handleDeleteSavedRecipe={() =>
+                          removeSavedRecipeMutation({ user, id, title })
+                        }
+                        isSaved={savedRecipes?.includes(id)}
+                        missedIngredientCount={missedIngredientCount}
+                        missedIngredients={missedIngredients}
+                      />
+                    )
+                  )}
+                </React.Fragment>
+              ))}
             </div>
           ) : (
             <div data-testid="no-ingredients-msg" className="text-center mt-10">
@@ -232,7 +236,7 @@ export function Home() {
             </div>
           )}
         </div>
-      )} */}
+      )}
     </div>
   );
 }
