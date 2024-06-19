@@ -1,14 +1,32 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { Home } from "./home";
+import { vi } from "vitest";
 import UserContextProvider from "@/context/context";
 import { BrowserRouter as Router } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { server } from "@/mocks/browser";
 import { HttpResponse, http } from "msw";
+import {
+  setupIntersectionMocking,
+  resetIntersectionMocking,
+} from "react-intersection-observer/test-utils";
 
 describe("home component", () => {
   beforeAll(() => server.listen());
-  afterEach(() => server.resetHandlers());
+  beforeEach(() =>
+    setupIntersectionMocking(
+      vi.fn as unknown as {
+        (): jest.Mock<any, any, any>;
+        <T, Y extends any[], C = any>(
+          implementation?: (this: C, ...args: Y) => T
+        ): jest.Mock<T, Y, C>;
+      }
+    )
+  );
+  afterEach(() => {
+    server.resetHandlers();
+    resetIntersectionMocking();
+  });
   afterAll(() => server.close());
 
   const queryClient = new QueryClient({
@@ -44,7 +62,7 @@ describe("home component", () => {
       http.get(
         import.meta.env.VITE_server_recipes,
         () => {
-          return HttpResponse.json([]);
+          return HttpResponse.json({ data: [] });
         },
         { once: true }
       )
@@ -54,7 +72,7 @@ describe("home component", () => {
       expect(screen.getByTestId("no-ingredients-msg")).toBeInTheDocument();
     });
   });
-  // search results
+  // // search results
   it("should change search recipe text input", async () => {
     server.use(
       http.get(import.meta.env.VITE_server_searchRecipes, () => {

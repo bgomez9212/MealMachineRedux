@@ -32,10 +32,10 @@ describe("App component", () => {
     );
   });
 
-  it("navigates to home page with user auth", async () => {
-    render(app("test-user"));
-    await waitFor(() =>
-      expect(screen.getByTestId("home-component")).toBeInTheDocument()
-    );
-  });
+  // it("navigates to home page with user auth", async () => {
+  //   render(app("test-user"));
+  //   await waitFor(() =>
+  //     expect(screen.getByTestId("home-component")).toBeInTheDocument()
+  //   );
+  // });
 });

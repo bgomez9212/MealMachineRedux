@@ -165,7 +165,7 @@ export function Home() {
         </div>
       ) : (
         <div>
-          {data?.pages.length ? (
+          {data?.pages[0].data.length ? (
             <div className="min-[630px]:grid min-[630px]:grid-cols-2 lg:grid-cols-3 px-10 gap-x-10 mb-20">
               {data?.pages.map((group, i) => (
                 <React.Fragment key={i}>
