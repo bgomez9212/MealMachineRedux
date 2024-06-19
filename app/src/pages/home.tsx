@@ -21,6 +21,7 @@ import {
 } from "@/hooks/recipes";
 import { useDebounce } from "use-debounce";
 import { Button } from "@mui/material";
+import React from "react";
 
 export function Home() {
   const { toast } = useToast();
@@ -39,6 +40,28 @@ export function Home() {
   //   refetchOnWindowFocus: false,
   // });
 
+  function removeDuplicates(currentPage, prevPage) {
+    if (!prevPage) {
+      return currentPage.data;
+    }
+    let combined = [...currentPage.data, ...prevPage.data];
+    let occurrences = {};
+    combined.forEach((obj) => {
+      if (!occurrences[obj.id]) {
+        occurrences[obj.id] = 1;
+      } else {
+        occurrences[obj.id] += 1;
+      }
+    });
+    let result = [];
+    combined.forEach((obj) => {
+      if (occurrences[obj.id] === 1) {
+        result.push(obj);
+      }
+    });
+    return result;
+  }
+
   const {
     data,
     error,
@@ -47,13 +70,26 @@ export function Home() {
     isFetchingNextPage,
   } = useInfiniteQuery({
     queryKey: ["recipes"],
-    queryFn: ({ pageParam = 0 }) =>
+    queryFn: ({ pageParam = 1 }) =>
       getRecipes({ user: user, pageParam: pageParam }),
     getNextPageParam: (lastPage, pages) => lastPage.nextCursor,
     refetchOnWindowFocus: false,
+    onSuccess(data) {
+      data.pages[data.pages.length - 1].data = removeDuplicates(
+        data.pages[data.pages.length - 1],
+        data.pages[data.pages.length - 2]
+      );
+    },
   });
 
   console.log(data);
+
+  // console.log(
+  //   removeDuplicates(
+  //     data?.pages[data.pages.length - 1],
+  //     data?.pages[data.pages.length - 2]
+  //   )
+  // );
 
   // const { data: savedRecipes } = useQuery({
   //   queryKey: ["savedRecipes"],
@@ -96,13 +132,13 @@ export function Home() {
   //   },
   // });
 
-  if (isLoadingRecipes) {
-    return (
-      <div className="w-full flex items-center justify-center mt-20">
-        <ClipLoader color="#8FAC5F" />
-      </div>
-    );
-  }
+  // if (isLoadingRecipes) {
+  //   return (
+  //     <div className="w-full flex items-center justify-center mt-20">
+  //       <ClipLoader color="#8FAC5F" />
+  //     </div>
+  //   );
+  // }
 
   if (error) {
     return (
@@ -115,6 +151,13 @@ export function Home() {
   return (
     <div data-testid="home-component">
       <Button onClick={() => fetchNextPage()}>Click Me</Button>
+      {/* {data?.pages.map((group, i) => (
+        <React.Fragment key={i}>
+          {group.data.map((recipe) => (
+            <p key={recipe.id}>{recipe.title}</p>
+          ))}
+        </React.Fragment>
+      ))} */}
       {/* <div className="mt-5 flex justify-center">
         <Input
           data-testid="recipe-search"
