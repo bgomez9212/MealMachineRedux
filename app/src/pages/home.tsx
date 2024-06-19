@@ -40,25 +40,19 @@ export function Home() {
   //   refetchOnWindowFocus: false,
   // });
 
-  function removeDuplicates(currentPage, prevPage) {
-    if (!prevPage) {
-      return currentPage.data;
-    }
-    let combined = [...currentPage.data, ...prevPage.data];
-    let occurrences = {};
-    combined.forEach((obj) => {
-      if (!occurrences[obj.id]) {
-        occurrences[obj.id] = 1;
-      } else {
-        occurrences[obj.id] += 1;
-      }
-    });
-    let result = [];
-    combined.forEach((obj) => {
-      if (occurrences[obj.id] === 1) {
-        result.push(obj);
-      }
-    });
+  function removeDuplicates(pagesArr) {
+    // Flatten the array of objects
+    const combined = pagesArr.flatMap((obj) => obj.data);
+
+    // Create a map to count occurrences
+    const occurrences = combined.reduce((acc, obj) => {
+      acc[obj.id] = (acc[obj.id] || 0) + 1;
+      return acc;
+    }, {});
+
+    // Filter out duplicates
+    const result = combined.filter((obj) => occurrences[obj.id] === 1);
+
     return result;
   }
 
@@ -75,10 +69,7 @@ export function Home() {
     getNextPageParam: (lastPage, pages) => lastPage.nextCursor,
     refetchOnWindowFocus: false,
     onSuccess(data) {
-      data.pages[data.pages.length - 1].data = removeDuplicates(
-        data.pages[data.pages.length - 1],
-        data.pages[data.pages.length - 2]
-      );
+      data.pages[data.pages.length - 1].data = removeDuplicates(data.pages);
     },
   });
 
@@ -151,13 +142,13 @@ export function Home() {
   return (
     <div data-testid="home-component">
       <Button onClick={() => fetchNextPage()}>Click Me</Button>
-      {/* {data?.pages.map((group, i) => (
+      {data?.pages.map((group, i) => (
         <React.Fragment key={i}>
           {group.data.map((recipe) => (
             <p key={recipe.id}>{recipe.title}</p>
           ))}
         </React.Fragment>
-      ))} */}
+      ))}
       {/* <div className="mt-5 flex justify-center">
         <Input
           data-testid="recipe-search"
