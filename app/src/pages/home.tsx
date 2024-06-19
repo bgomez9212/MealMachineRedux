@@ -1,5 +1,5 @@
 import { RecipeCard } from "@/components/RecipeCard";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   useInfiniteQuery,
@@ -8,7 +8,7 @@ import {
   useQueryClient,
 } from "react-query";
 import { useToast } from "@/components/ui/use-toast";
-import { type HomeRecipes } from "@/types";
+import { CombinedObject, Occurrences, type HomeRecipes } from "@/types";
 import ClipLoader from "react-spinners/ClipLoader";
 import { Input } from "@/components/ui/input";
 import { useUserContext } from "@/context/context";
@@ -20,8 +20,8 @@ import {
   saveRecipe,
 } from "@/hooks/recipes";
 import { useDebounce } from "use-debounce";
-import { Button } from "@mui/material";
 import React from "react";
+import { useInView } from "react-intersection-observer";
 
 export function Home() {
   const { toast } = useToast();
@@ -30,10 +30,11 @@ export function Home() {
   const navigate = useNavigate();
   const [search, setSearch] = useState("");
   const [debouncedSearch] = useDebounce(search, 500);
+  const { ref, inView } = useInView();
 
-  function removeDuplicates(pagesArr) {
-    const combined = pagesArr.flatMap((obj) => obj.data);
-    const occurrences = combined.reduce((acc, obj) => {
+  function removeDuplicates(pagesArr: { data: [] }[]) {
+    const combined = pagesArr.flatMap<CombinedObject>((obj) => obj.data);
+    const occurrences = combined.reduce<Occurrences>((acc, obj) => {
       acc[obj.id] = (acc[obj.id] || 0) + 1;
       return acc;
     }, {});
@@ -45,18 +46,24 @@ export function Home() {
     data,
     error,
     fetchNextPage,
-    isFetching: isLoadingRecipes,
+    isLoading: isLoadingRecipes,
     isFetchingNextPage,
   } = useInfiniteQuery({
     queryKey: ["recipes"],
     queryFn: ({ pageParam = 1 }) =>
       getRecipes({ user: user, pageParam: pageParam }),
-    getNextPageParam: (lastPage, pages) => lastPage.nextCursor,
+    getNextPageParam: (lastPage) => lastPage.nextCursor,
     refetchOnWindowFocus: false,
     onSuccess(data) {
       data.pages[data.pages.length - 1].data = removeDuplicates(data.pages);
     },
   });
+
+  useEffect(() => {
+    if (inView) {
+      fetchNextPage();
+    }
+  }, [fetchNextPage, inView]);
 
   const { data: savedRecipes } = useQuery({
     queryKey: ["savedRecipes"],
@@ -99,13 +106,13 @@ export function Home() {
     },
   });
 
-  // if (isLoadingRecipes) {
-  //   return (
-  //     <div className="w-full flex items-center justify-center mt-20">
-  //       <ClipLoader color="#8FAC5F" />
-  //     </div>
-  //   );
-  // }
+  if (isLoadingRecipes) {
+    return (
+      <div className="w-full flex items-center justify-center mt-20">
+        <ClipLoader color="#8FAC5F" />
+      </div>
+    );
+  }
 
   if (error) {
     return (
@@ -117,38 +124,6 @@ export function Home() {
 
   return (
     <div data-testid="home-component">
-      <Button onClick={() => fetchNextPage()}>Click Me</Button>
-      {/*
-      {data?.pages.map((group, i) => (
-        <React.Fragment key={i}>
-          {group.data.map(
-            ({
-              title,
-              image,
-              id,
-              missedIngredientCount,
-              missedIngredients,
-            }) => (
-              <RecipeCard
-                key={title}
-                title={title}
-                image={image}
-                handleSaveClick={() =>
-                  saveRecipeMutation({ user, id, title, image })
-                }
-                handleReadRecipe={() => handleReadRecipe(id)}
-                handleDeleteSavedRecipe={() =>
-                  removeSavedRecipeMutation({ user, id, title })
-                }
-                isSaved={savedRecipes?.includes(id)}
-                missedIngredientCount={missedIngredientCount}
-                missedIngredients={missedIngredients}
-              />
-            )
-          )}
-        </React.Fragment>
-      ))}
-       */}
       <div className="mt-5 flex justify-center">
         <Input
           data-testid="recipe-search"
@@ -201,7 +176,7 @@ export function Home() {
                       id,
                       missedIngredientCount,
                       missedIngredients,
-                    }) => (
+                    }: HomeRecipes) => (
                       <RecipeCard
                         key={title}
                         title={title}
@@ -221,6 +196,12 @@ export function Home() {
                   )}
                 </React.Fragment>
               ))}
+              <div ref={ref} />
+              {isFetchingNextPage && (
+                <div className="w-full flex items-center justify-center mt-20">
+                  <ClipLoader color="#8FAC5F" />
+                </div>
+              )}
             </div>
           ) : (
             <div data-testid="no-ingredients-msg" className="text-center mt-10">

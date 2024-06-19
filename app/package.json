@@ -30,6 +30,7 @@
     "pg-promise": "^11.5.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-intersection-observer": "^9.10.3",
     "react-router-dom": "^6.17.0",
     "react-spinners": "^0.13.8",
     "tailwind-merge": "^2.0.0",
