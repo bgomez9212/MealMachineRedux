@@ -49,6 +49,7 @@ export function Home() {
     fetchNextPage: fetchRecipes,
     isLoading: isLoadingRecipes,
     isFetchingNextPage: isFetchingNextRecipes,
+    isFetching,
   } = useInfiniteQuery({
     queryKey: ["recipes"],
     queryFn: ({ pageParam = 1 }) => getRecipes({ user, pageParam }),
@@ -76,6 +77,7 @@ export function Home() {
     },
     enabled: debouncedSearch.length >= 3,
   });
+  console.log(isFetching);
 
   useEffect(() => {
     if (recipeInView) {
