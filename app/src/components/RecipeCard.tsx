@@ -110,6 +110,7 @@ export function RecipeCard({
             ))}
           </div>
           <Button
+            data-testid="close-modal-btn"
             className="w-full md:w-1/2 mt-10"
             onClick={() => setSelectedRecipe(null)}
           >

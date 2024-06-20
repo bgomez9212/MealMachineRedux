@@ -71,5 +71,6 @@ describe("Recipe card component", () => {
     fireEvent.click(screen.getByTestId("card-description"));
     // click button to save grocery
     fireEvent.click(screen.getByTestId("11-test"));
+    fireEvent.click(screen.getByTestId("close-modal-btn"));
   });
 });
