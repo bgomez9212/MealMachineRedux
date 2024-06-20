@@ -38,6 +38,9 @@
     "use-debounce": "^10.0.1"
   },
   "devDependencies": {
+    "undici": ">=5.28.4",
+    "ws": ">=8.17.1",
+    "follow-redirects": ">=1.15.6",
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^14.4.3",
@@ -60,7 +63,7 @@
     "react-query": "^3.39.3",
     "tailwindcss": "^3.3.5",
     "typescript": "^5.0.2",
-    "vite": "^4.5.2",
+    "vite": ">=5.1.7",
     "vitest": "^1.4.0"
   }
 }
