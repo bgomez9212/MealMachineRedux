@@ -94,7 +94,8 @@ module.exports = {
     try {
       const result = await model.getSearchedRecipes(
         req.query.user_id,
-        req.query.term
+        req.query.term,
+        req.query.page
       );
       res.send(result);
     } catch (err) {
