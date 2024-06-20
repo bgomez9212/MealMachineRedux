@@ -197,7 +197,6 @@ module.exports = {
           },
         }
       );
-      console.log(result.results.length);
       return {
         data: result.results,
         nextCursor: Number(page) + 1,

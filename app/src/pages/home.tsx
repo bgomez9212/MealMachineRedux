@@ -77,17 +77,6 @@ export function Home() {
     enabled: debouncedSearch.length >= 3,
   });
 
-  console.log(searchResults);
-
-  // const { data: searchResults, isFetching: isSearchLoading } = useQuery<
-  //   HomeRecipes[]
-  // >({
-  //   queryKey: ["searchResults", debouncedSearch],
-  //   queryFn: () => getSearchResults({ user, debouncedSearch }),
-  //   refetchOnWindowFocus: false,
-  //   enabled: debouncedSearch.length >= 3,
-  // });
-
   useEffect(() => {
     if (recipeInView) {
       fetchRecipes();
@@ -176,23 +165,6 @@ export function Home() {
           data-testid="search-recipe-results"
           className="min-[630px]:grid min-[630px]:grid-cols-2 lg:grid-cols-3 px-10 gap-x-10 mb-20"
         >
-          {/* {searchResults?.map(({ title, id, image, missedIngredients }) => (
-            <RecipeCard
-              key={title}
-              title={title}
-              image={image}
-              handleSaveClick={() =>
-                saveRecipeMutation({ user, id, image, title })
-              }
-              handleReadRecipe={() => handleReadRecipe(id)}
-              handleDeleteSavedRecipe={() =>
-                removeSavedRecipeMutation({ user, id, title })
-              }
-              isSaved={savedRecipes?.includes(id)}
-              missedIngredientCount={missedIngredients.length}
-              missedIngredients={missedIngredients}
-            />
-          ))} */}
           {searchResults?.pages.map((group, i) => (
             <React.Fragment key={i}>
               {group.data.map(
@@ -217,11 +189,11 @@ export function Home() {
             </React.Fragment>
           ))}
           <div ref={searchRef} />
-          {/* {isFetchingNextSearchResults && (
+          {isFetchingNextSearchResults && (
             <div className="w-full flex items-center justify-center mt-20">
               <ClipLoader color="#8FAC5F" />
             </div>
-          )} */}
+          )}
         </div>
       ) : (
         <div>
