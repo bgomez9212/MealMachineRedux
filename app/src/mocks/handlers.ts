@@ -73,22 +73,24 @@ export const handlers = [
     return new HttpResponse(null, { status: 201, statusText: "deleted" });
   }),
   http.get(import.meta.env.VITE_server_recipes, () => {
-    return HttpResponse.json([
-      {
-        id: 1,
-        title: "test1",
-        image: "test-img",
-        missedIngredientCount: 2,
-        missedIngredients: [],
-      },
-      {
-        id: 7,
-        title: "test7",
-        image: "test-img",
-        missedIngredientCount: 4,
-        missedIngredients: [],
-      },
-    ]);
+    return HttpResponse.json({
+      data: [
+        {
+          id: 1,
+          title: "test1",
+          image: "test-img",
+          missedIngredientCount: 2,
+          missedIngredients: [],
+        },
+        {
+          id: 7,
+          title: "test7",
+          image: "test-img",
+          missedIngredientCount: 4,
+          missedIngredients: [],
+        },
+      ],
+    });
   }),
   // http.get(import.meta.env.VITE_server_searchRecipes, () => {
   //   console.log("SEARCH RECIPES WAS USED");

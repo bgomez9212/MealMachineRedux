@@ -71,3 +71,12 @@ export type moveIngredientVariables = {
   food_name: string;
   ingredient_id: number;
 };
+
+export type Occurrences = {
+  [key: string]: number;
+};
+
+export type CombinedObject = {
+  id: string;
+  value: number;
+};
