@@ -47,18 +47,21 @@ export async function getSavedRecipes(user: string | undefined) {
 export async function getSearchResults({
   user,
   debouncedSearch,
+  pageParam,
 }: {
   user: string | undefined;
   debouncedSearch: string;
+  pageParam: number;
 }) {
   return axios
     .get(import.meta.env.VITE_server_searchRecipes, {
       params: {
         user_id: user,
         term: debouncedSearch,
+        page: pageParam,
       },
     })
-    .then((res) => res.data.results);
+    .then((res) => res.data);
 }
 
 export async function saveRecipe({

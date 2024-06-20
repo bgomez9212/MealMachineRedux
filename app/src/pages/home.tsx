@@ -30,7 +30,8 @@ export function Home() {
   const navigate = useNavigate();
   const [search, setSearch] = useState("");
   const [debouncedSearch] = useDebounce(search, 500);
-  const { ref, inView } = useInView();
+  const { ref: recipeRef, inView: recipeInView } = useInView();
+  const { ref: searchRef, inView: searchInView } = useInView();
 
   function removeDuplicates(pagesArr: { data: [] }[]) {
     const combined = pagesArr.flatMap<CombinedObject>((obj) => obj.data);
@@ -43,15 +44,14 @@ export function Home() {
   }
 
   const {
-    data,
-    error,
-    fetchNextPage,
+    data: recipes,
+    error: errorRecipe,
+    fetchNextPage: fetchRecipes,
     isLoading: isLoadingRecipes,
-    isFetchingNextPage,
+    isFetchingNextPage: isFetchingNextRecipes,
   } = useInfiniteQuery({
     queryKey: ["recipes"],
-    queryFn: ({ pageParam = 1 }) =>
-      getRecipes({ user: user, pageParam: pageParam }),
+    queryFn: ({ pageParam = 1 }) => getRecipes({ user, pageParam }),
     getNextPageParam: (lastPage) => lastPage.nextCursor,
     refetchOnWindowFocus: false,
     onSuccess(data) {
@@ -59,25 +59,37 @@ export function Home() {
     },
   });
 
+  const {
+    data: searchResults,
+    error: errorSearchResults,
+    fetchNextPage: fetchSearchResults,
+    isLoading: isLoadingSearchResults,
+    isFetchingNextPage: isFetchingNextSearchResults,
+  } = useInfiniteQuery({
+    queryKey: ["searchResults", debouncedSearch],
+    queryFn: ({ pageParam = 1 }) =>
+      getSearchResults({ user, debouncedSearch, pageParam }),
+    getNextPageParam: (lastPage) => lastPage.nextCursor,
+    refetchOnWindowFocus: false,
+    onSuccess(data) {
+      data.pages[data.pages.length - 1].data = removeDuplicates(data.pages);
+    },
+    enabled: debouncedSearch.length >= 3,
+  });
+
   useEffect(() => {
-    if (inView) {
-      fetchNextPage();
+    if (recipeInView) {
+      fetchRecipes();
     }
-  }, [fetchNextPage, inView]);
+    if (searchInView) {
+      fetchSearchResults();
+    }
+  }, [fetchRecipes, recipeInView, fetchSearchResults, searchInView]);
 
   const { data: savedRecipes } = useQuery({
     queryKey: ["savedRecipes"],
     queryFn: () => getSavedRecipesIds(user),
     refetchOnWindowFocus: false,
-  });
-
-  const { data: searchResults, isFetching: isSearchLoading } = useQuery<
-    HomeRecipes[]
-  >({
-    queryKey: ["searchResults", debouncedSearch],
-    queryFn: () => getSearchResults({ user, debouncedSearch }),
-    refetchOnWindowFocus: false,
-    enabled: debouncedSearch.length >= 3,
   });
 
   const { mutateAsync: saveRecipeMutation } = useMutation({
@@ -114,7 +126,15 @@ export function Home() {
     );
   }
 
-  if (error) {
+  if (errorRecipe) {
+    return (
+      <div className="w-full flex items-center justify-center mt-20">
+        There seems to be an error. Try again later.
+      </div>
+    );
+  }
+
+  if (errorSearchResults) {
     return (
       <div className="w-full flex items-center justify-center mt-20">
         There seems to be an error. Try again later.
@@ -133,41 +153,53 @@ export function Home() {
           onChange={(e) => setSearch(e.target.value)}
         />
       </div>
-      {isSearchLoading ? (
+      {isLoadingSearchResults ? (
         <div
           data-testid="search-loading"
           className="w-full flex items-center justify-center mt-20"
         >
           <ClipLoader color="#8FAC5F" />
         </div>
-      ) : search.length >= 3 ? (
+      ) : searchResults?.pages[0].data.length ? (
         <div
           data-testid="search-recipe-results"
           className="min-[630px]:grid min-[630px]:grid-cols-2 lg:grid-cols-3 px-10 gap-x-10 mb-20"
         >
-          {searchResults?.map(({ title, id, image, missedIngredients }) => (
-            <RecipeCard
-              key={title}
-              title={title}
-              image={image}
-              handleSaveClick={() =>
-                saveRecipeMutation({ user, id, image, title })
-              }
-              handleReadRecipe={() => handleReadRecipe(id)}
-              handleDeleteSavedRecipe={() =>
-                removeSavedRecipeMutation({ user, id, title })
-              }
-              isSaved={savedRecipes?.includes(id)}
-              missedIngredientCount={missedIngredients.length}
-              missedIngredients={missedIngredients}
-            />
+          {searchResults?.pages.map((group, i) => (
+            <React.Fragment key={i}>
+              {group.data.map(
+                ({ title, image, id, missedIngredients }: HomeRecipes) => (
+                  <RecipeCard
+                    key={title}
+                    title={title}
+                    image={image}
+                    handleSaveClick={() =>
+                      saveRecipeMutation({ user, id, title, image })
+                    }
+                    handleReadRecipe={() => handleReadRecipe(id)}
+                    handleDeleteSavedRecipe={() =>
+                      removeSavedRecipeMutation({ user, id, title })
+                    }
+                    isSaved={savedRecipes?.includes(id)}
+                    missedIngredientCount={missedIngredients.length}
+                    missedIngredients={missedIngredients}
+                  />
+                )
+              )}
+            </React.Fragment>
           ))}
+          <div ref={searchRef} />
+          {isFetchingNextSearchResults && (
+            <div className="w-full flex items-center justify-center mt-20">
+              <ClipLoader color="#8FAC5F" />
+            </div>
+          )}
         </div>
       ) : (
         <div>
-          {data?.pages[0].data.length ? (
+          {recipes?.pages[0].data.length ? (
             <div className="min-[630px]:grid min-[630px]:grid-cols-2 lg:grid-cols-3 px-10 gap-x-10 mb-20">
-              {data?.pages.map((group, i) => (
+              {recipes?.pages.map((group, i) => (
                 <React.Fragment key={i}>
                   {group.data.map(
                     ({
@@ -196,8 +228,8 @@ export function Home() {
                   )}
                 </React.Fragment>
               ))}
-              <div ref={ref} />
-              {isFetchingNextPage && (
+              <div ref={recipeRef} />
+              {isFetchingNextRecipes && (
                 <div className="w-full flex items-center justify-center mt-20">
                   <ClipLoader color="#8FAC5F" />
                 </div>

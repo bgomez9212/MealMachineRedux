@@ -30,20 +30,25 @@ export function MyIngredients() {
 
   const { mutateAsync: removeIngredientMutation } = useMutation({
     mutationFn: removeIngredient,
-    onSuccess: () =>
-      queryClient.invalidateQueries({ queryKey: ["ingredients"] }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["ingredients"] });
+      queryClient.resetQueries({ queryKey: ["recipes"] });
+    },
   });
 
   const { mutateAsync: moveIngredientMutation } = useMutation({
     mutationFn: moveIngredient,
-    onSuccess: () =>
-      queryClient.invalidateQueries({ queryKey: ["ingredients"] }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["ingredients"] });
+      queryClient.resetQueries({ queryKey: ["recipes"] });
+    },
   });
 
   const { mutateAsync: addIngredientMutation } = useMutation({
     mutationFn: addIngredient,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["ingredients"] });
+      queryClient.resetQueries({ queryKey: ["recipes"] });
       setIngredientInput("");
     },
   });

@@ -177,25 +177,30 @@ module.exports = {
       throw new Error(err.message);
     }
   },
-  getSearchedRecipes: async (user_id, term) => {
+  getSearchedRecipes: async (user_id, term, page) => {
     if (!user_id || !term) {
       throw new Error("parameters missing from search recipes");
     }
     try {
+      const itemsPerPage = 9;
+      const cursor = Number(page) * itemsPerPage;
       const { rows: ingredients } = await pool.query(
         "SELECT name FROM food INNER JOIN ingredients ON food.id = ingredients.food_id WHERE ingredients.user_id = $1",
         [user_id]
       );
       const ingredientsList = createIngredientsListSearchedRecipes(ingredients);
       const { data: result } = await axios.get(
-        `https://api.spoonacular.com/recipes/complexSearch?titleMatch=${term}&number=9&fillIngredients=true&includeIngredients=${ingredientsList}&sort=min-missing-ingredients`,
+        `https://api.spoonacular.com/recipes/complexSearch?titleMatch=${term}&number=${cursor}&fillIngredients=true&includeIngredients=${ingredientsList}&sort=min-missing-ingredients`,
         {
           headers: {
             "x-api-key": process.env.API_KEY,
           },
         }
       );
-      return result;
+      return {
+        data: result.results,
+        nextCursor: Number(page) + 1,
+      };
     } catch (err) {
       throw new Error(err.message);
     }

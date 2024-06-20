@@ -30,13 +30,16 @@ export function MyGroceries() {
 
   const { mutateAsync: removeGroceryMutation } = useMutation({
     mutationFn: removeGrocery,
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["groceries"] }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["groceries"] });
+    },
   });
 
   const { mutateAsync: moveGroceryMutation } = useMutation({
     mutationFn: moveGrocery,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["groceries"] });
+      queryClient.resetQueries({ queryKey: ["recipes"] });
     },
   });
 

@@ -74,28 +74,6 @@ describe("home component", () => {
   });
   // // search results
   it("should change search recipe text input", async () => {
-    server.use(
-      http.get(import.meta.env.VITE_server_searchRecipes, () => {
-        return HttpResponse.json({
-          results: [
-            {
-              id: 1,
-              title: "test1",
-              image: "test-img",
-              missedIngredientCount: 2,
-              missedIngredients: [],
-            },
-            {
-              id: 7,
-              title: "test7",
-              image: "test-img",
-              missedIngredientCount: 4,
-              missedIngredients: [],
-            },
-          ],
-        });
-      })
-    );
     render(home);
     const textInput = (await waitFor(() =>
       screen.getByTestId("recipe-search")
