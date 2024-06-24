@@ -49,7 +49,15 @@ export function RecipeDetailPage() {
       (groceryObj: Groceries) => groceryObj.name
     );
 
-    if (userIngredients?.indexOf(recipeIngredient) > -1) {
+    const groceryBtn = userGroceries?.some((userGrocery: string) => {
+      return recipeIngredient.includes(userGrocery.toLowerCase());
+    });
+
+    const ingredientBtn = userIngredients?.some((userIngredient: string) => {
+      return recipeIngredient.includes(userIngredient.toLowerCase());
+    });
+
+    if (ingredientBtn) {
       return (
         <Button
           className="md:w-1/4"
@@ -60,7 +68,8 @@ export function RecipeDetailPage() {
         </Button>
       );
     }
-    if (userGroceries?.indexOf(recipeIngredient) > -1) {
+
+    if (groceryBtn) {
       return (
         <Button
           className="md:w-1/4"
@@ -173,7 +182,7 @@ export function RecipeDetailPage() {
                   key={id}
                 >
                   {ingredientWithMeasurement}
-                  {renderButton(ingredientName)}
+                  {renderButton(ingredientName.toLowerCase())}
                 </li>
               )
             )}
