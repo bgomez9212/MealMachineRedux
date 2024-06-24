@@ -6,6 +6,8 @@ import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import Box from "@mui/material/Box";
+import Modal from "@mui/material/Modal";
 
 interface LoginProps {
   handleClick: () => void;
@@ -16,6 +18,8 @@ const Login = ({ handleClick }: LoginProps) => {
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [errorMessage, setErrorMessage] = useState("");
   const [visible, setVisible] = useState(false);
+  const [modal, setModal] = useState(false);
+  const [email, setEmail] = useState("");
 
   const onLogin = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
@@ -31,6 +35,28 @@ const Login = ({ handleClick }: LoginProps) => {
   return (
     <>
       <main data-testid="login-component">
+        <Modal
+          className="flex justify-center items-center"
+          open={modal}
+          onClose={() => setModal(false)}
+        >
+          <Box
+            className={
+              "bg-white dark:bg-black shadow-lg border border-white p-10 flex flex-col items-center justify-center w-[90vw] sm:w-1/2"
+            }
+          >
+            <Input
+              name="email-address"
+              type="email"
+              required
+              placeholder="Email address"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full h-10 bg-white px-3 text-black mb-3"
+            />
+            <Button>Send Email</Button>
+          </Box>
+        </Modal>
         <section>
           <div className="flex flex-col justify-center items-center w-[300px]">
             <div className="h-[180px] w-[300px] bg-[url('/logo-landing.png')] bg-cover dark:bg-[url('/logo-landing-dark.PNG')]" />
@@ -95,18 +121,25 @@ const Login = ({ handleClick }: LoginProps) => {
               </div>
             </form>
 
-            <p className="text-center mt-2 text-black">
-              No account yet?
-              <br />
+            <div className="flex flex-col mt-2">
+              <Button
+                data-testid="forgot-button"
+                className="text-lightGreen h-5"
+                variant={"link"}
+                onClick={() => setModal(true)}
+              >
+                Forgot Password?
+              </Button>
+              <p className="text-center mt-2 text-black">No account yet?</p>
               <Button
                 data-testid="sign-up-button"
-                className="text-lightGreen"
+                className="text-lightGreen h-5"
                 variant={"link"}
                 onClick={handleClick}
               >
                 Sign up
               </Button>
-            </p>
+            </div>
           </div>
         </section>
       </main>
