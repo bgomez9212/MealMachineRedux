@@ -45,7 +45,9 @@ const Login = ({ handleClick }: LoginProps) => {
     sendPasswordResetEmail(resetAuth, uiState.resetEmail).then(() =>
       setUiState({
         ...uiState,
-        confirmationMessage: "Password reset email sent!",
+        confirmationMessage:
+          "Message sent, check your email to reset your password!",
+        resetEmail: "",
       })
     );
   }
@@ -56,7 +58,14 @@ const Login = ({ handleClick }: LoginProps) => {
         <Modal
           className="flex justify-center items-center"
           open={uiState.modal}
-          onClose={() => setUiState({ ...uiState, modal: false })}
+          onClose={() =>
+            setUiState({
+              ...uiState,
+              modal: false,
+              resetEmail: "",
+              confirmationMessage: "",
+            })
+          }
         >
           <Box
             className={
@@ -65,10 +74,19 @@ const Login = ({ handleClick }: LoginProps) => {
           >
             <div className="w-full flex items-end justify-end cursor-pointer">
               <CloseIcon
-                onClick={() => setUiState({ ...uiState, modal: false })}
+                onClick={() =>
+                  setUiState({
+                    ...uiState,
+                    modal: false,
+                    resetEmail: "",
+                    confirmationMessage: "",
+                  })
+                }
               />
             </div>
-            <p className="mb-3">Enter email to send password reset email</p>
+            <p className="mb-3 text-center">
+              Enter email to send password reset email
+            </p>
             <Input
               name="email-address"
               type="email"
@@ -78,10 +96,17 @@ const Login = ({ handleClick }: LoginProps) => {
               onChange={(e) =>
                 setUiState({ ...uiState, resetEmail: e.target.value })
               }
-              className="w-full sm: max-w-72 h-10 bg-white px-3 text-black mb-3"
+              className="w-full sm: max-w-72 h-10 bg-white px-3 text-black"
             />
+            {uiState.confirmationMessage && (
+              <p className="text-lightGreen text-center mt-2">
+                {uiState.confirmationMessage}
+              </p>
+            )}
             <div>
-              <Button onClick={sendResetPassword}>Send Email</Button>
+              <Button className="mt-2" onClick={sendResetPassword}>
+                Send Email
+              </Button>
             </div>
           </Box>
         </Modal>
