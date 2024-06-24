@@ -163,6 +163,7 @@ const Login = ({ handleClick }: LoginProps) => {
                 <Button
                   data-testid="login-button"
                   onClick={onLogin}
+                  disabled={!formData.email || !formData.password}
                   className="bg-black w-full mt-2 h-10 text-slate-50 dark:hover:text-slate-950"
                 >
                   {" "}
