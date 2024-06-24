@@ -12,6 +12,7 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
+import CloseIcon from "@mui/icons-material/Close";
 
 interface LoginProps {
   handleClick: () => void;
@@ -62,6 +63,11 @@ const Login = ({ handleClick }: LoginProps) => {
               "bg-white dark:bg-black shadow-lg border border-white p-10 flex flex-col items-center justify-center w-[90vw] sm:w-1/2"
             }
           >
+            <div className="w-full flex items-end justify-end cursor-pointer">
+              <CloseIcon
+                onClick={() => setUiState({ ...uiState, modal: false })}
+              />
+            </div>
             <p className="mb-3">Enter email to send password reset email</p>
             <Input
               name="email-address"
@@ -74,7 +80,9 @@ const Login = ({ handleClick }: LoginProps) => {
               }
               className="w-full sm: max-w-72 h-10 bg-white px-3 text-black mb-3"
             />
-            <Button>Send Email</Button>
+            <div>
+              <Button onClick={sendResetPassword}>Send Email</Button>
+            </div>
           </Box>
         </Modal>
         <section>
