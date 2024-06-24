@@ -1,5 +1,9 @@
 import { useState } from "react";
-import { signInWithEmailAndPassword } from "firebase/auth";
+import {
+  getAuth,
+  signInWithEmailAndPassword,
+  sendPasswordResetEmail,
+} from "firebase/auth";
 import { auth } from "../firebase";
 import { useNavigate } from "react-router-dom";
 import { Input } from "./ui/input";
@@ -16,10 +20,14 @@ interface LoginProps {
 const Login = ({ handleClick }: LoginProps) => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({ email: "", password: "" });
-  const [errorMessage, setErrorMessage] = useState("");
-  const [visible, setVisible] = useState(false);
-  const [modal, setModal] = useState(false);
-  const [email, setEmail] = useState("");
+  const [uiState, setUiState] = useState({
+    errorMessage: "",
+    passwordVisibility: false,
+    modal: false,
+    resetEmail: "",
+    confirmationMessage: "",
+  });
+  const resetAuth = getAuth();
 
   const onLogin = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
@@ -28,31 +36,43 @@ const Login = ({ handleClick }: LoginProps) => {
         navigate("/home");
       })
       .catch(() => {
-        setErrorMessage("Incorrect email or password");
+        setUiState({ ...uiState, errorMessage: "Incorrect email or password" });
       });
   };
+
+  async function sendResetPassword() {
+    sendPasswordResetEmail(resetAuth, uiState.resetEmail).then(() =>
+      setUiState({
+        ...uiState,
+        confirmationMessage: "Password reset email sent!",
+      })
+    );
+  }
 
   return (
     <>
       <main data-testid="login-component">
         <Modal
           className="flex justify-center items-center"
-          open={modal}
-          onClose={() => setModal(false)}
+          open={uiState.modal}
+          onClose={() => setUiState({ ...uiState, modal: false })}
         >
           <Box
             className={
               "bg-white dark:bg-black shadow-lg border border-white p-10 flex flex-col items-center justify-center w-[90vw] sm:w-1/2"
             }
           >
+            <p className="mb-3">Enter email to send password reset email</p>
             <Input
               name="email-address"
               type="email"
               required
               placeholder="Email address"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full h-10 bg-white px-3 text-black mb-3"
+              value={uiState.resetEmail}
+              onChange={(e) =>
+                setUiState({ ...uiState, resetEmail: e.target.value })
+              }
+              className="w-full sm: max-w-72 h-10 bg-white px-3 text-black mb-3"
             />
             <Button>Send Email</Button>
           </Box>
@@ -80,7 +100,7 @@ const Login = ({ handleClick }: LoginProps) => {
               <div className="flex items-center relative">
                 <Input
                   data-testid="password-input"
-                  type={visible ? "text" : "password"}
+                  type={uiState.passwordVisibility ? "text" : "password"}
                   placeholder="Password"
                   className="w-full mt-2 h-10 bg-white px-3 text-black"
                   value={formData.password}
@@ -91,9 +111,14 @@ const Login = ({ handleClick }: LoginProps) => {
                 <div
                   data-testid="visibility-button"
                   className="absolute right-3 cursor-pointer mt-1"
-                  onClick={() => setVisible((prevVisible) => !prevVisible)}
+                  onClick={() =>
+                    setUiState({
+                      ...uiState,
+                      passwordVisibility: !uiState.passwordVisibility,
+                    })
+                  }
                 >
-                  {visible ? (
+                  {uiState.passwordVisibility ? (
                     <VisibilityOffIcon sx={{ color: "black" }} />
                   ) : (
                     <VisibilityIcon sx={{ color: "black" }} />
@@ -110,12 +135,12 @@ const Login = ({ handleClick }: LoginProps) => {
                   {" "}
                   LOGIN
                 </Button>
-                {errorMessage && (
+                {uiState.errorMessage && (
                   <p
                     data-testid="login-error"
                     className={`text-center text-red-400 dark:text-red-500`}
                   >
-                    {errorMessage}
+                    {uiState.errorMessage}
                   </p>
                 )}
               </div>
@@ -126,7 +151,7 @@ const Login = ({ handleClick }: LoginProps) => {
                 data-testid="forgot-button"
                 className="text-lightGreen h-5"
                 variant={"link"}
-                onClick={() => setModal(true)}
+                onClick={() => setUiState({ ...uiState, modal: true })}
               >
                 Forgot Password?
               </Button>
