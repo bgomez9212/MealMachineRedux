@@ -11,6 +11,14 @@ describe("Login component", () => {
 
   it("renders error message when errorMessage is present", async () => {
     render(loginComponent);
+    const emailInput = screen.getByTestId("email-input") as HTMLInputElement;
+    const passwordInput = screen.getByTestId(
+      "password-input"
+    ) as HTMLInputElement;
+    fireEvent.change(emailInput, {
+      target: { value: "nonexistent@example.com" },
+    });
+    fireEvent.change(passwordInput, { target: { value: "testpassword" } });
     const loginBtn = screen.getByTestId("login-button");
     fireEvent.click(loginBtn);
     await waitFor(() =>
