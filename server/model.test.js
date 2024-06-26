@@ -252,9 +252,11 @@ describe("test get recipes", () => {
   });
 
   it("should return an empty array and status code 200", async () => {
-    const res = await request(app).get("/api/recipes").query({ user_id: 1 });
+    const res = await request(app)
+      .get("/api/recipes")
+      .query({ user_id: 1, page: 1 });
     expect(res.status).toBe(200);
-    expect(res.body).toStrictEqual([]);
+    expect(res.body).toStrictEqual({ data: [], nextCursor: 2 });
   });
 });
 
@@ -292,9 +294,9 @@ describe("test search recipes", () => {
   it("returns a list of recipes when passing correct parameters", async () => {
     const res = await request(app)
       .get("/api/searchRecipes")
-      .query({ user_id: 12345, term: "pasta" });
+      .query({ user_id: 12345, term: "pasta", page: 1 });
     expect(res.status).toBe(200);
-    expect(res.body.results.length).toBe(9);
+    expect(res.body.data.length).toBe(9);
   });
 
   it("returns an error when there is an external api error", async () => {
