@@ -36,4 +36,6 @@ This will be done in two separate terminals.
   In one terminal navigate to the server directory and run `npm run server`.
   In the other terminal navigate to the app directory and run `npm run dev`.
 
+# What is MealMachine?
+A recipe suggestion service where users can use the ingredients they have available to find recipes. Users create their inventory of ingredients, are suggested recipes where they a missing a minimal amount of ingredients, then can create grocery lists based off of their missing ingredients. User's can also manually search for recipes, which will be displayed in order of least missing ingredients, and can save recipes for later. Other features include responsive design, light and dark modes, and infinite scrolling.
 
